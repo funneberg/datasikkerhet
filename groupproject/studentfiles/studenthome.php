@@ -2,7 +2,7 @@
 
 session_start();
 
-if (!isset($_SESSION['teacher'])) {
+if (!isset($_SESSION['student'])) {
 	
 	header("../index.php");
 	

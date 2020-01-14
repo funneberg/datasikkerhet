@@ -10,10 +10,28 @@
     margin: 0vw 5vw 0vw 5vw;
 }
 
-#card {
-	width: 60vh;
-	height: 67vh;
+
+#studentCard {
+	width: 70vh;
+	height: 90vh;
 }
+
+#foreleserCard {
+	width: 70vh;
+	height: 90vh;
+}
+
+#studentReg {
+	width: 70vh;
+	height: 90vh;
+}
+
+#foreleserReg {
+	width: 70vh;
+	height: 90vh;
+}
+
+
 
 input {
 	margin-bottom: 2vh;

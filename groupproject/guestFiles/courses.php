@@ -30,34 +30,19 @@
 		
 }
 	
-	
-	function displayDepartments() {
-	
-	global $dbConn;	
-	
-	$sql = "SELECT DISTINCT department_name 
-	FROM course_table
-	ORDER BY department_name";
-	
-	$stmt = $dbConn -> prepare ($sql);
-	$stmt->execute();
-	$records = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	
-		for ($i = 0; $i < sizeof($records); $i++) {
-			echo "<option> ".$records[$i]['department_name']. "</option>";
-		}
-	}
+
 	
 	function displayCourse() {
-	global $dbConn;
-	$sql = "SELECT DISTINCT courseID
-			FROM `course_table`";
+
+	global $conn;
+	$sql = "SELECT * FROM `students`";
+
 	$stmt = $dbConn -> prepare ($sql);
 	$stmt->execute();
 	$records = $stmt->fetchALL(PDO::FETCH_ASSOC); 
 	
 	for ($i=0; $i < sizeof($records); $i++) {
-		echo "<option> " .$records[$i]["courseID"]." </option>"; 
+		echo "<option> " .$records[$i]["navn"]." </option>"; 
 	}
 	
 }
