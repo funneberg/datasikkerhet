@@ -1,15 +1,19 @@
-.navbar {
+nav {
 	padding: 2vh;
+	margin-bottom: 1vh;
 }
 
-#header {
-    padding-top: 5vh;
+#jumbotron {
+	margin-top: 10vh;
 }
 
 .content {
     margin: 0vw 5vw 0vw 5vw;
 }
 
+#byttpassordCard {
+	margin: 0vw 5vw 0vw 5vw;
+}
 
 #studentCard {
 	width: 70vh;
@@ -32,7 +36,6 @@
 }
 
 
-
 input {
 	margin-bottom: 2vh;
 }
@@ -48,10 +51,15 @@ input {
 }
 
 #header {
-	padding: 5vh;
+	margin-bottom: 10vh;
 }
 
 #adminText {
+	margin-right: 4vh;
+	margin-top: 1vh;
+}
+
+#studentText {
 	margin-right: 4vh;
 	margin-top: 1vh;
 }

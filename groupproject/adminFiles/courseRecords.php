@@ -33,7 +33,7 @@ function countCourses() {
   	$stmt->execute();
   	$result = $stmt->fetchColumn();
 	
-	echo $result;
+	return $result;
 }
 
 
@@ -153,8 +153,8 @@ function countCourses() {
 						  $courses[$i]["course_name"] . "</td><td>" . $courses[$i]["department_name"]. "</td><td>" .
 						  " <a class='delete' courseName = '".$courses[$i]['course_name']. "'  href='deleteCourse.php?courseID=".$courses[$i]['courseID']."'> Delete </a>" . 
 						  " <a class='course' href='updateCourse.php?courseID=".$courses[$i]['courseID']."'> Update </a>". "</td></tr>";
-				      }
-			     ?>
+				    }
+			    ?>
 			     
 			  </tbody>
 			 </table>
