@@ -2,9 +2,6 @@
 
 include 'connection.php';
 
-
-
-
 if(isset($_GET['logginn'])) {
 
 	global $con;	
@@ -24,18 +21,27 @@ if(isset($_GET['logginn'])) {
         $resultat2 = mysqli_query($con,$ansatttabell);
         $row2 = mysqli_fetch_array($resultat2);
 
+
         $studentCount = $row1['cntStudent'];
 		$ansattCount = $row2['cntForeleser'];
 
+		session_start();
+
         if ($studentCount > 0){
-			echo "Student";
+			$_SESSION["username"] = $id;
+			$_SESSION['student'] = true;
+            header('Location: studentSider/studentHome.php');
 			$studentCount = 0;
 		}
+
 		else if ($ansattCount > 0) {
-			echo "Foreleser";
+			$_SESSION["username"] = $id;
+			$_SESSION['foreleser'] = true;
+			header('Location: foreleserSider/foreleserHome.php');
 			$ansattCount = 0;
 		}
-		else{
+
+		else {
             echo "Invalid username and password";
         }
 	}
@@ -63,9 +69,8 @@ if(isset($_GET['logginn'])) {
 		  <div id="navbarBasicExample" class="navbar-menu">
 		    <div class="navbar-start">
 		    	
-		      <a class="navbar-item is-active">Home</a>
-		      <a class="navbar-item" href="guestFiles/departments.php">Departments</a>
-		      <a class="navbar-item" href="guestFiles/courses.php">Courses</a>
+		      <a class="navbar-item is-active">HJEM</a>
+		      <a class="navbar-item" href="gjesteSider/emner.php">EMNER</a>
 			
 			</div>
 		   </div>
