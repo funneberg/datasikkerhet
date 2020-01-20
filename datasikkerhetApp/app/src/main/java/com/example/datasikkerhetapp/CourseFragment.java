@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 public class CourseFragment extends Fragment {
 
+    private TextView tv;
 
     public CourseFragment() {
         // Required empty public constructor
@@ -20,7 +21,19 @@ public class CourseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_course, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_course, container, false);
+
+        String id = getArguments().getString("ID");
+        String name = getArguments().getString("Course");
+
+        String course = id + " " + name;
+
+        tv = view.findViewById(R.id.txtCourseName);
+
+        tv.setText(course);
+
+        return view;
     }
 
 }

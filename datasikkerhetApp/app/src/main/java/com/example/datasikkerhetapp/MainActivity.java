@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +16,23 @@ import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
+    private NavigationView navView;
+    ArrayList<Course> courses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setup(savedInstanceState);
+
+        populateArrayList();
+    }
+
+    private void setup(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -28,15 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout = findViewById(R.id.activity_main);
 
-        NavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.courseListBtn:
+                        uncheckItem();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
                         break;
                     case R.id.changePwBtn:
+                        uncheckItem();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChangePwFragment()).commit();
                         break;
                     case R.id.logOutBtn:
@@ -57,10 +71,46 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
-            navView.setCheckedItem(R.id.courseList);
         }
+    }
+
+
+    public void uncheckItem() {
+        if (navView.getCheckedItem() != null) {
+            MenuItem mItem = navView.getCheckedItem();
+            mItem.setChecked(false);
+        }
+    }
+
+    private void populateArrayList() {
+        //Testdata:
+        courses = new ArrayList<>();
+        courses.add(new Course("ITF10619", "Programmering 2"));
+        courses.add(new Course("ITF25019", "Datasikkerhet i utvikling og drift"));
+        courses.add(new Course("ITF20119", "Rammeverk"));
+    }
+
+    public ArrayList<Course> getCourses() {
+        return courses;
+    }
+
+
+    /*
+    private void shareBetweenFragments() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        CourseListFragment clf = new CourseListFragment();
+        CourseFragment cf = new CourseFragment();
+        ft.add(R.id.fragment_container, clf);
+        ft.add(R.id.fragment_container, cf);
+        ft.commit();
+    }
+
+    public void send(Course aCourse) {
 
     }
+
+     */
 
     @Override
     public void onBackPressed() {
