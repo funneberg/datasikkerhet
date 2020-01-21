@@ -16,7 +16,7 @@ public class API {
         info.replaceAll("[%20]", " ");
         info.replaceAll("[%2C]", ",");
 
-        //Fjerner alle special URL characters
+        //Fjerner alle URL enkodete symboler
         info.replaceAll("[%..]", " ");
 
         //Fjerner alle symboler som ikke er alphanumeriske, utenom "=", punktum, komma og whitespace
