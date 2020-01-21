@@ -19,7 +19,7 @@ public class API {
     }
 
     //Henter URL informasjon fra en side, og sender tilbake alt den får
-    public static String URLReader(String side) throws Exception {
+    private static String URLReader(String side) throws Exception {
 
         URL nettside = new URL("http://158.39.188.205/" + side);
         BufferedReader in = new BufferedReader(
