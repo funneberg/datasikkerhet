@@ -11,10 +11,16 @@ public class API {
 
     public String getInformasjon(String side) throws Exception {
        String info = URLReader(side);
-       //Endrer PHP whitespace til vanlig whitespace
-        info.replaceAll("%20", " ");
-        //Fjerner alle symboler som ikke er alphanumeriske, utenom "=" og whitespace
-        info.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}=\\s]", "");
+
+       //Endrer fra URL encoding til vanlig
+        info.replaceAll("[%20]", " ");
+        info.replaceAll("[%2C]", ",");
+
+        //Fjerner alle special URL characters
+        info.replaceAll("[%..]", " ");
+
+        //Fjerner alle symboler som ikke er alphanumeriske, utenom "=", punktum, komma og whitespace
+        info.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}=\\s\\.\\,]", "");
         return info;
     }
 
