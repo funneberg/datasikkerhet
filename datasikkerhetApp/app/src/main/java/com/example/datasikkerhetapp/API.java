@@ -2,11 +2,26 @@ package com.example.datasikkerhetapp;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 
 public class API {
+
     public void sendLogin(String id, String passord){
-        String URL = "http://158.39.188.205/" + "/?id=" + id + "&passord=" + passord + "&logginn=";
+        String URL = "http://158.39.188.205/" + "?id=" + id + "&passord=" + passord + "&logginn=";
+    }
+
+    //Generell kommando til å lage en URL for sending
+    public String sendInformasjon (String naaverendeURL, ArrayList<String> felt, ArrayList<String> info){
+        String URL = naaverendeURL;
+        if(felt.size() == info.size()){
+            URL += ("?" + felt.get(0) + "&" + info.get(0));
+            for (int i = 1; i < felt.size(); i++){
+                URL += ("&" + felt.get(1) + "&" + info.get(1));
+            }
+        }
+
+        return URL;
     }
 
     public String getInformasjon(String side) throws Exception {
