@@ -1,4 +1,4 @@
-package com.example.datasikkerhetapp;
+package com.example.datasikkerhetapp.model;
 
 public class Student {
 

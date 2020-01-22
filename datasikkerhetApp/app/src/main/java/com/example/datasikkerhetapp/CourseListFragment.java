@@ -1,32 +1,34 @@
 package com.example.datasikkerhetapp;
 
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.StrictMode;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
-import android.widget.Space;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.datasikkerhetapp.model.Course;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class CourseListFragment extends Fragment {
+
 
     private LinearLayout linearLayout;
 
@@ -38,6 +40,9 @@ public class CourseListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+        String urlAddress = "http://192.168.4.108/datasikkerhet/test/getcourses.php";
+
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
 
         linearLayout = view.findViewById(R.id.courseList);
@@ -48,7 +53,7 @@ public class CourseListFragment extends Fragment {
 
         for (final Course aCourse : courses) {
 
-            CardView cardView = new CardView(getActivity());
+            CardView cardView = new CardView(ma);
 
             LayoutParams layoutParams = new LayoutParams(
                     LayoutParams.MATCH_PARENT,
@@ -66,23 +71,6 @@ public class CourseListFragment extends Fragment {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //String cid=id.getText().toString();
-
-                    /*
-                    String id = aCourse.getId();
-                    String name = aCourse.getName();
-
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.send(aCourse);
-
-                     */
-
-
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    //mainActivity.uncheckItem();
-
-                    //CourseFragment courseFragment = new CourseFragment();
-
 
                     CourseFragment cf = new CourseFragment();
 
@@ -90,14 +78,12 @@ public class CourseListFragment extends Fragment {
                     FragmentTransaction ft = fm.beginTransaction();
 
                     Bundle args = new Bundle();
-                    args.putString("ID", aCourse.getId());
+                    args.putString("ID", aCourse.getCode());
                     args.putString("Course", aCourse.getName());
 
                     cf.setArguments(args);
                     ft.replace(R.id.fragment_container, cf);
                     ft.commit();
-
-                    // */
                 }
             });
 
