@@ -1,11 +1,33 @@
 <?php
 
-//Bruker autentisering
-session_start();
+	include '../connection.php';
 
-if (!isset($_SESSION['student'])) {
-	header("Location: ../hjem.php"); 
-}
+	//Brukerautentisering
+
+	//Starter session
+	session_start();
+	
+	global $con;
+	//Henter studentID/ansattID lagret i session
+    $username = $_SESSION['username'];
+
+	//Sjekker igjennom "students tabellen":
+	$studentabell = "SELECT count(*) as cntStudent from students where studentID = '$username'";
+	$resultat1 = mysqli_query($con,$studentabell);
+	$row1 = mysqli_fetch_array($resultat1);
+	
+	//Sjekker igjennom "foreleser tabellen":
+	$forelesertabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$username'";
+	$resultat2 = mysqli_query($con,$forelesertabell);
+	$row2 = mysqli_fetch_array($resultat2);
+
+	$studentCount = $row1['cntStudent'];
+	$foreleserCount = $row2['cntForeleser'];
+
+	//Dersom "username" finnes i "foreleser tabellen" blir brukeren sendt tilbake til startside.
+	if ($foreleserCount > 0){
+		header('Location: ../hjem.php');
+  	}
 
 ?>
 
@@ -32,7 +54,7 @@ if (!isset($_SESSION['student'])) {
 		   		<div class="navbar-start">
 					<a class="navbar-item is-active">HJEM</a>
 					<a class="navbar-item" href="sEmner.php">EMNER</a>
-					<a class="navbar-item" href="../innstillinger.php">INNSTILLINGER</a>
+					<a class="navbar-item" href="sInnstillinger.php">INNSTILLINGER</a>
 				</div>
 
 				<div class="navbar-end">

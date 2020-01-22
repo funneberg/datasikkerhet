@@ -6,6 +6,6 @@ $password = 'root';
 $dbname = "test";
 
 $con = mysqli_connect($servername,$username,$password,$dbname) or die("Connection Failed.");
-echo ("Connection success");
+
 
 ?>

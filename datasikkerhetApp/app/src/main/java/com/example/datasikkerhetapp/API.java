@@ -2,24 +2,45 @@ package com.example.datasikkerhetapp;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 
 public class API {
+
     public void sendLogin(String id, String passord){
-        String URL = "http://158.39.188.205/" + "/?id=" + id + "&passord=" + passord + "&logginn=";
+        String URL = "http://158.39.188.205/" + "?id=" + id + "&passord=" + passord + "&logginn=";
+    }
+
+    //Generell kommando til å lage en URL for sending
+    public String sendInformasjon (String naaverendeURL, ArrayList<String> felt, ArrayList<String> info){
+        String URL = naaverendeURL;
+        if(felt.size() == info.size()){
+            URL += ("?" + felt.get(0) + "&" + info.get(0));
+            for (int i = 1; i < felt.size(); i++){
+                URL += ("&" + felt.get(1) + "&" + info.get(1));
+            }
+        }
+
+        return URL;
     }
 
     public String getInformasjon(String side) throws Exception {
        String info = URLReader(side);
-       //Endrer PHP whitespace til vanlig whitespace
-        info.replaceAll("%20", " ");
-        //Fjerner alle symboler som ikke er alphanumeriske, utenom "=" og whitespace
-        info.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}=\\s]", "");
+
+       //Endrer fra URL encoding til vanlig
+        info.replaceAll("[%20]", " ");
+        info.replaceAll("[%2C]", ",");
+
+        //Fjerner alle URL enkodete symboler
+        info.replaceAll("[%..]", " ");
+
+        //Fjerner alle symboler som ikke er alphanumeriske, utenom "=", punktum, komma og whitespace
+        info.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}=\\s\\.\\,]", "");
         return info;
     }
 
     //Henter URL informasjon fra en side, og sender tilbake alt den får
-    public static String URLReader(String side) throws Exception {
+    private static String URLReader(String side) throws Exception {
 
         URL nettside = new URL("http://158.39.188.205/" + side);
         BufferedReader in = new BufferedReader(
