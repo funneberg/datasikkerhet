@@ -11,39 +11,49 @@ if(isset($_GET['logginn'])) {
 
 	if ($id != "" && $passord != "") {
 
-		//Sjekker igjennom student tabellen:
-        $studentabell = "SELECT count(*) as cntStudent from students where studentID = '$id' AND passord ='$passord'";
-        $resultat1 = mysqli_query($con,$studentabell);
-		$row1 = mysqli_fetch_array($resultat1);
-		
-		//Sjekker igjennom ansatt tabellen:
-		$ansatttabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$id' AND passord ='$passord'";
-        $resultat2 = mysqli_query($con,$ansatttabell);
-        $row2 = mysqli_fetch_array($resultat2);
-
-
-        $studentCount = $row1['cntStudent'];
-		$ansattCount = $row2['cntForeleser'];
-
 		session_start();
 
-        if ($studentCount > 0){
-			$_SESSION["username"] = $id;
-			$_SESSION['student'] = true;
-            header('Location: studentSider/studentHome.php');
-			$studentCount = 0;
-		}
+		
+		if ($passord == "admin" && $id == "admin") { 
 
-		else if ($ansattCount > 0) {
-			$_SESSION["username"] = $id;
-			$_SESSION['foreleser'] = true;
-			header('Location: foreleserSider/foreleserHome.php');
-			$ansattCount = 0;
+			$_SESSION['admin'] = true;
+			header('Location: admin.php');
+
 		}
 
 		else {
-            echo "Invalid username and password";
-        }
+
+			//Sjekker igjennom student tabellen:
+			$studentabell = "SELECT count(*) as cntStudent from students where studentID = '$id' AND passord ='$passord'";
+			$resultat1 = mysqli_query($con,$studentabell);
+			$row1 = mysqli_fetch_array($resultat1);
+			
+			//Sjekker igjennom ansatt tabellen:
+			$ansatttabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$id' AND passord ='$passord'";
+			$resultat2 = mysqli_query($con,$ansatttabell);
+			$row2 = mysqli_fetch_array($resultat2);
+
+			$studentCount = $row1['cntStudent'];
+			$ansattCount = $row2['cntForeleser'];
+
+			if ($studentCount > 0){
+				$_SESSION["username"] = $id;
+				header('Location: studentSider/studentHome.php');
+				$studentCount = 0;
+			}
+
+			else if ($ansattCount > 0) {
+				$_SESSION["username"] = $id;
+				
+				header('Location: foreleserSider/foreleserHome.php');
+				$ansattCount = 0;
+			}
+
+			else {
+				echo "Invalid username and password";
+			}
+		
+		}
 	}
 }
 ?>
@@ -60,33 +70,32 @@ if(isset($_GET['logginn'])) {
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
   
-  
-  <body>
+	<body>
   	
-  	<header>
-		<nav class="navbar has-background-grey-light" role="navigation" aria-label="main navigation">
-			
-		  <div id="navbarBasicExample" class="navbar-menu">
-		    <div class="navbar-start">
-		    	
-		      <a class="navbar-item is-active">HJEM</a>
-		      <a class="navbar-item" href="gjesteSider/emner.php">EMNER</a>
-			
-			</div>
-		   </div>
-		</nav>
-	</header>
+		<header>
+
+			<nav class="navbar has-background-grey-light" role="navigation" aria-label="main navigation">
+				
+				<div class="navbar-menu">
+
+					<div class="navbar-start">
+						
+						<a class="navbar-item is-active">HJEM</a>
+						<a class="navbar-item" href="gjesteSider/emner.php">EMNER</a>
+					
+					</div>
+
+				</div>
+
+			</nav>
+
+		</header>
 	
 		<div class="columns">
 			
 		  <div class="column is-half " class="column">
 		  	
-		  	<!--Header-->
-		  	
-    	  	<div id="header"  class="container is-vcentered">
-      			<h1 class="subtitle is-2 is-vcentered" id="quotes"></h1>
-      		<p id="name"></p>
-    		</div>
+
 		  </div>
 		  
 		  <!--Login Card-->
@@ -139,13 +148,11 @@ if(isset($_GET['logginn'])) {
 					<div class="level-right">
 					
 					<p class="control">
-						<p class="is-vcentered">Ikke registrert? <a href="login/registrer.php">Trykk her!</a></p> 
+						<p class="is-vcentered">Ikke registrert? <a href="registrer.php">Trykk her!</a></p> 
 						
 					</p>
 
 					</div>
-
-					
 
 					<br> 
 

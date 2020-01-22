@@ -2,32 +2,47 @@
 
     include "../connection.php";
 
-    //Bruker autentisering
-    session_start();
+    //Brukerautentisering
 
-    if (!isset($_SESSION['student'])) {
-        header("Location: ../hjem.php"); 
-    }
+	//Starter session
+	session_start();
+	
+	global $con;
+	//Henter studentID/ansattID lagret i session
+    $username = $_SESSION['username'];
+
+	//Sjekker igjennom "students tabellen":
+	$studentabell = "SELECT count(*) as cntStudent from students where studentID = '$username'";
+	$resultat1 = mysqli_query($con,$studentabell);
+	$row1 = mysqli_fetch_array($resultat1);
+	
+	//Sjekker igjennom "foreleser tabellen":
+	$forelesertabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$username'";
+	$resultat2 = mysqli_query($con,$forelesertabell);
+	$row2 = mysqli_fetch_array($resultat2);
+
+	$studentCount = $row1['cntStudent'];
+	$foreleserCount = $row2['cntForeleser'];
+
+	//Dersom "username" finnes i "foreleser tabellen" blir brukeren sendt tilbake til startside.
+	if ($foreleserCount > 0){
+		header('Location: ../hjem.php');
+  	}
     
-
-
-
-		
 	function visEmner() {
-			
-		global $con;	
-		
-		$sql = "SELECT * FROM emner ";
+
+		global $con;
+
+		$sql = "SELECT navn FROM `emner` ";
 
 		$resultat = mysqli_query($con,$sql);
 
-		$array = array();
-		while($row = mysqli_fetch_assoc($resultat)){
-			$array[] = $row;
-		}
-		
-		return $array;	
+		while($row = $resultat->fetch_assoc()) {
+			echo "<option value=" . $row['navn'] . ">" . $row['navn'] . "</option>";
+		}	
+
 	}
+	
 ?>
 
 <!DOCTYPE html>
@@ -76,15 +91,34 @@
 
     <div class="content">
     	
-    	<div class="content">
-    	
     	<nav class="level">
   			<!-- Left side -->
-		  	<div class="level-left">
-			    <div class="level-item">
-			      
-			    </div>
+		  	<div  class="level-left">
+
+			  	<form>
+
+			    	<div class="level-item">
+					
+						<div id="emnerSelect" class="select">
+
+							<select id="emnerDD"  name="dropdownEmner">
+
+								<option>Emner</option>
+
+								<?= visEmner()?>
+
+							</select>
+
+						</div>
+
+						<div class="level-item">
+							<button class="button is-primary" name="filtrer">  Søk  </button>
+						</div>
+
+					</div> 
+				</form>
 			</div>
+			
 
   			<!-- Right side -->
   			<div class="level-right is-vcentered">
@@ -93,44 +127,60 @@
   					
     			</div>
     			
-    		
   			</div>
   			
 		</nav>
 		
     	<hr>
     	
-	<div class="container">
-		<div class="column">
-  					
-   	 		<table class="table">
-			  <thead>
-			    <tr>
-			      <th>Emnekode</th>
-			      <th>Navn</th>
-			      <th>Foreleser</th>
-			      <th>Foreleser ID</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			  	
-			    <?php 
-			    
-					$row = visEmner();
-					  
-					for ($i=0; $i < sizeof($row); $i++) { 
-					echo "<tr><td>" . $row[$i]["emneKode"]. "</td>
-					<td>" . $row[$i]["navn"] . "</td>
-					<td>" . $row[$i]["foreleserNavn"]. "</td>
-					<td>" . $row[$i]["foreleserID"] . "</td></tr>";
-					}
-	      		?>	
-			    
-			     
-			  </tbody>
-			 </table>
-  		
-  			</div>
+		<div class="container">
+
+			<div class="column">
+						
+				<table class="table">
+
+					<thead>
+						<tr>
+							<th>Emnekode</th>
+							<th>Navn</th>
+							<th>Foreleser</th>
+							<th>Foreleser ID</th>
+						</tr>
+					</thead>
+				
+				<tbody>
+				<tbody>
+						<?php
+
+							if(isset($_GET['filtrer'])) {
+
+								global $con;
+
+								$dropdownEmner = $_GET['dropdownEmner'];
+
+								$sql = "SELECT * FROM emner WHERE navn = '$dropdownEmner'";
+
+								$result = $con->query($sql) or die($con->error);
+
+								echo $dropdownEmner;
+
+								while($row = $result->fetch_assoc()) {
+									echo "<tr><td>" . $row["emneKode"] . "</td>
+									<td>" . $row["navn"] . "</td>
+									<td>" . $row["foreleserNavn"] . "</td>
+									<td>" . $row["foreleserID"] . "</td></tr>";
+								}	
+							}
+						?>
+					</tbody>
+					
+					
+					
+				</tbody>
+				
+				</table>
+			
+			</div>
   
 		</div>
 	

@@ -2,21 +2,6 @@
 
 	include "../connection.php";
 		
-	function visEmner() {
-			
-		global $con;	
-		
-		$sql = "SELECT * FROM emner ";
-
-		$resultat = mysqli_query($con,$sql);
-
-		$array = array();
-		while($row = mysqli_fetch_assoc($resultat)){
-			$array[] = $row;
-		}
-		
-		return $array;	
-	}
 ?>
 
 <!DOCTYPE html>
@@ -64,66 +49,90 @@
 
 
     <div class="content">
+	
     	
-    	<div class="content">
-    	
-    	<nav class="level">
-  			<!-- Left side -->
-		  	<div class="level-left">
-			    <div class="level-item">
-			      
-			    </div>
+		<nav class="level">
+
+			<!-- Left side -->
+			<div class="level-left">
+				<div class="level-item">
+					<div class="field has-addons">
+
+						<form	>
+
+						
+							<div class="control">
+								<input class="input" type="text" name="pinKode" placeholder="PIN Kode - 0000">
+							</div>
+
+							<div class="control">
+								<button name="sok">Søk</button>
+							</div>
+
+						</form>	
+						
+
+					</div>
+				</div>
 			</div>
 
-  			<!-- Right side -->
-  			<div class="level-right is-vcentered">
-  				
-  				<div class="level-item is-vcentered">
-  					
-    			</div>
-    			
-    		
-  			</div>
-  			
+			<!-- Right side -->
+			<div class="level-right is-vcentered">
+				
+				<div class="level-item is-vcentered"></div>
+			
+			</div>
+		
 		</nav>
 		
     	<hr>
     	
-	<div class="container">
-		<div class="column">
-  					
-   	 		<table class="table">
-			  <thead>
-			    <tr>
-			      <th>Emnekode</th>
-			      <th>Navn</th>
-			      <th>Foreleser</th>
-			      <th>Foreleser ID</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			  	
-			    <?php 
-			    
-					$row = visEmner();
-					  
-					for ($i=0; $i < sizeof($row); $i++) { 
-					echo "<tr><td>" . $row[$i]["emneKode"]. "</td>
-					<td>" . $row[$i]["navn"] . "</td>
-					<td>" . $row[$i]["foreleserNavn"]. "</td>
-					<td>" . $row[$i]["foreleserID"] . "</td></tr>";
-					}
-	      		?>	
-			    
-			     
-			  </tbody>
-			 </table>
-  		
-  			</div>
-  
+		<div class="container">
+
+			<div class="column">
+						
+				<table class="table">
+					<thead>
+						<tr>
+						<th>Emnekode</th>
+						<th>Navn</th>
+						<th>Foreleser</th>
+						<th>Foreleser ID</th>
+						<th>	</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<?php
+
+							if(isset($_GET['sok'])) {
+
+								global $con;
+
+								$pinKode = $_GET['pinKode']; 
+
+								$sql = "SELECT * FROM emner WHERE $pinKode = PIN ";
+
+								$resultat = mysqli_query($con,$sql);
+
+								while($row = $resultat->fetch_assoc()) {
+									echo "<tr><td>" . $row["emneKode"] . "</td>
+									<td>" . $row["navn"] . "</td>
+									<td>" . $row["foreleserNavn"] . "</td>
+									<td>" . $row["foreleserID"] . "<td><a href='tilbakemeldinger.php'>" . "Se tilbakemeldinger" . "</a></td></tr>";
+								}	
+							}
+						?>
+					</tbody>
+				</table>
+			
+			</div>
+	
 		</div>
 	
-	<hr>
+		<hr>				
+
+	</div>
 	
 
 
