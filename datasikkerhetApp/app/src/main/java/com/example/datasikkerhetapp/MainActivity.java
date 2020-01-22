@@ -1,34 +1,123 @@
 package com.example.datasikkerhetapp;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.MenuItem;
 
-import java.net.HttpURLConnection;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private DrawerLayout drawerLayout;
+    private NavigationView navView;
+    ArrayList<Course> courses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setup(savedInstanceState);
+
+        populateArrayList();
+    }
+
+    private void setup(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
 
-        //HttpURLConnection connection =
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        Button btnLogIn = findViewById(R.id.btnLogIn);
-        final TextView textView = findViewById(R.id.txtTest);
+        drawerLayout = findViewById(R.id.activity_main);
 
+        navView = findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.courseListBtn:
+                        uncheckItem();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
+                        break;
+                    case R.id.changePwBtn:
+                        uncheckItem();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChangePwFragment()).commit();
+                        break;
+                    case R.id.logOutBtn:
+                        startActivity(new Intent(MainActivity.this, StartActivity.class));
+                        break;
+                }
 
-        btnLogIn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                CharSequence charSequence = "o o f";
-                textView.setText(charSequence);
+                drawerLayout.closeDrawer(GravityCompat.START);
+
+                return true;
             }
         });
 
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
+        }
+    }
+
+
+    public void uncheckItem() {
+        if (navView.getCheckedItem() != null) {
+            MenuItem mItem = navView.getCheckedItem();
+            mItem.setChecked(false);
+        }
+    }
+
+    private void populateArrayList() {
+        //Testdata:
+        courses = new ArrayList<>();
+        courses.add(new Course("ITF10619", "Programmering 2"));
+        courses.add(new Course("ITF25019", "Datasikkerhet i utvikling og drift"));
+        courses.add(new Course("ITF20119", "Rammeverk"));
+    }
+
+    public ArrayList<Course> getCourses() {
+        return courses;
+    }
+
+
+    /*
+    private void shareBetweenFragments() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        CourseListFragment clf = new CourseListFragment();
+        CourseFragment cf = new CourseFragment();
+        ft.add(R.id.fragment_container, clf);
+        ft.add(R.id.fragment_container, cf);
+        ft.commit();
+    }
+
+    public void send(Course aCourse) {
+
+    }
+
+     */
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
