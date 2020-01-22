@@ -12,12 +12,14 @@ public class API {
     }
 
     //Generell kommando til å lage en URL for sending
-    public String sendInformasjon (String naaverendeURL, ArrayList<String> felt, ArrayList<String> info){
+    public String sendInformasjon (String naaverendeURL, ArrayList<String> feltNavn, ArrayList<String> info){
+
         String URL = naaverendeURL;
-        if(felt.size() == info.size()){
-            URL += ("?" + felt.get(0) + "&" + info.get(0));
-            for (int i = 1; i < felt.size(); i++){
-                URL += ("&" + felt.get(1) + "&" + info.get(1));
+
+        if(feltNavn.size() == info.size()){
+            URL += ("?" + feltNavn.get(0) + "&" + info.get(0));
+            for (int i = 1; i < feltNavn.size(); i++){
+                URL += ("&" + feltNavn.get(1) + "&" + info.get(1));
             }
         }
 
