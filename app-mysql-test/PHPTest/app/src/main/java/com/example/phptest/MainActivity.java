@@ -18,16 +18,11 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.phptest.model.Course;
-import com.example.phptest.model.Spacecraft;
 import com.example.phptest.mysql.Downloader;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    //spacecraft_select.php is our pho code. It is contained in
-    //a folder called `android`. : `C:wampwwwandroidspacecraft_select.php`
 
     private static final String urlAddress="http://192.168.4.108/datasikkerhet/test/getcourses.php";
 
@@ -35,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         final ListView lv= findViewById(R.id.lv);
 
