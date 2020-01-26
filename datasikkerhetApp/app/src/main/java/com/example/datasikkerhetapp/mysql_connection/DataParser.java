@@ -3,13 +3,14 @@ package com.example.datasikkerhetapp.mysql_connection;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ListView;
 import android.widget.Toast;
 
 
-
-import com.example.datasikkerhetapp.CustomAdapter;
+import com.example.datasikkerhetapp.CourseListFragment;
+import com.example.datasikkerhetapp.MainActivity;
+import com.example.datasikkerhetapp.R;
 import com.example.datasikkerhetapp.model.Course;
+import com.example.datasikkerhetapp.model.Lecturer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,15 +21,13 @@ import java.util.ArrayList;
 public class DataParser  extends AsyncTask<Void,Void,Integer>{
 
     Context c;
-    ListView lv;
     String jsonData;
 
     ProgressDialog pd;
     ArrayList<Course> courses =new ArrayList<>();
 
-    public DataParser(Context c, ListView lv, String jsonData) {
+    public DataParser(Context c, String jsonData) {
         this.c = c;
-        this.lv = lv;
         this.jsonData = jsonData;
     }
 
@@ -56,9 +55,12 @@ public class DataParser  extends AsyncTask<Void,Void,Integer>{
         {
             Toast.makeText(c,"Unable to parse",Toast.LENGTH_SHORT).show();
         }else {
-            //CALL ADAPTER TO BIND DATA
-            CustomAdapter adapter=new CustomAdapter(c, courses);
-            lv.setAdapter(adapter);
+            MainActivity ma = (MainActivity) c;
+            ma.setCourses(courses);
+
+            ma.showCourselist();
+
+            System.out.println("Courses are set! :^)");
         }
     }
 
@@ -66,19 +68,31 @@ public class DataParser  extends AsyncTask<Void,Void,Integer>{
     {
         try {
             JSONArray ja=new JSONArray(jsonData);
-            JSONObject jo = null;
+            JSONObject jo;
 
             courses.clear();
-            Course course = null;
+            Course course;
 
             for(int i=0;i<ja.length();i++)
             {
                 jo=ja.getJSONObject(i);
 
-                String code=jo.getString("code");
-                String name=jo.getString("name");
+                String code=jo.getString("EmneID");
+                String name=jo.getString("Emnenavn");
 
                 course = new Course(code, name);
+
+                String lecturerName;
+                String lecturerEmail;
+                String lecturerPhoto;
+
+                if (!jo.getString("epost").equals("")) {
+                    lecturerName = jo.getString("navn");
+                    lecturerEmail = jo.getString("epost");
+                    lecturerPhoto = jo.getString("bilde");
+
+                    course.setLecturer(new Lecturer(lecturerName, lecturerEmail, lecturerPhoto));
+                }
 
                 courses.add(course);
 

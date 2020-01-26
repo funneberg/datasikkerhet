@@ -2,20 +2,14 @@ package com.example.datasikkerhetapp.model;
 
 public class Course {
 
-    private static int counter = 0;
-
-    private int id;
     private String code;
     private String name;
+    private Lecturer lecturer;
 
     public Course(String code, String name) {
-        this.id = counter++;
         this.code = code;
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
+        lecturer = null;
     }
 
     public String getCode() {
@@ -24,6 +18,14 @@ public class Course {
 
     public String getName() {
         return name;
+    }
+
+    public Lecturer getLecturer() {
+        return lecturer;
+    }
+
+    public void setLecturer(Lecturer lecturer) {
+        this.lecturer = lecturer;
     }
 
     @Override

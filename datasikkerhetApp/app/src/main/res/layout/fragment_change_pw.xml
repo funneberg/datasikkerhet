@@ -12,6 +12,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="75dp"
         android:text="Gammelt passord"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,13 +36,14 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="47dp"
+        android:textColor="#000000"
         android:text="Nytt passord"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <EditText
-        android:id="@+id/txtPasswordCheck"
+        android:id="@+id/txtNewPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
@@ -59,13 +61,14 @@
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="47dp"
+        android:textColor="#000000"
         android:text="Gjenta nytt passord"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <EditText
-        android:id="@+id/txtPasswordCheck2"
+        android:id="@+id/txtNewPassword2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -74,7 +77,7 @@
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintStart_toEndOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/txtPasswordCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNewPassword" />
 
     <Button
         android:id="@+id/btnChangePw"
@@ -85,6 +88,6 @@
         android:layout_marginTop="48dp"
         android:text="Endre passord"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPasswordCheck2" />
+        app:layout_constraintTop_toBottomOf="@+id/txtNewPassword2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

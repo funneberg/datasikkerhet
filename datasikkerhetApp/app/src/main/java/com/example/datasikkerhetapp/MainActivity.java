@@ -12,23 +12,30 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.datasikkerhetapp.model.Course;
+import com.example.datasikkerhetapp.mysql_connection.Downloader;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String URL_GETCOURSES="http://192.168.1.10/datasikkerhet/php_test/php/getcourses.php";
+
     private DrawerLayout drawerLayout;
     private NavigationView navView;
-    ArrayList<Course> courses;
+    private ArrayList<Course> courses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setup(savedInstanceState);
 
-        populateArrayList();
+        Downloader d=new Downloader(MainActivity.this, URL_GETCOURSES);
+        d.execute();
+
+        System.out.println("Starting setup :^)");
+
+        setup(savedInstanceState);
     }
 
     private void setup(Bundle savedInstanceState) {
@@ -67,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
         }
     }
 
@@ -79,12 +86,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void populateArrayList() {
-        //Testdata:
-        courses = new ArrayList<>();
-        courses.add(new Course("ITF10619", "Programmering 2"));
-        courses.add(new Course("ITF25019", "Datasikkerhet i utvikling og drift"));
-        courses.add(new Course("ITF20119", "Rammeverk"));
+    public void setCourses(ArrayList<Course> courses) {
+        this.courses = courses;
     }
 
     public ArrayList<Course> getCourses() {
@@ -116,5 +119,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void showCourselist() {
+        System.out.println("Bruh...");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
     }
 }

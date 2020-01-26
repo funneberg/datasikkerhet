@@ -40,16 +40,15 @@ public class CourseListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        String urlAddress = "http://192.168.4.108/datasikkerhet/test/getcourses.php";
-
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
 
         linearLayout = view.findViewById(R.id.courseList);
 
         MainActivity ma = (MainActivity) getActivity();
 
-        ArrayList<Course> courses = ma.getCourses();
+        ArrayList<Course> courses = null;
+
+        courses = ma.getCourses();
 
         for (final Course aCourse : courses) {
 
@@ -78,8 +77,13 @@ public class CourseListFragment extends Fragment {
                     FragmentTransaction ft = fm.beginTransaction();
 
                     Bundle args = new Bundle();
-                    args.putString("ID", aCourse.getCode());
-                    args.putString("Course", aCourse.getName());
+                    args.putString("Coursecode", aCourse.getCode());
+                    /*
+                    args.putString("Coursename", aCourse.getName());
+                    args.putString("Course", aCourse.getLecturer().getName());
+                    args.putString("Email", aCourse.getLecturer().getEmail());
+                    args.putString("Photo", aCourse.getLecturer().getImgString());
+                     */
 
                     cf.setArguments(args);
                     ft.replace(R.id.fragment_container, cf);

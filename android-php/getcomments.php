@@ -2,9 +2,7 @@
 
 include "connection.php";
 
-$sql="SELECT e.*, f.navn, f.epost, f.bilde
-FROM emner e LEFT JOIN foreleser_has_emner ehf ON (e.EmneID = ehf.emnekode)
-LEFT JOIN foreleser f ON (ehf.foreleserEpost = f.epost)";
+$sql="select * from henvendelse h left join kommentar k on h.henvendelseID = k.kommentarTil";
 
 $result=mysqli_query($conn,$sql);
 

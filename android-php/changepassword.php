@@ -23,7 +23,7 @@ if(isset($_POST['email']) && isset($_POST['oldPassword']) && isset($_POST['newPa
                 $stmt->execute();
                 $stmt->store_result();
                 $response['error'] = false;
-                $response['message'] = "Password updated";
+                $response['message'] = "Passordet er endret";
             }
             else {
                 $error = $conn->errno." ".$conn->error;
@@ -32,42 +32,17 @@ if(isset($_POST['email']) && isset($_POST['oldPassword']) && isset($_POST['newPa
         }
         else {
             $response['error'] = false;
-            $response['message'] = "Wrong password";
+            $response['message'] = "Nytt passord var ikke riktig";
         }
     }
     else {
         $response['error'] = false;
-		$response['message'] = "Wrong password grr";
+		$response['message'] = "Feil passord";
     }
 } else{
 	$response['error'] = true;
-	$response['message'] = "Insufficient Parameters";
+    $response['message'] = "Alle feltene må fylles ut";
 }
-echo json_encode($response);
+print(json_encode($response));
 
 ?>
-
-<form method="post">
-
-    <div>
-        <label for="email">E-post:</label><br/>
-        <input name="email" type="email" />
-    </div>
-
-    <div>
-        <label for="oldPassword">Gammelt passord:</label><br/>
-        <input name="oldPassword" type="password" />
-    </div>
-    
-    <div>
-        <label for="newPassword1">Nytt passord:</label><br/>
-        <input name="newPassword1" type="password" />
-    </div>
-    
-    <div>
-        <label for="newPassword2">Nytt passord igjen:</label><br/>
-        <input name="newPassword2" type="password" />
-    </div>
-    <input type="submit" />
-
-</form>

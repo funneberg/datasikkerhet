@@ -17,14 +17,12 @@ public class Downloader extends AsyncTask<Void,Void,String> {
 
     Context c;
     String urlAddress;
-    ListView lv;
 
     ProgressDialog pd;
 
-    public Downloader(Context c, String urlAddress, ListView lv) {
+    public Downloader(Context c, String urlAddress) {
         this.c = c;
         this.urlAddress = urlAddress;
-        this.lv = lv;
     }
 
     @Override
@@ -56,7 +54,7 @@ public class Downloader extends AsyncTask<Void,Void,String> {
         else
         {
             //CALL DATA PARSER TO PARSE
-            DataParser parser=new DataParser(c,lv,s);
+            DataParser parser=new DataParser(c,s);
             parser.execute();
 
         }
@@ -86,11 +84,13 @@ public class Downloader extends AsyncTask<Void,Void,String> {
 
             while ((line=br.readLine()) != null)
             {
-                response.append(line+"n");
+                response.append(line+"\n");
             }
             System.out.println("The response, m'dudes: " + response.toString());
 
             br.close();
+
+            System.out.println("Response: " + response.toString());
 
             return response.toString();
 

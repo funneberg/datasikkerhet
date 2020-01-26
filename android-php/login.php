@@ -13,23 +13,23 @@ if(isset($_POST['email']) && isset($_POST['password'])){
     $stmt->fetch();
 	if($post_password == $db_password){
 		$response['error'] = false;
-		$response['message'] = "Login Successful!";
+		$response['message'] = "Du er logget inn";
         $response['name'] = $db_name;
         $response['email'] = $email;
         $response['fieldOfStudy'] = $db_fieldOfStudy;
         $response['year'] = $db_year;
 	} else{
 		$response['error'] = false;
-		$response['message'] = "Invalid Email or Password";
+		$response['message'] = "Feil epost eller passord";
 	}
 } else {
 	$response['error'] = true;
-	$response['message'] = "Insufficient Parameters";
+	$response['message'] = "Alle feltene må fylles ut";
 }
 echo json_encode($response);
 
 ?>
-
+<!--
 <form method="post">
 
     <div>
@@ -43,3 +43,4 @@ echo json_encode($response);
     <input name="submit" type="submit" />
 
 </form>
+-->
