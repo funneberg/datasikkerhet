@@ -75,7 +75,7 @@ if(isset($_GET['foreleserSubmit'])) {
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
             
-            <a class="navbar-item is-active has-text-white subtitle is-6"  href="hjem.php">TILBAKE</a>
+            <a class="navbar-item is-active has-text-white subtitle is-6"  href="index.php">TILBAKE</a>
           
         </div>
         </div>

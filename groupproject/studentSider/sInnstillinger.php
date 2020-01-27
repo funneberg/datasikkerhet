@@ -27,7 +27,7 @@
 
 	//Dersom "username" finnes i "foreleser tabellen" blir brukeren sendt tilbake til startside.
 	if ($foreleserCount > 0){
-		header('Location: ../hjem.php');
+		header('Location: ../index.php');
   }
     
 

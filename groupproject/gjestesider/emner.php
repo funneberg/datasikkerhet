@@ -27,7 +27,7 @@
 		  <div id="navbarBasicExample" class="navbar-menu">
 		    <div class="navbar-start">
 		    	
-		      <a class="navbar-item has-text-white is-3" href="../hjem.php">HJEM</a>
+		      <a class="navbar-item has-text-white is-3" href="../index.php">HJEM</a>
 		      <a class="navbar-item is-active" href="emner.php">EMNER</a>
 			
 			</div>
