@@ -1,22 +1,33 @@
 package com.example.datasikkerhetapp.model;
 
-public class Comment {
+import java.util.Collections;
 
-    private Person sender;
-    private int parentCommentID;
+public class Comment implements Comparable<Comment> {
+
+    private int id;
     private String comment;
+    private boolean user;
 
-    public Comment(Person sender, int parentCommentID, String comment) {
-        this.sender = sender;
-        this.parentCommentID = parentCommentID;
+    public Comment(int id, String comment, boolean user) {
+        this.id = id;
+        this.user = user;
         this.comment = comment;
     }
 
-    public Comment(int parentCommentID, String comment) {
-        sender = null;
-        this.parentCommentID = parentCommentID;
-        this.comment = comment;
+    public int getId() {
+        return id;
     }
 
+    public String getComment() {
+        return comment;
+    }
 
+    public boolean isUser() {
+        return user;
+    }
+
+    @Override
+    public int compareTo(Comment c) {
+        return c.id - id;
+    }
 }

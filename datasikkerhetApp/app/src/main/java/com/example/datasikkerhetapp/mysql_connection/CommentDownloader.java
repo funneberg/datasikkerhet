@@ -3,7 +3,6 @@ package com.example.datasikkerhetapp.mysql_connection;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -13,14 +12,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class Downloader extends AsyncTask<Void,Void,String> {
+public class CommentDownloader extends AsyncTask<Void,Void,String> {
 
     Context c;
     String urlAddress;
 
     ProgressDialog pd;
 
-    public Downloader(Context c, String urlAddress) {
+    public CommentDownloader(Context c, String urlAddress) {
         this.c = c;
         this.urlAddress = urlAddress;
     }
@@ -54,7 +53,7 @@ public class Downloader extends AsyncTask<Void,Void,String> {
         else
         {
             //CALL DATA PARSER TO PARSE
-            DataParser parser=new DataParser(c,s);
+            CommentDataParser parser=new CommentDataParser(c,s);
             parser.execute();
 
         }
@@ -66,16 +65,11 @@ public class Downloader extends AsyncTask<Void,Void,String> {
         HttpURLConnection con=Connector.connect(urlAddress);
         if(con==null)
         {
-            System.out.println("No connection... sadface");
             return null;
         }
-        System.out.println("Connection: " + con + " wahwahwah!!!");
 
         InputStream is=null;
         try {
-
-            System.out.println("InputStream 1: " + con.getInputStream());
-
             is=new BufferedInputStream(con.getInputStream());
             BufferedReader br=new BufferedReader(new InputStreamReader(is));
 
@@ -86,19 +80,14 @@ public class Downloader extends AsyncTask<Void,Void,String> {
             {
                 response.append(line+"\n");
             }
-            System.out.println("The response, m'dudes: " + response.toString());
 
             br.close();
-
-            System.out.println("Response: " + response.toString());
 
             return response.toString();
 
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }finally {
-            System.out.println("InputStream 2: " + is);
             if(is != null)
             {
                 try {
@@ -111,4 +100,5 @@ public class Downloader extends AsyncTask<Void,Void,String> {
 
         return null;
     }
+
 }

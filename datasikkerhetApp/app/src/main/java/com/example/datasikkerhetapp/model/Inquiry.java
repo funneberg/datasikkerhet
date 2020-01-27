@@ -2,31 +2,52 @@ package com.example.datasikkerhetapp.model;
 
 import java.util.ArrayList;
 
-public class Inquiry {
+public class Inquiry implements Comparable<Inquiry> {
 
     private int id;
-    private Student sender;
-    private Lecturer reciever;
+    private boolean user;
     private String inquiry;
-    private Comment response;
+    private String response;
     private ArrayList<Comment> comments;
 
-    public Inquiry(int id, Student sender, Lecturer reciever, String inquiry, ArrayList<Comment> comments) {
+    public Inquiry(int id, boolean user, String inquiry, ArrayList<Comment> comments) {
         this.id = id;
-        this.sender = sender;
-        this.reciever = reciever;
+        this.user = user;
         this.inquiry = inquiry;
         this.comments = comments;
         response = null;
     }
 
-    public Inquiry(int id, Student sender, Lecturer reciever, String inquiry, ArrayList<Comment> comments, Comment response) {
+    public Inquiry(int id, boolean user, String inquiry, ArrayList<Comment> comments, String response) {
         this.id = id;
-        this.sender = sender;
-        this.reciever = reciever;
+        this.user = user;
         this.inquiry = inquiry;
         this.response = response;
         this.comments = comments;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public boolean isUser() {
+        return user;
+    }
+
+    public String getInquiry() {
+        return inquiry;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public ArrayList<Comment> getComments() {
+        return comments;
+    }
+
+    @Override
+    public int compareTo(Inquiry i) {
+        return i.id - id;
+    }
 }

@@ -62,7 +62,7 @@ public class CourseListFragment extends Fragment {
             cardView.setLayoutParams(layoutParams);
             cardView.setRadius(9);
             cardView.setContentPadding(15,30,15,30);
-            cardView.setCardBackgroundColor(Color.LTGRAY);
+            cardView.setCardBackgroundColor(Color.parseColor("#80D8FF"));
             cardView.setMaxCardElevation(5);
             cardView.setCardElevation(2);
             cardView.setUseCompatPadding(true);
@@ -71,23 +71,32 @@ public class CourseListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    CourseFragment cf = new CourseFragment();
+                    /*CourseFragment cf = new CourseFragment();
 
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
 
+                    ((MainActivity) getActivity()).setChosenCourse(aCourse);
+
                     Bundle args = new Bundle();
                     args.putString("Coursecode", aCourse.getCode());
-                    /*
-                    args.putString("Coursename", aCourse.getName());
-                    args.putString("Course", aCourse.getLecturer().getName());
-                    args.putString("Email", aCourse.getLecturer().getEmail());
-                    args.putString("Photo", aCourse.getLecturer().getImgString());
-                     */
+
+                    //args.putString("Coursename", aCourse.getName());
+                    //args.putString("Course", aCourse.getLecturer().getName());
+                    //args.putString("Email", aCourse.getLecturer().getEmail());
+                    //args.putString("Photo", aCourse.getLecturer().getImgString());
+
 
                     cf.setArguments(args);
                     ft.replace(R.id.fragment_container, cf);
-                    ft.commit();
+                    ft.commit();*/
+
+                    MainActivity ma = (MainActivity) getActivity();
+
+                    ma.setChosenCourse(aCourse);
+
+                    ma.showCourse();
+
                 }
             });
 

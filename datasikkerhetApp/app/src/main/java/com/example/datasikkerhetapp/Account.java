@@ -6,11 +6,11 @@ public class Account {
 
     private static Student activeUser;
 
-    static void setActiveUser(String name, String email, String fieldOfStudy, String year) {
+    public static void setActiveUser(String name, String email, String fieldOfStudy, String year) {
         activeUser = new Student(name, email, fieldOfStudy, Integer.parseInt(year));
     }
 
-    static Student getActiveUser() {
+    public static Student getActiveUser() {
         return activeUser;
     }
 

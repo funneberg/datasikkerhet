@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.datasikkerhetapp.model.Course;
-import com.example.datasikkerhetapp.mysql_connection.Downloader;
+import com.example.datasikkerhetapp.model.Inquiry;
+import com.example.datasikkerhetapp.mysql_connection.CommentDownloader;
+import com.example.datasikkerhetapp.mysql_connection.CourseDownloader;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -20,17 +22,20 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private static final String URL_GETCOURSES="http://192.168.1.10/datasikkerhet/php_test/php/getcourses.php";
+    private static final String URL_GET_COMMENTS = "http://192.168.1.10/datasikkerhet/php_test/php/getcomments.php?coursecode=";
 
     private DrawerLayout drawerLayout;
     private NavigationView navView;
     private ArrayList<Course> courses;
+    private ArrayList<Inquiry> courseInquiries;
+    private Course chosenCourse = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Downloader d=new Downloader(MainActivity.this, URL_GETCOURSES);
+        CourseDownloader d=new CourseDownloader(MainActivity.this, URL_GETCOURSES);
         d.execute();
 
         System.out.println("Starting setup :^)");
@@ -86,14 +91,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void setChosenCourse(Course chosenCourse) {
+        this.chosenCourse = chosenCourse;
+    }
+
     public void setCourses(ArrayList<Course> courses) {
         this.courses = courses;
+    }
+
+    public void setCourseInquiries(ArrayList<Inquiry> courseInquiries) {
+        this.courseInquiries = courseInquiries;
     }
 
     public ArrayList<Course> getCourses() {
         return courses;
     }
 
+    public ArrayList<Inquiry> getCourseInquiries() {
+        return courseInquiries;
+    }
+
+    public Course getChosenCourse() {
+        return chosenCourse;
+    }
 
     /*
     private void shareBetweenFragments() {
@@ -122,7 +142,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCourselist() {
-        System.out.println("Bruh...");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
+    }
+
+    public void showCourse() {
+        CommentDownloader d=new CommentDownloader(MainActivity.this, URL_GET_COMMENTS + chosenCourse.getCode());
+        d.execute();
     }
 }

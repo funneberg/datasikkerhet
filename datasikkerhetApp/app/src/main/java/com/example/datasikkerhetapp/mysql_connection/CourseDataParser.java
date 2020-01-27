@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class DataParser  extends AsyncTask<Void,Void,Integer>{
+public class CourseDataParser extends AsyncTask<Void,Void,Integer>{
 
     Context c;
     String jsonData;
@@ -26,7 +26,7 @@ public class DataParser  extends AsyncTask<Void,Void,Integer>{
     ProgressDialog pd;
     ArrayList<Course> courses =new ArrayList<>();
 
-    public DataParser(Context c, String jsonData) {
+    public CourseDataParser(Context c, String jsonData) {
         this.c = c;
         this.jsonData = jsonData;
     }
@@ -59,8 +59,6 @@ public class DataParser  extends AsyncTask<Void,Void,Integer>{
             ma.setCourses(courses);
 
             ma.showCourselist();
-
-            System.out.println("Courses are set! :^)");
         }
     }
 
@@ -71,16 +69,15 @@ public class DataParser  extends AsyncTask<Void,Void,Integer>{
             JSONObject jo;
 
             courses.clear();
-            Course course;
 
             for(int i=0;i<ja.length();i++)
             {
                 jo=ja.getJSONObject(i);
 
-                String code=jo.getString("EmneID");
-                String name=jo.getString("Emnenavn");
+                String code=jo.getString("emnekode");
+                String name=jo.getString("emnenavn");
 
-                course = new Course(code, name);
+                Course course = new Course(code, name);
 
                 String lecturerName;
                 String lecturerEmail;
