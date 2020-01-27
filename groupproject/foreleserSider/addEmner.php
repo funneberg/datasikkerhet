@@ -26,7 +26,7 @@
 
 	//Dersom "username" finnes i student tabellen blir brukeren sendt tilbake til startside.
 	if ($studentCount > 0){
-		header('Location: ../hjem.php');
+		header('Location: ../index.php');
 	}
 
     if(isset($_GET['leggTil'])){

@@ -4,6 +4,6 @@ session_start();
 
 session_destroy();
 
-header("Location: hjem.php"); 
+header("Location: index.php"); 
 
 ?>
