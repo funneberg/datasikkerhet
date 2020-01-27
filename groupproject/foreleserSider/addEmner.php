@@ -21,6 +21,7 @@
 	$resultat2 = mysqli_query($con,$ansatttabell);
 	$row2 = mysqli_fetch_array($resultat2);
 
+
 	$studentCount = $row1['cntStudent'];
 	$ansattCount = $row2['cntForeleser'];
 
@@ -29,15 +30,22 @@
 		header('Location: ../index.php');
 	}
 
-    if(isset($_GET['leggTil'])){
+    //Sjekkker om foreleser er godkjent
+    $godkjent = "SELECT godkjent from foreleser where epost ='$username'"
+    $gResultat = mysqli_query($con,$ansatttabell);
+    if($gResultat = true){
+        if(isset($_GET['leggTil'])){
 
-        global $con;
+            global $con;
 
-        $username = $_SESSION['username'];
-        $emneKode = $_GET['emneKode'];
-        $navn = $_GET['navn'];
+            $username = $_SESSION['username'];
+            $emneKode = $_GET['emneKode'];
+            $navn = $_GET['navn'];
 
-        $sql2 = "INSERT INTO emner (navn, emneKode, foreleser) VALUES ( '$navn' , '$emneKode' , '$username' )";
+            $sql2 = "INSERT INTO emner (navn, emneKode, foreleser) VALUES ( '$navn' , '$emneKode' , '$username' )";
+        }
+    if($gResultat = false){
+    echo "Du er ikke godkjent som foreleser, kontakt admin hvis du ikke allerede har gjort det";
     }
 
 
