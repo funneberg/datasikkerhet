@@ -50,7 +50,8 @@ public class PostRequestHandler {
                 }
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -63,10 +64,12 @@ public class PostRequestHandler {
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (first)
+            if (first) {
                 first = false;
-            else
+            }
+            else {
                 result.append("&");
+            }
 
             result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
             result.append("=");

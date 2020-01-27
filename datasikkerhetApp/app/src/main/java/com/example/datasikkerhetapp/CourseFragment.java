@@ -2,8 +2,12 @@ package com.example.datasikkerhetapp;
 
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +32,21 @@ import com.example.datasikkerhetapp.mysql_connection.PostRequestHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 public class CourseFragment extends Fragment {
 
-    private static final String URL_REPORT_INQUIRY = "http://192.168.1.10/datasikkerhet/php_test/php/reportinquiry.php";
-    private static final String URL_REPORT_COMMENT = "http://192.168.1.10/datasikkerhet/php_test/php/reportcomment.php";
-    private static final String URL_SEND_INQUIRY = "http://192.168.1.10/datasikkerhet/php_test/php/sendinquiry.php";
-    private static final String URL_SEND_COMMENT = "http://192.168.1.10/datasikkerhet/php_test/php/comment.php";
+    private static final String IP_ADRESS = "158.39.167.241";
 
+    private static final String URL_REPORT_INQUIRY = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/reportinquiry.php";
+    private static final String URL_REPORT_COMMENT = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/reportcomment.php";
+    private static final String URL_SEND_INQUIRY = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/sendinquiry.php";
+    private static final String URL_SEND_COMMENT = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/comment.php";
+    private static final String URL_IMG = "http://"+IP_ADRESS+"/datasikkerhet/bilder/";
 
     private TextView tv;
     private LinearLayout llLectuter;
@@ -69,8 +77,6 @@ public class CourseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         setup(view);
     }
 
@@ -90,6 +96,8 @@ public class CourseFragment extends Fragment {
 
             nameView.setText(thisCourse.getLecturer().getName());
             emailView.setText(thisCourse.getLecturer().getEmail());
+
+            loadImageFromServerAndSet(imgView);
 
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -165,6 +173,58 @@ public class CourseFragment extends Fragment {
         tv.setText(txtCourse);
 
         showComments();
+    }
+
+    private void loadImageFromServerAndSet(final ImageView imgView) {
+        /*System.out.println("Bilde: " + url);
+        try {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src");
+            System.out.println("wow: " + d);
+            return Drawable.createFromStream(is, "src");
+        } catch (Exception e) {
+            return null;
+        }*/
+
+        class LoadImage extends AsyncTask<Void, Void, Drawable> {
+            ProgressDialog pdLoading = new ProgressDialog(getActivity());
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+                pdLoading.setMessage("\tLoading...");
+                pdLoading.setCancelable(false);
+                pdLoading.show();
+            }
+
+            @Override
+            protected Drawable doInBackground(Void... voids) {
+
+                Drawable drawable = null;
+                try {
+                    InputStream in = (InputStream) new URL(URL_IMG + thisCourse.getLecturer().getImgString()).getContent();
+                    drawable = Drawable.createFromStream(in, "src");
+                } catch (Exception e) {
+                    Log.e("Error", e.getMessage());
+                    e.printStackTrace();
+                }
+                return drawable;
+            }
+
+            @Override
+            protected void onPostExecute(Drawable d) {
+                super.onPostExecute(d);
+                pdLoading.dismiss();
+
+                imgView.setImageDrawable(d);
+
+            }
+        }
+
+
+        LoadImage loadImage = new LoadImage();
+        loadImage.execute();
     }
 
     public void showComments() {

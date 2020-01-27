@@ -6,9 +6,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 
-import com.example.datasikkerhetapp.CourseListFragment;
 import com.example.datasikkerhetapp.MainActivity;
-import com.example.datasikkerhetapp.R;
 import com.example.datasikkerhetapp.model.Course;
 import com.example.datasikkerhetapp.model.Lecturer;
 
@@ -62,34 +60,28 @@ public class CourseDataParser extends AsyncTask<Void,Void,Integer>{
         }
     }
 
-    private int parseData()
-    {
+    private int parseData() {
         try {
             JSONArray ja=new JSONArray(jsonData);
             JSONObject jo;
 
             courses.clear();
 
-            for(int i=0;i<ja.length();i++)
-            {
+            for(int i=0;i<ja.length();i++) {
                 jo=ja.getJSONObject(i);
 
                 String code=jo.getString("emnekode");
                 String name=jo.getString("emnenavn");
 
-                Course course = new Course(code, name);
-
                 String lecturerName;
                 String lecturerEmail;
                 String lecturerPhoto;
 
-                if (!jo.getString("epost").equals("")) {
-                    lecturerName = jo.getString("navn");
-                    lecturerEmail = jo.getString("epost");
-                    lecturerPhoto = jo.getString("bilde");
+                lecturerName = jo.getString("navn");
+                lecturerEmail = jo.getString("epost");
+                lecturerPhoto = jo.getString("bilde");
 
-                    course.setLecturer(new Lecturer(lecturerName, lecturerEmail, lecturerPhoto));
-                }
+                Course course = new Course(code, name, new Lecturer(lecturerName, lecturerEmail, lecturerPhoto));
 
                 courses.add(course);
 
@@ -97,7 +89,8 @@ public class CourseDataParser extends AsyncTask<Void,Void,Integer>{
 
             return 1;
 
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             e.printStackTrace();
         }
 

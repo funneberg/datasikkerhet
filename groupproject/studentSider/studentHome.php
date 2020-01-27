@@ -12,12 +12,12 @@
     $username = $_SESSION['username'];
 
 	//Sjekker igjennom "students tabellen":
-	$studentabell = "SELECT count(*) as cntStudent from students where studentID = '$username'";
+	$studentabell = "SELECT count(*) as cntStudent from student where epost = '$username'";
 	$resultat1 = mysqli_query($con,$studentabell);
 	$row1 = mysqli_fetch_array($resultat1);
 	
 	//Sjekker igjennom "foreleser tabellen":
-	$forelesertabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$username'";
+	$forelesertabell = "SELECT count(*) as cntForeleser from foreleser where epost = '$username'";
 	$resultat2 = mysqli_query($con,$forelesertabell);
 	$row2 = mysqli_fetch_array($resultat2);
 

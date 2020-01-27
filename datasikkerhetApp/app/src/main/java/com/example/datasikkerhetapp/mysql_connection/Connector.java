@@ -20,14 +20,13 @@ public class Connector {
             con.setDoInput(true);
 
             return con;
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
+        catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
-
 }

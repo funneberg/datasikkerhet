@@ -12,12 +12,12 @@
     $username = $_SESSION['username'];
 
 	//Sjekker igjennom student tabellen:
-	$studentabell = "SELECT count(*) as cntStudent from students where studentID = '$username'";
+	$studentabell = "SELECT count(*) as cntStudent from student where epost = '$username'";
 	$resultat1 = mysqli_query($con,$studentabell);
 	$row1 = mysqli_fetch_array($resultat1);
 	
 	//Sjekker igjennom ansatt tabellen:
-	$ansatttabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$username'";
+	$ansatttabell = "SELECT count(*) as cntForeleser from foreleser where epost = '$username'";
 	$resultat2 = mysqli_query($con,$ansatttabell);
 	$row2 = mysqli_fetch_array($resultat2);
 
@@ -37,7 +37,7 @@
         $emneKode = $_GET['emneKode'];
         $navn = $_GET['navn'];
 
-        $sql2 = "INSERT INTO `emner` ( `navn` , `emneKode` , `foreleserID`, `foreleserNavn` ) VALUES ( '$navn' , '$emneKode' , '$username' , (SELECT forelesere.navn FROM forelesere WHERE '$username' = ansattID ) ) ";
+        $sql2 = "INSERT INTO emner (navn, emneKode, foreleser) VALUES ( '$navn' , '$emneKode' , '$username' )";
     }
 
 
@@ -47,13 +47,13 @@
 
         $username = $_SESSION['username'];
 
-        $query = "SELECT * FROM emner WHERE '$username' = foreleserID ";
+        $query = "SELECT emnekode, emnenavn, navn, epost FROM emner, foreleser WHERE foreleser = epost AND foreleser = '$username'";
 
         $resultat = $con->query($query) or die($con->error);
         
 		while($row = $resultat->fetch_assoc()) {
-            echo "<tr><td>" . $row['emneKode'] . "</td>
-            <td>" . $row['navn'] . "</td><td>" . $row['foreleserNavn'] . "<td><a href='meldinger.php?emneKode=" . $row['emneKode'] . "'>" . "Se meldinger" . "</a></td></tr>";
+            echo "<tr><td>" . $row['emnekode'] . "</td>
+            <td>" . $row['navn'] . "</td><td>" . $row['epost'] . "<td><a href='meldinger.php?emnekode=" . $row['emnekode'] . "'>" . "Se meldinger" . "</a></td></tr>";
         }	
     }
 ?>

@@ -10,9 +10,7 @@ import com.example.datasikkerhetapp.CourseFragment;
 import com.example.datasikkerhetapp.MainActivity;
 import com.example.datasikkerhetapp.R;
 import com.example.datasikkerhetapp.model.Comment;
-import com.example.datasikkerhetapp.model.Course;
 import com.example.datasikkerhetapp.model.Inquiry;
-import com.example.datasikkerhetapp.model.Lecturer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
