@@ -1,32 +1,34 @@
 package com.example.datasikkerhetapp;
 
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.StrictMode;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
-import android.widget.Space;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.datasikkerhetapp.model.Course;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class CourseListFragment extends Fragment {
+
 
     private LinearLayout linearLayout;
 
@@ -44,11 +46,13 @@ public class CourseListFragment extends Fragment {
 
         MainActivity ma = (MainActivity) getActivity();
 
-        ArrayList<Course> courses = ma.getCourses();
+        ArrayList<Course> courses = null;
+
+        courses = ma.getCourses();
 
         for (final Course aCourse : courses) {
 
-            CardView cardView = new CardView(getActivity());
+            CardView cardView = new CardView(ma);
 
             LayoutParams layoutParams = new LayoutParams(
                     LayoutParams.MATCH_PARENT,
@@ -58,7 +62,7 @@ public class CourseListFragment extends Fragment {
             cardView.setLayoutParams(layoutParams);
             cardView.setRadius(9);
             cardView.setContentPadding(15,30,15,30);
-            cardView.setCardBackgroundColor(Color.LTGRAY);
+            cardView.setCardBackgroundColor(Color.parseColor("#80D8FF"));
             cardView.setMaxCardElevation(5);
             cardView.setCardElevation(2);
             cardView.setUseCompatPadding(true);
@@ -66,38 +70,33 @@ public class CourseListFragment extends Fragment {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //String cid=id.getText().toString();
 
-                    /*
-                    String id = aCourse.getId();
-                    String name = aCourse.getName();
-
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.send(aCourse);
-
-                     */
-
-
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    //mainActivity.uncheckItem();
-
-                    //CourseFragment courseFragment = new CourseFragment();
-
-
-                    CourseFragment cf = new CourseFragment();
+                    /*CourseFragment cf = new CourseFragment();
 
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
 
+                    ((MainActivity) getActivity()).setChosenCourse(aCourse);
+
                     Bundle args = new Bundle();
-                    args.putString("ID", aCourse.getId());
-                    args.putString("Course", aCourse.getName());
+                    args.putString("Coursecode", aCourse.getCode());
+
+                    //args.putString("Coursename", aCourse.getName());
+                    //args.putString("Course", aCourse.getLecturer().getName());
+                    //args.putString("Email", aCourse.getLecturer().getEmail());
+                    //args.putString("Photo", aCourse.getLecturer().getImgString());
+
 
                     cf.setArguments(args);
                     ft.replace(R.id.fragment_container, cf);
-                    ft.commit();
+                    ft.commit();*/
 
-                    // */
+                    MainActivity ma = (MainActivity) getActivity();
+
+                    ma.setChosenCourse(aCourse);
+
+                    ma.showCourse();
+
                 }
             });
 

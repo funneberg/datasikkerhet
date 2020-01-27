@@ -6,35 +6,44 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.datasikkerhetapp.model.Course;
+import com.example.datasikkerhetapp.model.Inquiry;
+import com.example.datasikkerhetapp.mysql_connection.CommentDownloader;
+import com.example.datasikkerhetapp.mysql_connection.CourseDownloader;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String URL_GETCOURSES="http://192.168.1.10/datasikkerhet/php_test/php/getcourses.php";
+    private static final String URL_GET_COMMENTS = "http://192.168.1.10/datasikkerhet/php_test/php/getcomments.php?coursecode=";
+
     private DrawerLayout drawerLayout;
     private NavigationView navView;
-    ArrayList<Course> courses;
+    private ArrayList<Course> courses;
+    private ArrayList<Inquiry> courseInquiries;
+    private Course chosenCourse = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setup(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        populateArrayList();
+        CourseDownloader d=new CourseDownloader(MainActivity.this, URL_GETCOURSES);
+        d.execute();
+
+        System.out.println("Starting setup :^)");
+
+        setup(savedInstanceState);
     }
 
     private void setup(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -70,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
         }
     }
 
@@ -82,18 +91,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void populateArrayList() {
-        //Testdata:
-        courses = new ArrayList<>();
-        courses.add(new Course("ITF10619", "Programmering 2"));
-        courses.add(new Course("ITF25019", "Datasikkerhet i utvikling og drift"));
-        courses.add(new Course("ITF20119", "Rammeverk"));
+    public void setChosenCourse(Course chosenCourse) {
+        this.chosenCourse = chosenCourse;
+    }
+
+    public void setCourses(ArrayList<Course> courses) {
+        this.courses = courses;
+    }
+
+    public void setCourseInquiries(ArrayList<Inquiry> courseInquiries) {
+        this.courseInquiries = courseInquiries;
     }
 
     public ArrayList<Course> getCourses() {
         return courses;
     }
 
+    public ArrayList<Inquiry> getCourseInquiries() {
+        return courseInquiries;
+    }
+
+    public Course getChosenCourse() {
+        return chosenCourse;
+    }
 
     /*
     private void shareBetweenFragments() {
@@ -119,5 +139,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void showCourselist() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
+    }
+
+    public void showCourse() {
+        CommentDownloader d=new CommentDownloader(MainActivity.this, URL_GET_COMMENTS + chosenCourse.getCode());
+        d.execute();
     }
 }
