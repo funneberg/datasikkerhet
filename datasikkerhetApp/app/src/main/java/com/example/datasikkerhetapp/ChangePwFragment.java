@@ -24,7 +24,9 @@ import java.util.HashMap;
 
 public class ChangePwFragment extends Fragment {
 
-    private static final String URL_CHANGE_PASSWORD = "http://192.168.1.10/datasikkerhet/php_test/php/changepassword.php";
+    private static final String IP_ADRESS = "158.39.167.241";
+
+    private static final String URL_CHANGE_PASSWORD = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/changepassword.php";
 
     private EditText etOldPassword;
     private EditText etNewPassword1;

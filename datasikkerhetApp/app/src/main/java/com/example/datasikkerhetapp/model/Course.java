@@ -6,10 +6,10 @@ public class Course {
     private String name;
     private Lecturer lecturer;
 
-    public Course(String code, String name) {
+    public Course(String code, String name, Lecturer lecturer) {
         this.code = code;
         this.name = name;
-        lecturer = null;
+        this.lecturer = lecturer;
     }
 
     public String getCode() {

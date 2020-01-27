@@ -6,7 +6,6 @@ if(isset($_GET['studentSubmit'])) {
 
   global $con;
 
-  $studentID = $_GET['studentID'];
   $navn = $_GET['navn'];
   $epost = $_GET['epost'];
   $studieretning = $_GET['studieretning'];
@@ -15,7 +14,7 @@ if(isset($_GET['studentSubmit'])) {
   //Passord:
   $passord1 = $_GET['passord1'];
 
-  $sql1 = "INSERT INTO `students`(`studentID`, `navn`, `epost`, `studieretning`, `kull` , `passord` ) VALUES ('$studentID', '$navn', '$epost', '$studieretning', '$kull' , '$passord1')";
+  $sql1 = "INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES ('$navn', '$epost', '$studieretning', '$kull' , '$passord1')";
 
   if ($con->query($sql1) === TRUE) {
       echo "New student created successfully";
@@ -29,7 +28,6 @@ if(isset($_GET['foreleserSubmit'])) {
 
   global $con;
 
-  $ansattID = $_GET['ansattID'];
   $foreleserNavn = $_GET['foreleserNavn'];
   $foreleserEpost = $_GET['foreleserEpost'];
   $bildeLink = $_GET['bildeLink'];
@@ -37,7 +35,7 @@ if(isset($_GET['foreleserSubmit'])) {
   //Passord:
   $passord2 = $_GET['passord2'];
 
-  $sql1 = "INSERT INTO `forelesere`(`ansattID`, `navn`, `epost`, `bilde` , `passord` ) VALUES ('$ansattID', '$foreleserNavn', '$foreleserEpost', '$bildeLink' , '$passord2')";
+  $sql1 = "INSERT INTO foreleser (navn, epost, bilde, passord) VALUES ('$foreleserNavn', '$foreleserEpost', '$bildeLink' , '$passord2')";
 
   if ($con->query($sql1) === TRUE) {
       echo "New foreleser created successfully";
@@ -82,29 +80,7 @@ if(isset($_GET['foreleserSubmit'])) {
         </div>
         </div>
       </nav>
-  </header>   
-
-  <div class="columns">
-        
-    <div class="column is-half " class="column">
-          
-      <!--Header-->
-      <div id="header"  class="container is-centered">
-            <h1 class="subtitle is-2 is-centered">Student</h1>
-      </div>
-
-    </div>
-
-    <div class="column is-half " class="column">
-          
-      <!--Header-->
-      <div id="header"  class="container is-centered">
-            <h1 class="subtitle is-2 is-centered">Foreleser</h1>
-      </div>
-
-    </div>
-
-  </div>
+  </header>
 
 	<div class="content">
 
@@ -113,6 +89,15 @@ if(isset($_GET['foreleserSubmit'])) {
     <div class="column is-half" id="studentReg">
     	
       <div id="studentCard" class="card">
+
+        <div class="column is-half " class="column">
+          
+          <!--Header-->
+          <div id="header"  class="container is-centered">
+            <h1 class="subtitle is-2 is-centered">Student</h1>
+          </div>
+
+        </div>
 		  		
 		    <div  class="card-content">
   				
@@ -122,8 +107,6 @@ if(isset($_GET['foreleserSubmit'])) {
 
 			      <form action= "">
 			      	
-              <label class="label">Student ID</label>
-			        <input type="text" class="input is-primary" placeholder="ABC1234" name="studentID"><br>
               <label class="label">Navn</label>
 			        <input type="text" class="input is-primary" name="navn">
               <label class="label">E-post</label>
@@ -131,11 +114,10 @@ if(isset($_GET['foreleserSubmit'])) {
               <label class="label">Studieretning</label>
 			        <input type="text" class="input is-primary" name="studieretning">
               <label class="label">Årskull</label>
-              <input type="text" class="input is-primary" name="kull"><br>
-			        <br>
+              <input type="text" class="input is-primary" name="kull">
 
               <div class="field is-grouped is-grouped-multiline">
-                        
+                <label class="label">Passord</label>
                 <input type="password" class="input is-primary " name="passord1">
 
               </div>
@@ -153,6 +135,15 @@ if(isset($_GET['foreleserSubmit'])) {
     <div class="column is-half" id="foreleserReg">
     	
       <div id="foreleserCard" class="card">
+
+      <div class="column is-half " class="column">
+          
+      <!--Header-->
+      <div id="header"  class="container is-centered">
+            <h1 class="subtitle is-2 is-centered">Foreleser</h1>
+      </div>
+
+    </div>
 		  		
 		    <divclass="card-content">
   				
@@ -162,8 +153,6 @@ if(isset($_GET['foreleserSubmit'])) {
 
 			      <form action= "">
 			      	
-              <label class="label">Ansatt ID</label>
-			        <input type="text" class="input is-primary" placeholder="ABC1234" name="ansattID"><br>
               <label class="label">Navn</label>
 			        <input type="text" class="input is-primary" name="foreleserNavn">
               <label class="label">E-post</label>

@@ -23,9 +23,12 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String URL_LOGIN = "http://192.168.1.10/datasikkerhet/php_test/php/login.php";
-    EditText email, password;
-    SharedPreferences sharedPreferences;
+    private static final String IP_ADRESS = "158.39.167.241";
+    private static final String URL_LOGIN = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/login.php";
+
+    private EditText email, password;
+    private SharedPreferences sharedPreferences;
+
     public static final String MY_PREFERENCES = "MyPrefs";
     public static final String EMAIL = "email";
     public static final String STATUS = "status";

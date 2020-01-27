@@ -13,17 +13,17 @@
   $username = $_SESSION['username'];
 
 	//Sjekker igjennom "students tabellen":
-	$studentabell = "SELECT count(*) as cntStudent from students where studentID = '$username'";
+  $studentabell = "SELECT count(*) as cntStudent from student where epost = '$username'";
 	$resultat1 = mysqli_query($con,$studentabell);
 	$row1 = mysqli_fetch_array($resultat1);
 	
 	//Sjekker igjennom "foreleser tabellen":
-	$forelesertabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$username'";
+  $forelesertabell = "SELECT count(*) as cntForeleser from foreleser where epost = '$username'";
 	$resultat2 = mysqli_query($con,$forelesertabell);
 	$row2 = mysqli_fetch_array($resultat2);
 
-	$studentCount = $row1['cntStudent'];
-	$foreleserCount = $row2['cntForeleser'];
+  $studentCount = $row1['cntStudent'];
+  $foreleserCount = $row2['cntForeleser'];
 
 	//Dersom "username" finnes i "foreleser tabellen" blir brukeren sendt tilbake til startside.
 	if ($foreleserCount > 0){
@@ -42,13 +42,13 @@
 
 
 
-    $sjekkStudent = " SELECT passord FROM students  WHERE passord = '$gammeltPassord' AND '$username' = studentID";
+    $sjekkStudent = " SELECT passord FROM student  WHERE passord = '$gammeltPassord' AND epost = '$username'";
 
     if(mysqli_query( $con, $sjekkStudent )){
 
       echo "Funker student";
 
-      $sql = "UPDATE students SET passord = '$passord1' WHERE courseID = '$username'";
+      $sql = "UPDATE student SET passord = '$passord1' WHERE epost = '$username'";
 
       mysqli_query ( $con, $sql );
 
@@ -98,9 +98,9 @@
 
       <div class="navbar-end">
 
-        <p id="studentText" class="has-text-centered has-text-white is-vcentered">Logged in as <strong>Foreleser</strong></p>
+        <p id="studentText" class="has-text-centered has-text-white is-vcentered">Logged in as <strong>Student</strong></p>
 
-        <form action="logout.php">
+        <form action="../logout.php">
           <button  class="button is-primary has-text-centered ">Logg ut</button>
         </form>
 

@@ -10,9 +10,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.datasikkerhetapp.model.Course;
 import com.example.datasikkerhetapp.model.Inquiry;
+import com.example.datasikkerhetapp.model.Student;
 import com.example.datasikkerhetapp.mysql_connection.CommentDownloader;
 import com.example.datasikkerhetapp.mysql_connection.CourseDownloader;
 import com.google.android.material.navigation.NavigationView;
@@ -21,8 +25,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String URL_GETCOURSES="http://192.168.1.10/datasikkerhet/php_test/php/getcourses.php";
-    private static final String URL_GET_COMMENTS = "http://192.168.1.10/datasikkerhet/php_test/php/getcomments.php?coursecode=";
+    private static final String IP_ADRESS = "158.39.167.241";
+
+    private static final String URL_GET_COURSES="http://"+IP_ADRESS+"/datasikkerhet/php_test/php/getcourses.php";
+    private static final String URL_GET_COMMENTS = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/getcomments.php?coursecode=";
 
     private DrawerLayout drawerLayout;
     private NavigationView navView;
@@ -35,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CourseDownloader d=new CourseDownloader(MainActivity.this, URL_GETCOURSES);
+        CourseDownloader d=new CourseDownloader(MainActivity.this, URL_GET_COURSES);
         d.execute();
-
-        System.out.println("Starting setup :^)");
 
         setup(savedInstanceState);
     }
@@ -50,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.activity_main);
 
         navView = findViewById(R.id.nav_view);
+        View header = navView.getHeaderView(0);
+
+        Student user = Account.getActiveUser();
+
+        TextView name = header.findViewById(R.id.userName);
+        TextView email = header.findViewById(R.id.userEmail);
+
+        name.setText(user.getName());
+        email.setText(user.getEmail());
+
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -64,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.logOutBtn:
                         startActivity(new Intent(MainActivity.this, StartActivity.class));
+                        Account.userLogOut();
                         break;
                 }
 
@@ -76,11 +91,6 @@ public class MainActivity extends AppCompatActivity {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-
-
-        if (savedInstanceState == null) {
-            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CourseListFragment()).commit();
-        }
     }
 
 
@@ -114,23 +124,6 @@ public class MainActivity extends AppCompatActivity {
     public Course getChosenCourse() {
         return chosenCourse;
     }
-
-    /*
-    private void shareBetweenFragments() {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        CourseListFragment clf = new CourseListFragment();
-        CourseFragment cf = new CourseFragment();
-        ft.add(R.id.fragment_container, clf);
-        ft.add(R.id.fragment_container, cf);
-        ft.commit();
-    }
-
-    public void send(Course aCourse) {
-
-    }
-
-     */
 
     @Override
     public void onBackPressed() {

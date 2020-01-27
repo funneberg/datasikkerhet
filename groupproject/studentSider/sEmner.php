@@ -12,12 +12,12 @@
     $username = $_SESSION['username'];
 
 	//Sjekker igjennom "students tabellen":
-	$studentabell = "SELECT count(*) as cntStudent from students where studentID = '$username'";
+	$studentabell = "SELECT count(*) as cntStudent from student where epost = '$username'";
 	$resultat1 = mysqli_query($con,$studentabell);
 	$row1 = mysqli_fetch_array($resultat1);
 	
 	//Sjekker igjennom "foreleser tabellen":
-	$forelesertabell = "SELECT count(*) as cntForeleser from forelesere where ansattID = '$username'";
+	$forelesertabell = "SELECT count(*) as cntForeleser from foreleser where epost = '$username'";
 	$resultat2 = mysqli_query($con,$forelesertabell);
 	$row2 = mysqli_fetch_array($resultat2);
 
@@ -33,12 +33,12 @@
 
 		global $con;
 
-		$sql = "SELECT navn FROM `emner` ";
+		$sql = "SELECT emnekode, emnenavn FROM emner";
 
 		$resultat = mysqli_query($con,$sql);
 
 		while($row = $resultat->fetch_assoc()) {
-			echo "<option value=" . $row['navn'] . ">" . $row['navn'] . "</option>";
+			echo "<option value=" . $row['emnekode'] . ">" . $row['emnenavn'] . "</option>";
 		}	
 
 	}
@@ -70,7 +70,18 @@
 		    	
 		      <a class="navbar-item has-text-white is-3" href="studentHome.php">HJEM</a>
 		      <a class="navbar-item is-active" >EMNER</a>
+			  <a class="navbar-item" href="sInnstillinger.php">INNSTILLINGER</a>
 			
+			</div>
+
+			<div class="navbar-end">
+
+			  <p id="studentText" class="has-text-centered has-text-white is-vcentered">Logged in as <strong>Student</strong></p>
+
+			  <form action="../logout.php">
+			    <button  class="button is-primary has-text-centered ">Logg ut</button>
+			  </form>
+
 			</div>
 		   </div>
 		</nav>
@@ -105,7 +116,7 @@
 
 								<option>Emner</option>
 
-								<?= visEmner()?>
+								<?php visEmner() ?>
 
 							</select>
 
@@ -144,7 +155,7 @@
 							<th>Emnekode</th>
 							<th>Navn</th>
 							<th>Foreleser</th>
-							<th>Foreleser ID</th>
+							<th>Epost</th>
 						</tr>
 					</thead>
 				
@@ -158,17 +169,20 @@
 
 								$dropdownEmner = $_GET['dropdownEmner'];
 
-								$sql = "SELECT * FROM emner WHERE navn = '$dropdownEmner'";
+								$sql = "SELECT e.*, f.navn FROM emner e LEFT JOIN foreleser f ON (e.foreleser = f.epost) WHERE emnekode = '$dropdownEmner'";
 
 								$result = $con->query($sql) or die($con->error);
 
-								echo $dropdownEmner;
-
 								while($row = $result->fetch_assoc()) {
-									echo "<tr><td>" . $row["emneKode"] . "</td>
-									<td>" . $row["navn"] . "</td>
-									<td>" . $row["foreleserNavn"] . "</td>
-									<td>" . $row["foreleserID"] . "</td></tr>";
+									echo "<tr><td>" . $row["emnekode"] . "</td>
+									<td>" . $row["emnenavn"] . "</td>";
+									if ($row['foreleser'] != null) {
+										echo "<td>" . $row["navn"] . "</td>
+										<td>" . $row["foreleser"] . "</td></tr>";
+									}
+									else {
+										echo "</tr>";
+									}
 								}	
 							}
 						?>

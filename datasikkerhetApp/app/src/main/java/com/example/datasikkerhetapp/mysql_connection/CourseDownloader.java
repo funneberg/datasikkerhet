@@ -46,25 +46,20 @@ public class CourseDownloader extends AsyncTask<Void,Void,String> {
 
         pd.dismiss();
 
-        if(s==null)
-        {
+        if(s==null) {
             Toast.makeText(c,"Unsuccessfull,Null returned",Toast.LENGTH_SHORT).show();
         }
-        else
-        {
+        else {
             //CALL DATA PARSER TO PARSE
             CourseDataParser parser=new CourseDataParser(c,s);
             parser.execute();
 
         }
-
     }
 
-    private String downloadData()
-    {
+    private String downloadData() {
         HttpURLConnection con=Connector.connect(urlAddress);
-        if(con==null)
-        {
+        if(con==null) {
             return null;
         }
 
@@ -76,8 +71,7 @@ public class CourseDownloader extends AsyncTask<Void,Void,String> {
             String line;
             StringBuffer response=new StringBuffer();
 
-            while ((line=br.readLine()) != null)
-            {
+            while ((line=br.readLine()) != null) {
                 response.append(line+"\n");
             }
 
@@ -85,14 +79,16 @@ public class CourseDownloader extends AsyncTask<Void,Void,String> {
 
             return response.toString();
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            if(is != null)
-            {
+        }
+        finally {
+            if(is != null) {
                 try {
                     is.close();
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
