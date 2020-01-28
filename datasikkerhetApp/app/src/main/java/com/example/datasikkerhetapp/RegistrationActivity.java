@@ -58,6 +58,9 @@ public class RegistrationActivity extends AppCompatActivity {
                 if(sName.isEmpty() || sEmail.isEmpty() || sFieldOfStudy.isEmpty() || sYear.isEmpty() || sPassword.isEmpty()){
                     Toast.makeText(RegistrationActivity.this, "Alle feltene må fylles ut", Toast.LENGTH_SHORT).show();
                 }
+                else if (sYear.length() != 4) {
+                    Toast.makeText(RegistrationActivity.this, "Ugyldig kull", Toast.LENGTH_SHORT).show();
+                }
 
                 else {
                     class Login extends AsyncTask<Void, Void, String> {
@@ -105,8 +108,10 @@ public class RegistrationActivity extends AppCompatActivity {
                                     Account.setActiveUser(sName, sEmail, sFieldOfStudy, sYear);
 
                                     finish();
-                                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                                }
+                                else {
+                                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

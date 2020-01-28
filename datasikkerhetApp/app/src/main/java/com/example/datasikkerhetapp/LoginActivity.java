@@ -112,8 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(LoginActivity.this, "Exception: " + e, Toast.LENGTH_LONG).show();
-                                System.out.println("Exception: " + e);
+                                Toast.makeText(LoginActivity.this, "Feil passord eller brukernavn", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
