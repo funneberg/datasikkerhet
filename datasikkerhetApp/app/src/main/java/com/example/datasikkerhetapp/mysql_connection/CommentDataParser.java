@@ -77,7 +77,6 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
 
                 int inquiryID = jo.getInt("inquiryID");
                 String sender = jo.getString("senderEmail");
-                //String reciever = jo.getString("recieverEmail");
                 String message = jo.getString("message");
                 String response = jo.getString("response");
 
