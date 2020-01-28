@@ -50,6 +50,7 @@ public class CommentDownloader extends AsyncTask<Void,Void,String> {
             Toast.makeText(c,"Unsuccessfull,Null returned",Toast.LENGTH_SHORT).show();
         }
         else {
+            System.out.println("Stringgg: " + s);
             CommentDataParser parser=new CommentDataParser(c,s);
             parser.execute();
         }

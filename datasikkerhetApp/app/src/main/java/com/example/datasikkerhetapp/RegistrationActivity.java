@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private static final String URL_REGISTER = "http://158.39.167.241/datasikkerhet/php_test/php/register.php";
+    private static final String URL_REGISTER = "http://192.168.1.10/datasikkerhet/php_test/php/register.php";
 
     private EditText name, email, fieldOfStudy, year, password;
     private Button btnRegister;

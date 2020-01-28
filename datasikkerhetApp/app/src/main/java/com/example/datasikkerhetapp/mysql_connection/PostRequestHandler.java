@@ -76,6 +76,8 @@ public class PostRequestHandler {
             result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
 
+        System.out.println("ParamString: " + result.toString());
+
         return result.toString();
     }
 }

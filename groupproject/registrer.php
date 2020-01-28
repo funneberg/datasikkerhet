@@ -2,53 +2,78 @@
 
 include 'connection.php';
 
-if(isset($_GET['studentSubmit'])) {
+if(isset($_POST['studentSubmit'])) {
 
   global $con;
 
-  $navn = $_GET['navn'];
-  $epost = $_GET['epost'];
-  $studieretning = $_GET['studieretning'];
-  $kull = $_GET['kull'];
+  $navn = $_POST['navn'];
+  $epost = $_POST['epost'];
+  $studieretning = $_POST['studieretning'];
+  $kull = $_POST['kull'];
 
   //Passord:
-  $passord1 = $_GET['passord1'];
+  $passord1 = $_POST['passord1'];
 
   $sql1 = "INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES ('$navn', '$epost', '$studieretning', '$kull' , '$passord1')";
 
   if ($con->query($sql1) === TRUE) {
-      echo "New student created successfully";
+      echo "Studentbruker opprettet!";
   } 
   else {
       echo "Error: " . $sql1 . "<br>" . $con->error;
   }
 }
 
-if(isset($_GET['foreleserSubmit'])) {
+if(isset($_POST['foreleserSubmit']) && isset($_FILES['bilde'])) {
+
+  echo "Hei";
 
   global $con;
 
-  $foreleserNavn = $_GET['foreleserNavn'];
-  $foreleserEpost = $_GET['foreleserEpost'];
-  $bildeLink = $_GET['bildeLink'];
+  $foreleserNavn = $_POST['foreleserNavn'];
+  $foreleserEpost = $_POST['foreleserEpost'];
+
+  $target_dir = "bilder/";
+  $bilde = basename($_FILES['bilde']['name']);
+  $target_file = $target_dir.$bilde;
+
+  $uploadOk = 1;
+  $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+  $check = getimagesize($_FILES["bilde"]["tmp_name"]);
+
+  if($check !== false) {
+    echo "Filen er et bilde - " . $check["mime"] . ".";
+    $uploadOk = 1;
+  } else {
+    echo "Filen er ikke et bilde. ";
+    echo "Bruker ble ikke opprettet.";
+    $uploadOk = 0;
+    exit();
+  }
+
+  // Check if $uploadOk is set to 0 by an error
+  if ($uploadOk == 0) {
+    echo "Filen ble ikke lastet opp.";
+  // if everything is ok, try to upload file
+  } else {
+    move_uploaded_file($_FILES["bilde"]["tmp_name"], $target_file);
+  }
 
   //Passord:
-  $passord2 = $_GET['passord2'];
+  $passord2 = $_POST['passord2'];
 
-  $sql1 = "INSERT INTO foreleser (navn, epost, bilde, passord) VALUES ('$foreleserNavn', '$foreleserEpost', '$bildeLink' , '$passord2')";
+  $sql1 = "INSERT INTO foreleser (navn, epost, bilde, passord) VALUES ('$foreleserNavn', '$foreleserEpost', '$bilde' , '$passord2')";
 
   if ($con->query($sql1) === TRUE) {
-      echo "New foreleser created successfully";
+      echo "Foreleserbruker opprettet!";
   } 
   else {
       echo "Error: " . $sql1 . "<br>" . $con->error;
   }
 }
 
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -105,7 +130,7 @@ if(isset($_GET['foreleserSubmit'])) {
 		  	
 		      <div class="field">
 
-			      <form action= "">
+			      <form action= "" method="post">
 			      	
               <label class="label">Navn</label>
 			        <input type="text" class="input is-primary" name="navn">
@@ -151,14 +176,14 @@ if(isset($_GET['foreleserSubmit'])) {
 		  	
 		      <div class="field">
 
-			      <form action= "">
+			      <form action= "" method="post" enctype="multipart/form-data">
 			      	
               <label class="label">Navn</label>
 			        <input type="text" class="input is-primary" name="foreleserNavn">
               <label class="label">E-post</label>
 			        <input type="text" class="input is-primary" name="foreleserEpost">
-              <label class="label">Bilde link</label>
-			        <input type="text" class="input is-primary" name="bildeLink">
+              <label class="label">Bilde</label>
+			        <input type="file" class="input is-primary" name="bilde">
   
 			        <br>
 

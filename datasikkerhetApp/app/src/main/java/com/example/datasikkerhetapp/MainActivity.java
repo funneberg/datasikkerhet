@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String IP_ADRESS = "158.39.167.241";
+    private static final String IP_ADRESS = "192.168.1.10";
 
     private static final String URL_GET_COURSES="http://"+IP_ADRESS+"/datasikkerhet/php_test/php/getcourses.php";
     private static final String URL_GET_COMMENTS = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/getcomments.php?coursecode=";

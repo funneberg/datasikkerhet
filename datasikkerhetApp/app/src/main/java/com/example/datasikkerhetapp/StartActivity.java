@@ -19,8 +19,6 @@ public class StartActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
 
-        //HttpURLConnection connection =
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(StartActivity.this, LoginActivity.class));

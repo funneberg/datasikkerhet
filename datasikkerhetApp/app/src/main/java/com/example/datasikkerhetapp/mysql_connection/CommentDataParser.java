@@ -65,8 +65,7 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
         }
     }
 
-    private int parseData()
-    {
+    private int parseData() {
         System.out.println("jsonData: " + jsonData);
         try {
             //converting response to json object
@@ -117,7 +116,7 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(c, "Exception: " + e, Toast.LENGTH_LONG).show();
+            //Toast.makeText(c, "Exception: " + e, Toast.LENGTH_LONG).show();
             System.out.println("Exception: " + e);
         }
 

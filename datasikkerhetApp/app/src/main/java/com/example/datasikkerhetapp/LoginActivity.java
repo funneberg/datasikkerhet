@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String IP_ADRESS = "158.39.167.241";
+    private static final String IP_ADRESS = "192.168.1.10";
     private static final String URL_LOGIN = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/login.php";
 
     private EditText email, password;
@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                 if(sEmail.isEmpty()|| sPassword.isEmpty()){
                     Toast.makeText(LoginActivity.this, "Alle feltene må fylles ut", Toast.LENGTH_SHORT).show();
                 }
-
                 else {
                     class Login extends AsyncTask<Void, Void, String> {
                         ProgressDialog pdLoading = new ProgressDialog(LoginActivity.this);
@@ -82,9 +81,13 @@ public class LoginActivity extends AppCompatActivity {
                             //creating request handler object
                             PostRequestHandler requestHandler = new PostRequestHandler();
 
+
+                            System.out.println(sEmail);
                             //creating request parameters
                             HashMap<String, String> params = new HashMap<>();
+                            System.out.println("Test 1");
                             params.put("email", sEmail);
+                            System.out.println("Test 2");
                             params.put("password", sPassword);
 
                             //returing the response
@@ -100,7 +103,12 @@ public class LoginActivity extends AppCompatActivity {
 
                             try {
                                 //converting response to json object
+
+                                System.out.println("Test 3 " + s);
+
                                 JSONObject obj = new JSONObject(s);
+
+                                System.out.println("Test 4");
                                 //if no error in response
                                 if (!obj.getBoolean("error")) {
                                     String name = obj.getString("name");
@@ -108,17 +116,6 @@ public class LoginActivity extends AppCompatActivity {
                                     String year = obj.getString("year");
 
                                     Account.setActiveUser(name, sEmail, fieldOfStudy, year);
-
-                                    /*
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putString(NAME, name);
-                                    editor.putString(EMAIL, sEmail);
-                                    editor.putString(FIELD_OF_STUDY, fieldOfStudy);
-                                    editor.putString(YEAR, year);
-                                    editor.putBoolean(STATUS, true);
-                                    editor.apply();
-
-                                     */
 
                                     finish();
                                     Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
@@ -139,11 +136,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         if (status){
-
-            //SharedPreferences.Editor editor = sharedPreferences.edit();
-            //editor.putBoolean(STATUS, false);
-            //editor.apply();
-
             finish();
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }

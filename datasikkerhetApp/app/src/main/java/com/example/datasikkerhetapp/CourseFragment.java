@@ -40,7 +40,7 @@ import java.util.HashMap;
 
 public class CourseFragment extends Fragment {
 
-    private static final String IP_ADRESS = "158.39.167.241";
+    private static final String IP_ADRESS = "192.168.1.10";
 
     private static final String URL_REPORT_INQUIRY = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/reportinquiry.php";
     private static final String URL_REPORT_COMMENT = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/reportcomment.php";
