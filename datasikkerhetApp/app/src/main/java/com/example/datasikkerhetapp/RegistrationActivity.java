@@ -18,9 +18,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class RegistrationActivity extends AppCompatActivity {
+import static com.example.datasikkerhetapp.Links.*;
 
-    private static final String URL_REGISTER = "http://192.168.1.10/datasikkerhet/php_test/php/register.php";
+public class RegistrationActivity extends AppCompatActivity {
 
     private EditText name, email, fieldOfStudy, year, password;
     private Button btnRegister;

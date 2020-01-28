@@ -23,12 +23,10 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import static com.example.datasikkerhetapp.Links.*;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String IP_ADRESS = "192.168.1.10";
-
-    private static final String URL_GET_COURSES="http://"+IP_ADRESS+"/datasikkerhet/php_test/php/getcourses.php";
-    private static final String URL_GET_COMMENTS = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/getcomments.php?coursecode=";
 
     private DrawerLayout drawerLayout;
     private NavigationView navView;

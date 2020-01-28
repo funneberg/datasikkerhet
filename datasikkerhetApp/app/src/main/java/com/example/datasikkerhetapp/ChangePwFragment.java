@@ -2,7 +2,6 @@ package com.example.datasikkerhetapp;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -22,11 +20,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static com.example.datasikkerhetapp.Links.*;
+
 public class ChangePwFragment extends Fragment {
-
-    private static final String IP_ADRESS = "192.168.1.10";
-
-    private static final String URL_CHANGE_PASSWORD = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/changepassword.php";
 
     private EditText etOldPassword;
     private EditText etNewPassword1;

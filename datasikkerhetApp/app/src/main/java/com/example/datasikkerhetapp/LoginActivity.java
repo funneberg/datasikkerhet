@@ -2,7 +2,6 @@ package com.example.datasikkerhetapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,10 +20,10 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static com.example.datasikkerhetapp.Links.*;
+
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String IP_ADRESS = "192.168.1.10";
-    private static final String URL_LOGIN = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/login.php";
 
     private EditText email, password;
     private SharedPreferences sharedPreferences;

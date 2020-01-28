@@ -2,8 +2,6 @@ package com.example.datasikkerhetapp;
 
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,15 +36,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static com.example.datasikkerhetapp.Links.*;
+
 public class CourseFragment extends Fragment {
-
-    private static final String IP_ADRESS = "192.168.1.10";
-
-    private static final String URL_REPORT_INQUIRY = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/reportinquiry.php";
-    private static final String URL_REPORT_COMMENT = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/reportcomment.php";
-    private static final String URL_SEND_INQUIRY = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/sendinquiry.php";
-    private static final String URL_SEND_COMMENT = "http://"+IP_ADRESS+"/datasikkerhet/php_test/php/comment.php";
-    private static final String URL_IMG = "http://"+IP_ADRESS+"/datasikkerhet/bilder/";
 
     private TextView tv;
     private LinearLayout llLectuter;
