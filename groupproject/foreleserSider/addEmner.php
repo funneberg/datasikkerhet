@@ -21,6 +21,7 @@
 	$resultat2 = mysqli_query($con,$ansatttabell);
 	$row2 = mysqli_fetch_array($resultat2);
 
+
 	$studentCount = $row1['cntStudent'];
 	$ansattCount = $row2['cntForeleser'];
 
@@ -29,16 +30,37 @@
 		header('Location: ../index.php');
 	}
 
-    if(isset($_GET['leggTil'])){
+    //Sjekkker om foreleser er godkjent
 
-        global $con;
+        if(isset($_GET['leggTil'])){
+         $godkjent = "SELECT count(*) as cntGodkjent from foreleser where epost ='$username' AND godkjent = 'ja'";
+         $gResultat = mysqli_query($con,$godkjent);
+         $row3 = mysqli_fetch_array($gResultat);
+         $jaCount = $row3['cntGodkjent'];
 
-        $username = $_SESSION['username'];
-        $emneKode = $_GET['emneKode'];
-        $navn = $_GET['navn'];
+           if ($jaCount == '1') {
 
-        $sql2 = "INSERT INTO emner (navn, emneKode, foreleser) VALUES ( '$navn' , '$emneKode' , '$username' )";
-    }
+            global $con;
+
+            $username = $_SESSION['username'];
+            $emneKode = $_GET['emneKode'];
+            $pin = $_GET['pin'];
+            $navn = $_GET['navn'];
+
+
+            $sql2 = "INSERT INTO emner (emnenavn, emnekode, foreleser, pin) VALUES ( '$navn' , '$emneKode' , '$username', $pin)";
+            if ($con->query($sql2) === TRUE) {
+                  echo "Nytt emne lagt til";
+              }
+
+
+
+           }
+           if ($jaCount != '1') {
+              echo "Du er ikke godkjent, kontakt en admin om du allerede ikke har gjort det";
+            }
+        }
+
 
 
     function visEmner() {
@@ -50,11 +72,11 @@
         $query = "SELECT emnekode, emnenavn, navn, epost FROM emner, foreleser WHERE foreleser = epost AND foreleser = '$username'";
 
         $resultat = $con->query($query) or die($con->error);
-        
+
 		while($row = $resultat->fetch_assoc()) {
             echo "<tr><td>" . $row['emnekode'] . "</td>
             <td>" . $row['navn'] . "</td><td>" . $row['epost'] . "<td><a href='meldinger.php?emnekode=" . $row['emnekode'] . "'>" . "Se meldinger" . "</a></td></tr>";
-        }	
+        }
     }
 ?>
 
@@ -138,6 +160,8 @@
                 
                             Emnenavn:  <input type="text" class="input is-primary"  name="navn"><br>
                             Emnekode:  <input type="text" class="input is-primary"  name="emneKode"><br>
+                            Pin (fire siffer):  <input type="text" class="input is-primary"  name="pin"><br>
+
                             
                             <br>
 

@@ -2,8 +2,8 @@
 
 $servername = "localhost";
 $username = "root";
-$password = '';
-$dbname = "datasikkerhet_test";
+$password = "skosaalen!";
+$dbname = "datasikkerhet";
 
 $con = mysqli_connect($servername,$username,$password,$dbname) or die("Connection Failed.");
 
