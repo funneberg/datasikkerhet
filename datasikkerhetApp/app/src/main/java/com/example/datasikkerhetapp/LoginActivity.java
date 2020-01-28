@@ -96,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
                             super.onPostExecute(s);
                             pdLoading.dismiss();
 
+                            System.out.println("Test: " + s);
+
                             try {
                                 JSONObject obj = new JSONObject(s);
 
@@ -112,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(LoginActivity.this, "Feil passord eller brukernavn", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
