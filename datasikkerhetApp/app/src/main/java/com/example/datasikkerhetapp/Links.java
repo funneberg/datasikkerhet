@@ -2,11 +2,12 @@ package com.example.datasikkerhetapp;
 
 public class Links {
 
+    private static final String HTTP = "http://";
     private static final String IP_ADRESS = "158.39.188.221";
     private static final String DIR = "/app/androidphp/";
-    private static final String URL = "http://"+IP_ADRESS+DIR;
+    private static final String URL = HTTP+IP_ADRESS+DIR;
 
-    static final String URL_IMG = IP_ADRESS+"/bilder/";
+    static final String URL_IMG = HTTP+IP_ADRESS+"/bilder/";
 
     static final String URL_LOGIN = URL+"/login.php";
     static final String URL_REGISTER = URL+"/register.php";

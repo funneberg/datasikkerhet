@@ -56,7 +56,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         ", " + sYear + " og " + sPassword);
 
                 if(sName.isEmpty() || sEmail.isEmpty() || sFieldOfStudy.isEmpty() || sYear.isEmpty() || sPassword.isEmpty()){
-                    Toast.makeText(RegistrationActivity.this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistrationActivity.this, "Alle feltene må fylles ut", Toast.LENGTH_SHORT).show();
                 }
 
                 else {
@@ -102,7 +102,11 @@ public class RegistrationActivity extends AppCompatActivity {
                                 JSONObject obj = new JSONObject(s);
                                 //if no error in response
                                 if (!obj.getBoolean("error")) {
+                                    Account.setActiveUser(sName, sEmail, sFieldOfStudy, sYear);
+
+                                    finish();
                                     Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -114,8 +118,6 @@ public class RegistrationActivity extends AppCompatActivity {
                     Login login = new Login();
                     login.execute();
                 }
-
-                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
             }
         });
     }

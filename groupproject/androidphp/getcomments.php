@@ -30,7 +30,7 @@ if(isset($_GET['coursecode'])){
             $arr1['message'] = $row[2];
             $arr1['response'] = $row[3];
 
-            $sql_query2 = "SELECT id, avsender, kommentar FROM kommentar WHERE kommentarTil = '$row[0]'";
+            $sql_query2 = "SELECT id, avsender, kommentar FROM kommentar WHERE kommentar_til = '$row[0]'";
 
             $result2=mysqli_query($conn,$sql_query2);
 

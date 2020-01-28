@@ -168,15 +168,6 @@ public class CourseFragment extends Fragment {
     }
 
     private void loadImageFromServerAndSet(final ImageView imgView) {
-        /*System.out.println("Bilde: " + url);
-        try {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, "src");
-            System.out.println("wow: " + d);
-            return Drawable.createFromStream(is, "src");
-        } catch (Exception e) {
-            return null;
-        }*/
 
         class LoadImage extends AsyncTask<Void, Void, Drawable> {
             ProgressDialog pdLoading = new ProgressDialog(getActivity());

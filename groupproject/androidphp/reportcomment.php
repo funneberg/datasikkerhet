@@ -6,7 +6,7 @@ $response = array();
 if(isset($_POST['messageID'])){
     $messageID = $_POST['messageID'];
     $reported = true;
-	$stmt = $conn->prepare("UPDATE kommentar SET rapportert = ? WHERE kommentarID = ?");
+	$stmt = $conn->prepare("UPDATE kommentar SET rapportert = ? WHERE id = ?");
 	$stmt->bind_param("ii", $reported, $messageID);
     $stmt->execute();
     $stmt->fetch();

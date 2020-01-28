@@ -84,9 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                             System.out.println(sEmail);
                             //creating request parameters
                             HashMap<String, String> params = new HashMap<>();
-                            System.out.println("Test 1");
                             params.put("email", sEmail);
-                            System.out.println("Test 2");
                             params.put("password", sPassword);
 
                             //returing the response
@@ -98,17 +96,9 @@ public class LoginActivity extends AppCompatActivity {
                             super.onPostExecute(s);
                             pdLoading.dismiss();
 
-                            System.out.println("JSON-string: " + s);
-
                             try {
-                                //converting response to json object
-
-                                System.out.println("Test 3 " + s);
-
                                 JSONObject obj = new JSONObject(s);
 
-                                System.out.println("Test 4");
-                                //if no error in response
                                 if (!obj.getBoolean("error")) {
                                     String name = obj.getString("name");
                                     String fieldOfStudy = obj.getString("fieldOfStudy");

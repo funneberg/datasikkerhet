@@ -7,7 +7,7 @@ if(isset($_POST['emailFrom']) && isset($_POST['parentCommentID']) && isset($_POS
     $emailFrom = $_POST['emailFrom'];
     $parentCommentID = $_POST['parentCommentID'];
 	$comment = $_POST['comment'];
-	$stmt = $conn->prepare("INSERT INTO kommentar (avsender, kommentarTil, kommentar, rapportert) VALUES (?, ?, ?, false)");
+	$stmt = $conn->prepare("INSERT INTO kommentar (avsender, kommentar_til, kommentar, rapportert) VALUES (?, ?, ?, 0)");
 	$stmt->bind_param("sss",$emailFrom, $parentCommentID, $comment);
     $stmt->execute();
     $stmt->fetch();
