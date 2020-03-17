@@ -150,17 +150,17 @@
                 <div class="field">
                   
                   <label class="label">Skriv inn gammelt passord</label>
-                  <input type="password" class="input is-primary" name="gammeltPassord"><br>
+                  <input type="password" class="input is-primary" name="gammeltPassord" pattern="[^'\x22]+" minlength="2" maxlength="25"><br>
 
                   <br>
 
                   <label class="label">Skriv inn nytt passord</label>
-                  <input type="password" class="input is-primary" name="passord1"><br>
+                  <input type="password" class="input is-primary" name="passord1" pattern="[^'\x22]+" minlength="2" maxlength="25"><br>
                       
                   <br>
 
                   <label class="label is-centered">Gjenta passord</label>
-                  <input type="password" class="input is-primary" name="passord2">
+                  <input type="password" class="input is-primary" name="passord2"pattern="[^'\x22]+" minlength="2" maxlength="25">
               
                 </field>
 

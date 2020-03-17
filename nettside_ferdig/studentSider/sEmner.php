@@ -97,6 +97,7 @@
       		<h1 class="subtitle is-2 is-vcentered">Emne oversikt</h1>
     		</div>
 		  </div> 
+		  
     </div>
 
 

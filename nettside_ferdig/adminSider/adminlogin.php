@@ -57,11 +57,11 @@ if(isset($_POST['logginn']) && isset($_POST['username']) && isset($_POST['passwo
     <form method="post">
         <div>
             <labe for="username">Brukernavn:</label><br/>
-            <input type="text" name="username" />
+            <input type="text" name="username" pattern="[a-zA-Z0-9]+" minlength="3" maxlength="20"/>
         </div>
         <div>
             <labe for="password">Passord:</label><br/>
-            <input type="password" name="password" />
+            <input type="password" name="password" pattern="[^'\x22]+" minlength="3" maxlength="25"/>
         </div>
         <!--<input type="submit" name="Logginn" text="Logg inn" />-->
         <button name="logginn" value="Send">Logg inn</button>

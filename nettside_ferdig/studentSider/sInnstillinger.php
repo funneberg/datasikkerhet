@@ -7,29 +7,30 @@
 	//Starter session
 	session_start();
 	
-	global $con;
+  global $con;
+  
 	//Henter studentID/ansattID lagret i session
-    $username = $_SESSION['username'];
+  $username = $_SESSION['username'];
 
-	//Sjekker igjennom student tabellen:
-	$studentabell = "SELECT count(*) as cntStudent from student where epost = '$username'";
+	//Sjekker igjennom "students tabellen":
+  $studentabell = "SELECT count(*) as cntStudent from student where epost = '$username'";
 	$resultat1 = mysqli_query($con,$studentabell);
 	$row1 = mysqli_fetch_array($resultat1);
 	
-	//Sjekker igjennom ansatt tabellen:
-	$ansatttabell = "SELECT count(*) as cntForeleser from foreleser where epost = '$username'";
-	$resultat2 = mysqli_query($con,$ansatttabell);
+	//Sjekker igjennom "foreleser tabellen":
+  $forelesertabell = "SELECT count(*) as cntForeleser from foreleser where epost = '$username'";
+	$resultat2 = mysqli_query($con,$forelesertabell);
 	$row2 = mysqli_fetch_array($resultat2);
 
-	$studentCount = $row1['cntStudent'];
-	$ansattCount = $row2['cntForeleser'];
+  $studentCount = $row1['cntStudent'];
+  $foreleserCount = $row2['cntForeleser'];
 
-	//Dersom "username" finnes i student tabellen blir brukeren sendt tilbake til startside.
-	if ($studentCount > 0){
+	//Dersom "username" finnes i "foreleser tabellen" blir brukeren sendt tilbake til startside.
+	if ($foreleserCount > 0){
 		header('Location: ../index.php');
   }
-  
-  //Dersom knappen for "Bytt passord" er trykket på utføres denne koden.
+    
+
   if(isset($_GET['byttPassord'])) {
 
     global $con;
@@ -39,33 +40,26 @@
     $passord1 = $_GET['passord1'];
     $passord2 = $_GET['passord2'];
 
-    $sjekk = "SELECT passord FROM foreleser WHERE passord = '$gammeltPassord'  AND epost = '$username'";
 
-    $result = mysqli_query( $con, $sjekk);
 
-    $row = mysqli_fetch_array($result);
+    $sjekkStudent = " SELECT passord FROM student  WHERE passord = '$gammeltPassord' AND epost = '$username'";
 
-    if ($row[0] == $gammeltPassord) {
-      if ($passord1 == $passord2) {
-        
-        $sql = "UPDATE foreleser SET passord = '$passord1' WHERE epost = '$username'";
+    if(mysqli_query( $con, $sjekkStudent )){
 
-        if (mysqli_query( $con, $sql)) {
-          echo "Passord oppdatert";
-        }
-        else {
-          echo "Passordet ble ikke oppdatert";
-        }
-      }
-      else {
-        echo "Nytt passord var feil";
-      }
-    }
-    else {
-      echo "Feil passord";
+      echo "Funker student";
+
+      $sql = "UPDATE student SET passord = '$passord1' WHERE epost = '$username'";
+
+      mysqli_query ( $con, $sql );
+
+    } 
+    
+    else{
+      echo "ERROR: Could not able to execute $sjekkStudent. " . mysqli_error($con);
     }
 
   }
+
 ?>
 
 <!DOCTYPE html>
@@ -96,15 +90,15 @@
 
       <div class="navbar-start">
 
-        <a class="navbar-item" href="foreleserHome.php">HJEM</a>
-        <a class="navbar-item" href="addEmner.php">EMNER</a>
-        <a class="navbar-item is-active" href="fInnstillinger.php">INNSTILLINGER</a>
+        <a class="navbar-item" href="studentHome.php">HJEM</a>
+        <a class="navbar-item" href="sEmner.php">EMNER</a>
+        <a class="navbar-item is-active" href="sInnstillinger.php">INNSTILLINGER</a>
 
       </div>
 
       <div class="navbar-end">
 
-        <p id="studentText" class="has-text-centered has-text-white is-vcentered">Logged in as <strong>Foreleser</strong></p>
+        <p id="studentText" class="has-text-centered has-text-white is-vcentered">Logged in as <strong>Student</strong></p>
 
         <form action="../logout.php">
           <button  class="button is-primary has-text-centered ">Logg ut</button>
@@ -150,17 +144,17 @@
                 <div class="field">
                   
                   <label class="label">Skriv inn gammelt passord</label>
-                  <input type="password" class="input is-primary" name="gammeltPassord"><br>
+                  <input type="password" class="input is-primary" name="gammeltPassord" pattern="[^'\x22]+"><br>
 
                   <br>
 
                   <label class="label">Skriv inn nytt passord</label>
-                  <input type="password" class="input is-primary" name="passord1"><br>
+                  <input type="password" class="input is-primary" name="passord1" pattern="[^'\x22]+"><br>
                       
                   <br>
 
                   <label class="label is-centered">Gjenta passord</label>
-                  <input type="password" class="input is-primary" name="passord2">
+                  <input type="password" class="input is-primary" name="passord2" pattern="[^'\x22]+">
               
                 </field>
 

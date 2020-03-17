@@ -17,11 +17,8 @@ if(isset($_POST['studentSubmit'])) {
   $sql1 = "INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES ('$navn', '$epost', '$studieretning', '$kull' , '$passord1')";
 
   if ($con->query($sql1) === TRUE) {
-      echo "Studentbruker opprettet!";
+    echo "Studentbruker opprettet!";
   } 
-  else {
-      echo "Error: " . $sql1 . "<br>" . $con->error;
-  }
 }
 
 if(isset($_POST['foreleserSubmit']) && isset($_FILES['bilde'])) {
@@ -66,11 +63,8 @@ if(isset($_POST['foreleserSubmit']) && isset($_FILES['bilde'])) {
   $sql1 = "INSERT INTO foreleser (navn, epost, bilde, passord) VALUES ('$foreleserNavn', '$foreleserEpost', '$bilde' , '$passord2')";
 
   if ($con->query($sql1) === TRUE) {
-      echo "Foreleserbruker opprettet!";
+    echo "Foreleserbruker opprettet!";
   } 
-  else {
-      echo "Error: " . $sql1 . "<br>" . $con->error;
-  }
 }
 
 ?>
@@ -133,17 +127,17 @@ if(isset($_POST['foreleserSubmit']) && isset($_FILES['bilde'])) {
 			      <form action= "" method="post">
 			      	
               <label class="label">Navn</label>
-			        <input type="text" class="input is-primary" name="navn">
+			        <input type="text" class="input is-primary" name="navn" pattern="[a-zA-Z0-9]+" minlength="2" maxlength="20">
               <label class="label">E-post</label>
-			        <input type="text" class="input is-primary" name="epost">
+			        <input type="text" class="input is-primary" name="epost" pattern="[a-zA-Z0-9]+" minlength="2" maxlength="20">
               <label class="label">Studieretning</label>
-			        <input type="text" class="input is-primary" name="studieretning">
+			        <input type="text" class="input is-primary" name="studieretning" pattern="[a-zA-Z0-9]+" minlength="2" maxlength="50">
               <label class="label">Årskull</label>
-              <input type="text" class="input is-primary" name="kull">
+              <input type="text" class="input is-primary" name="kull" pattern="[0-9]+" minlength="2" maxlength="10">
 
               <div class="field is-grouped is-grouped-multiline">
                 <label class="label">Passord</label>
-                <input type="password" class="input is-primary " name="passord1">
+                <input type="password" class="input is-primary " name="passord1" pattern="[^'\x22]+">
 
               </div>
 
@@ -189,7 +183,7 @@ if(isset($_POST['foreleserSubmit']) && isset($_FILES['bilde'])) {
 
               <div class="field">
               <label class="label">Passord</label>  
-                <input type="password" class="input is-primary " name="passord2">
+                <input type="password" class="input is-primary " name="passord2" pattern="[^'\x22]+">
 
               </div>
 

@@ -79,48 +79,48 @@
 
 <body>
 
-<header>
+    <header>
 
-    <nav class="navbar has-background-grey-light" role="navigation" aria-label="main navigation">
+        <nav class="navbar has-background-grey-light" role="navigation" aria-label="main navigation">
 
-    <div id="navbarBasicExample" class="navbar-menu">
+            <div id="navbarBasicExample" class="navbar-menu">
 
-        <div class="navbar-start">
+                <div class="navbar-start">
 
-            <a class="navbar-item" href="foreleserHome.php" >HJEM</a>
-            <a class="navbar-item is-active" href="">EMNER</a>
-            <a class="navbar-item" href="finnstillinger.php">INNSTILLINGER</a>
+                    <a class="navbar-item" href="foreleserHome.php" >HJEM</a>
+                    <a class="navbar-item is-active" href="">EMNER</a>
+                    <a class="navbar-item" href="finnstillinger.php">INNSTILLINGER</a>
 
-        </div>
+                </div>
 
-        <div class="navbar-end">
+                <div class="navbar-end">
 
-        <p id="studentText" class="has-text-centered has-text-white ">Logged in as <strong>Foreleser</strong></p>
+                <p id="studentText" class="has-text-centered has-text-white ">Logged in as <strong>Foreleser</strong></p>
 
-        <form action="../logout.php">
-            <button  class="button is-primary has-text-centered ">Logg ut</button>
-        </form>
+                <form action="../logout.php">
+                    <button  class="button is-primary has-text-centered ">Logg ut</button>
+                </form>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+    <div class="columns">
+            
+        <div class="column">
+
+            <!--Header-->
+            <div class="container is-centered">
+                <h1 class="subtitle is-2 is-centered">LEGG TIL EMNER:</h1>
+            </div>
 
         </div>
 
     </div>
-
-    </nav>
-
-</header>
-
-<div class="columns">
-        
-  <div class="column">
-
-    <!--Header-->
-    <div class="container is-centered">
-      <h1 class="subtitle is-2 is-centered">LEGG TIL EMNER:</h1>
-    </div>
-
-  </div>
-
-</div>
 
     <div class="columns">
 
@@ -136,8 +136,8 @@
         
                         <form action= "">
                 
-                            Emnenavn:  <input type="text" class="input is-primary"  name="navn"><br>
-                            Emnekode:  <input type="text" class="input is-primary"  name="emneKode"><br>
+                            Emnenavn:  <input type="text" class="input is-primary"  name="navn" pattern="[a-zA-Z0-9]+" minlength="2" maxlength="50"><br>
+                            Emnekode:  <input type="text" class="input is-primary"  name="emneKode" pattern="[a-zA-Z0-9]+" minlength="2" maxlength="20"><br>
                             
                             <br>
 

@@ -59,11 +59,11 @@
 				<div class="level-item">
 					<div class="field has-addons">
 
-						<form	>
+						<form>
 
 						
 							<div class="control">
-								<input class="input" type="text" name="pinkode" placeholder="PIN Kode - 0000">
+								<input class="input" type="text" name="pinkode" placeholder="PIN Kode - 0000" pattern="[0-9]+" minlength="4" maxlength="4">
 							</div>
 
 							<div class="control">

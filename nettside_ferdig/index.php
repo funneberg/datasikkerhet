@@ -102,7 +102,7 @@ if(isset($_GET['logginn'])) {
 		    <div class="field">
 		    	
 				<p class="control has-icons-left has-icons-right">
-				    <input class="input" type="text" placeholder="Epost" name="epost">
+				    <input class="input" type="text" placeholder="Epost" name="epost" pattern="[a-zA-Z0-9]+" minlength="3" maxlength="15">
 				    <span class="icon is-small is-left">
 				    <i class="fas fa-user"></i>
 				    </span>
@@ -115,7 +115,7 @@ if(isset($_GET['logginn'])) {
 
 					<p class="control has-icons-left">
 
-						<input class="input" type="password" placeholder="Passord" name="passord">
+						<input class="input" type="password" placeholder="Passord" name="passord" pattern="[^'\x22]+">
 
 						<span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
 
