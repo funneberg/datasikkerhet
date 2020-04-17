@@ -1,9 +1,31 @@
 <?php
 
 include "connection.php";
-include "../test/redirect.php";
 
-redirectIfLoggedIn();
+session_start();
+
+///////////////////////////////////////////////////////////////////////////////////
+// Redirecter vekk fra startsiden hvis man allerede er logget inn.
+///////////////////////////////////////////////////////////////////////////////////
+if (isset($_SESSION['admin'])) {
+	if ($_SESSION['admin']) {
+		header("Location: http://localhost/datasikkerhet/nettside_ny/nettside_ferdig/adminSider/admin.php");
+		exit();
+	}
+}
+if (isset($_SESSION['student'])) {
+	if ($_SESSION['student']) {
+		header("Location: http://localhost/datasikkerhet/nettside_ny/nettside_ferdig/studentSider/studentHome.php");
+		exit();
+	}
+}
+if (isset($_SESSION['foreleser'])) {
+	if ($_SESSION['foreleser']) {
+		header("Location: http://localhost/datasikkerhet/nettside_ny/nettside_ferdig/foreleserSider/foreleserHome.php");
+		exit();
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////
 
 if(isset($_GET['logginn'])) {
 
