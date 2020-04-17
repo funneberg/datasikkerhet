@@ -5,7 +5,26 @@
     //Bruker autentisering
 
 	//Starter session
-	session_start();
+    session_start();
+    
+    ////////////////////////////////////////////////////////////////////
+    // Redirecter brukeren hvis man ikke er logget inn som foreleser.
+    ////////////////////////////////////////////////////////////////////
+
+    if (isset($_SESSION['student'])) {
+        header("Location: ../studentSider/studentHome.php");
+        exit();
+    }
+    if (isset($_SESSION['admin'])) {
+        header("Location: ../adminSider/admin.php");
+        exit();
+    }
+    if (!isset($_SESSION['foreleser'])) {
+        header("Location: ../index.php");
+        exit();
+    }
+
+    /////////////////////////////////////////////////////////////////////
 	
 	global $con;
 	//Henter studentID/ansattID lagret i session
@@ -24,10 +43,12 @@
 	$studentCount = $row1['cntStudent'];
 	$ansattCount = $row2['cntForeleser'];
 
+    /*
 	//Dersom "username" finnes i student tabellen blir brukeren sendt tilbake til startside.
 	if ($studentCount > 0){
 		header('Location: ../index.php');
-	}
+    }
+    */
 
     if(isset($_GET['leggTil'])){
 
@@ -53,7 +74,7 @@
         
 		while($row = $resultat->fetch_assoc()) {
             echo "<tr><td>" . $row['emnekode'] . "</td>
-            <td>" . $row['navn'] . "</td><td>" . $row['epost'] . "<td><a href='../henvendelser.php?emnekode=" . $row['emnekode'] . "'>" . "Se meldinger" . "</a></td></tr>";
+            <td>" . $row['navn'] . "</td><td>" . $row['epost'] . "<td><a href='../henvendelser.php?coursecode=" . $row['emnekode'] . "'>" . "Se meldinger" . "</a></td></tr>";
         }	
     }
 ?>

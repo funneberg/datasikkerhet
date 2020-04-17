@@ -1,6 +1,11 @@
 <?php
 
 include 'connection.php';
+include "../test/redirect.php";
+
+redirectIfLoggedIn();
+
+session_destroy();
 
 if(isset($_POST['studentSubmit'])) {
 

@@ -1,11 +1,31 @@
 <?php
 
   include '../connection.php';
+  //include "../../test/redirect.php";
 
   //Brukerautentisering
 
 	//Starter session
-	session_start();
+  session_start();
+  
+  ////////////////////////////////////////////////////////////////////
+  // Redirecter brukeren hvis man ikke er logget inn som foreleser.
+  ////////////////////////////////////////////////////////////////////
+
+    if (isset($_SESSION['student'])) {
+      header("Location: ../studentSider/studentHome.php");
+      exit();
+  }
+  if (isset($_SESSION['admin'])) {
+      header("Location: ../adminSider/admin.php");
+      exit();
+  }
+  if (!isset($_SESSION['foreleser'])) {
+      header("Location: ../index.php");
+      exit();
+  }
+
+  /////////////////////////////////////////////////////////////////////
 	
 	global $con;
 	//Henter studentID/ansattID lagret i session
@@ -24,10 +44,12 @@
 	$studentCount = $row1['cntStudent'];
 	$ansattCount = $row2['cntForeleser'];
 
+  /*
 	//Dersom "username" finnes i student tabellen blir brukeren sendt tilbake til startside.
 	if ($studentCount > 0){
 		header('Location: ../index.php');
   }
+  */
   
   //Dersom knappen for "Bytt passord" er trykket på utføres denne koden.
   if(isset($_GET['byttPassord'])) {

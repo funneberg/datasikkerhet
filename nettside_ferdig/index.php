@@ -1,6 +1,9 @@
 <?php
 
-include 'connection.php';
+include "connection.php";
+include "../test/redirect.php";
+
+redirectIfLoggedIn();
 
 if(isset($_GET['logginn'])) {
 
@@ -102,7 +105,7 @@ if(isset($_GET['logginn'])) {
 		    <div class="field">
 		    	
 				<p class="control has-icons-left has-icons-right">
-				    <input class="input" type="text" placeholder="Epost" name="epost" pattern="[a-zA-Z0-9]+" minlength="3" maxlength="15">
+				    <input class="input" type="text" placeholder="Epost" name="epost">
 				    <span class="icon is-small is-left">
 				    <i class="fas fa-user"></i>
 				    </span>

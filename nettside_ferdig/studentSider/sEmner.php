@@ -1,11 +1,31 @@
 <?php
 
-    include "../connection.php";
+	include "../connection.php";
+	//include "../../test/redirect.php";
 
     //Brukerautentisering
 
 	//Starter session
 	session_start();
+
+	////////////////////////////////////////////////////////////////////
+    // Redirecter brukeren hvis man ikke er logget inn som student.
+    ////////////////////////////////////////////////////////////////////
+
+    if (isset($_SESSION['foreleser'])) {
+        header("Location: ../foreleserSider/foreleserHome.php");
+        exit();
+    }
+    if (isset($_SESSION['admin'])) {
+        header("Location: ../adminSider/admin.php");
+        exit();
+    }
+    if (!isset($_SESSION['student'])) {
+        header("Location: ../index.php");
+        exit();
+    }
+
+    /////////////////////////////////////////////////////////////////////
 	
 	global $con;
 	//Henter studentID/ansattID lagret i session
@@ -180,7 +200,7 @@
 									if ($row['foreleser'] != null) {
 										echo "<td>" . $row["navn"] . "</td>
 										<td>" . $row["foreleser"] . "</td>
-										<td><a href='../henvendelser.php?emnekode=".$row['emnekode']."'>Se henvendelser</a></td></tr>";
+										<td><a href='../henvendelser.php?coursecode=".$row['emnekode']."'>Se henvendelser</a></td></tr>";
 									}
 									else {
 										echo "</tr>";

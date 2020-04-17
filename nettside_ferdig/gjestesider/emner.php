@@ -1,6 +1,8 @@
 <?php
 
 	include "../connection.php";
+
+	redirectIfLoggedIn();
 		
 ?>
 
@@ -120,7 +122,7 @@
 									echo "<tr><td>" . $row["emnekode"] . "</td>
 									<td>" . $row["emnenavn"] . "</td>
 									<td>" . $row["navn"] . "</td>
-									<td>" . $row["epost"] . "<td><a href='../henvendelser.php?emnekode=".$row['emnekode']."'>Se henvendelser</a></td></tr>";
+									<td>" . $row["epost"] . "<td><a href='../henvendelser.php?coursecode=".$row['emnekode']."'>Se henvendelser</a></td></tr>";
 								}	
 							}
 						?>

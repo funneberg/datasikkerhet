@@ -1,8 +1,28 @@
 <?php
 
     include "../connection.php";
+    //include "../../test/redirect.php";
 
     session_start();
+
+    ////////////////////////////////////////////////////////////////////
+    // Redirecter brukeren hvis man ikke er logget inn som admin.
+    ////////////////////////////////////////////////////////////////////
+
+    if (isset($_SESSION['foreleser'])) {
+        header("Location: ../foreleserSider/foreleserHome.php");
+        exit();
+    }
+    if (isset($_SESSION['student'])) {
+        header("Location: ../studentSider/studentHome.php");
+        exit();
+    }
+    if (!isset($_SESSION['admin'])) {
+        header("Location: ../index.php");
+        exit();
+    }
+
+    /////////////////////////////////////////////////////////////////////
 
     if (isset($_SESSION['admin'])) {
 

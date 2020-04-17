@@ -1,11 +1,31 @@
 <?php
 
 	include '../connection.php';
+	//include "../../test/redirect.php";
 
 	//Brukerautentisering
 
 	//Starter session
 	session_start();
+
+	////////////////////////////////////////////////////////////////////
+    // Redirecter brukeren hvis man ikke er logget inn som student.
+    ////////////////////////////////////////////////////////////////////
+
+    if (isset($_SESSION['foreleser'])) {
+        header("Location: ../foreleserSider/foreleserHome.php");
+        exit();
+    }
+    if (isset($_SESSION['admin'])) {
+        header("Location: ../adminSider/admin.php");
+        exit();
+    }
+    if (!isset($_SESSION['student'])) {
+        header("Location: ../index.php");
+        exit();
+    }
+
+    /////////////////////////////////////////////////////////////////////
 	
 	global $con;
 	//Henter studentID/ansattID lagret i session
@@ -24,10 +44,12 @@
 	$studentCount = $row1['cntStudent'];
 	$foreleserCount = $row2['cntForeleser'];
 
+	/*
 	//Dersom "username" finnes i "foreleser tabellen" blir brukeren sendt tilbake til startside.
 	if ($foreleserCount > 0){
 		header('Location: ../index.php');
   	}
+	*/
 
 ?>
 
