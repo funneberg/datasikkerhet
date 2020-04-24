@@ -150,6 +150,19 @@ else if ($page == 'settings') {
         $model = $controller->changePassword($model);
     }
 }
+else if ($page == 'app') {
+    include("model/App.php");
+    include("view/AppView.php");
+    include("controller/AppController.php");
+
+    $model = new App($mysqli);
+    $view = new AppView();
+    $controller = new AppController();
+
+    if (isset($_POST['download'])) {
+        $model = $controller->download($model);
+    }
+}
 
 // Ødelegger sesjonen hvis man logger ut.
 else if ($page == 'logout') {
