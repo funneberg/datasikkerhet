@@ -102,7 +102,7 @@
                 
                     <div class="field">
 
-                        <form action= "" method="post" enctype="multipart/form-data">
+                        <form method="post" enctype="multipart/form-data">
                         
                             <label class="label">Navn</label>
                             <input type="text" class="input is-primary" name="name" />
@@ -111,14 +111,14 @@
                             <input type="text" class="input is-primary" name="email" />
 
                             <label class="label">Bilde</label>
-                            <input type="file" class="input is-primary" name="password" />
+                            <input type="file" class="input is-primary" name="image" />
     
                             <br>
 
                             <div class="field">
 
                                 <label class="label">Passord</label>  
-                                <input type="password" class="input is-primary " name="passord2" />
+                                <input type="password" class="input is-primary " name="password" />
 
                             </div>
 

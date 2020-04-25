@@ -38,23 +38,22 @@ class Register extends Model {
             // Sjekker om brukeren finnes fra før, og om bildefilen er gyldig.
             if (!$this->userExists($lecturer['email']) && $this->isLegalFile($image)) {
 
-                $targetFile = Register::dir.basename($image['name']);
-                $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+                // Lager et nytt navn til bildet.
+                $fileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
+                $newFileName = Register::dir.hash("sha256", uniqid()).".".$fileType;
                 $fileName = basename($targetFile, ".".$fileType);
-                $copy = 1;
 
-                // Endrer navnet på bildefilen hvis det finnes et annet bilde i bildemappen med samme navn.
-                while (file_exists($targetFile)) {
-                    $targetFile = Register::dir.$fileName."-".$copy.".".$fileType;
-                    $copy++;
+                // Endrer navnet på nytt hvis det allerede finnes et bilde med det nye navnet.
+                while (file_exists($newFileName)) {
+                    $newFileName = Register::dir.hash("sha256", uniqid()).".".$fileType;
                 }
 
                 $stmt = $this->mysqli->prepare("INSERT INTO foreleser (navn, epost, passord, bilde) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $lecturer['name'], $lecturer['email'], $lecturer['password'], basename($targetFile));
+                $stmt->bind_param("ssss", $lecturer['name'], $lecturer['email'], $lecturer['password'], basename($newFileName));
                 $stmt->execute();
 
                 if ($stmt->affected_rows > 0) {
-                    move_uploaded_file($image['tmp_name'], $targetFile);
+                    move_uploaded_file($image['tmp_name'], $newFileName);
                 }
 
                 $_SESSION['loggedIn'] = true;
