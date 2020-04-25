@@ -15,7 +15,7 @@ class SettingsController extends Controller {
             $model = $model->changeStudentPassword($_POST);
         }
         // Endrer passordet til en foreleser.
-        else if (isset($_SESSION['foreleser'])) {
+        else if (isset($_SESSION['lecturer'])) {
             $model = $model->changeLecturerPassword($_POST);
         }
         return $model;

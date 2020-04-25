@@ -13,15 +13,24 @@ class Register extends Model {
     public function registerStudent(array $student): Register {
         if (!empty($student['name']) && !empty($student['email']) && !empty($student['fieldOfStudy']) &&
             !empty($student['year']) && !empty($student['password'])) {
-            if (!$this->userExists($student['email'])) {
+
+            $name = $student['name'];
+            $email = $student['email'];
+            $fieldOfStudy = $student['fieldOfStudy'];
+            $year = $student['year'];
+            $password = password_hash($student['password'], PASSWORD_DEFAULT);
+
+            if (!$this->userExists($email)) {
                 $stmt = $this->mysqli->prepare("INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssis", $student['name'], $student['email'], $student['fieldOfStudy'], $student['year'], $student['password']);
+                $stmt->bind_param("sssis", $name, $email, $fieldOfStudy, $year, $password);
                 $stmt->execute();
 
-                $_SESSION['loggedIn'] = true;
-                $_SESSION['student'] = true;
-                $_SESSION['name'] = $student['name'];
-                $_SESSION['email'] = $student['email'];
+                if ($stmt->affected_rows > 0) {
+                    $_SESSION['loggedIn'] = true;
+                    $_SESSION['student'] = true;
+                    $_SESSION['name'] = $name;
+                    $_SESSION['email'] = $email;
+                }
             }
         }
         return new Register($this->mysqli);
@@ -32,6 +41,10 @@ class Register extends Model {
      */
     public function registerLecturer(array $lecturer): Register {
         if (!empty($lecturer['name']) && !empty($lecturer['email']) && !empty($lecturer['password'] && !empty($lecturer['image']))) {
+
+            $name = $lecturer['name'];
+            $email = $lecturer['email'];
+            $password = password_hash($lecturer['password'], PASSWORD_DEFAULT);
 
             $image = $lecturer['image'];
 
@@ -50,17 +63,17 @@ class Register extends Model {
                 $fileName = basename($file);
 
                 $stmt = $this->mysqli->prepare("INSERT INTO foreleser (navn, epost, passord, bilde) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $lecturer['name'], $lecturer['email'], $lecturer['password'], $fileName);
+                $stmt->bind_param("ssss", $name, $email, $password, $fileName);
                 $stmt->execute();
 
                 if ($stmt->affected_rows > 0) {
                     move_uploaded_file($image['tmp_name'], $file);
-                }
 
-                $_SESSION['loggedIn'] = true;
-                $_SESSION['lecturer'] = true;
-                $_SESSION['name'] = $lecturer['name'];
-                $_SESSION['email'] = $lecturer['email'];
+                    $_SESSION['loggedIn'] = true;
+                    $_SESSION['lecturer'] = true;
+                    $_SESSION['name'] = $name;
+                    $_SESSION['email'] = $email;
+                }
             }
         }
         return new Register($this->mysqli);

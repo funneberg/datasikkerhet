@@ -13,13 +13,19 @@ class Login extends Model {
         if (!empty($user['email']) && !empty($user['password'])) {
 
             // Prøver å logge inn som student.
-            $this->loginStudent($user);
+            if ($this->loginStudent($user)) {
+                return new Login($this->mysqli);
+            }
 
             // Prøver å logge inn som foreleser.
-            $this->loginLecturer($user);
+            else if ($this->loginLecturer($user)) {
+                return new Login($this->mysqli);
+            }
 
             // Prøver å logge inn som administrator.
-            $this->loginAdmin($user);
+            else if ($this->loginAdmin($user)) {
+                return new Login($this->mysqli);
+            }
         }
 
         return new Login($this->mysqli);
@@ -28,57 +34,89 @@ class Login extends Model {
     /**
      * Logger inn en student hvis brukeren finnes i tabellen for studenter.
      */
-    private function loginStudent(array $user): void {
-        $stmt = $this->mysqli->prepare("SELECT navn, epost FROM student WHERE epost = ? AND passord = ?");
-        $stmt->bind_param("ss", $user['email'], $user['password']);
+    private function loginStudent(array $user): bool {
+        $email = $user['email'];
+        $password = $user['password'];
+
+        $stmt = $this->mysqli->prepare("SELECT navn, passord FROM student WHERE epost = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
+        // Sjekker om det ble returnert en student.
         if ($result->num_rows > 0) {
-            $student = $result->fetch_array();
+            $student = $result->fetch_assoc();
+            $name = $student['navn'];
+            $pwHash = $student['passord'];
 
-            $_SESSION['loggedIn'] = true;
-            $_SESSION['student'] = true;
-            $_SESSION['name'] = $student[0];
-            $_SESSION['email'] = $student[1];
+            if (password_verify($password, $pwHash)) {
+                $_SESSION['loggedIn'] = true;
+                $_SESSION['student'] = true;
+                $_SESSION['name'] = $name;
+                $_SESSION['email'] = $email;
+
+                return true;
+            }
         }
+        return false;
     }
 
     /**
      * Logger inn en foreleser hvis brukeren finnes i tabellen for forelesere.
      */
-    private function loginLecturer(array $user): void {
-        $stmt = $this->mysqli->prepare("SELECT navn, epost FROM foreleser WHERE epost = ? AND passord = ?");
-        $stmt->bind_param("ss", $user['email'], $user['password']);
+    private function loginLecturer(array $user): bool {
+        $email = $user['email'];
+        $password = $user['password'];
+
+        $stmt = $this->mysqli->prepare("SELECT navn, passord FROM foreleser WHERE epost = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
+        // Sjekker om det ble returnert en foreleser.
         if ($result->num_rows > 0) {
-            $lecturer = $result->fetch_array();
+            $lecturer = $result->fetch_assoc();
+            $name = $lecturer['navn'];
+            $pwHash = $lecturer['passord'];
 
-            $_SESSION['loggedIn'] = true;
-            $_SESSION['lecturer'] = true;
-            $_SESSION['name'] = $lecturer[0];
-            $_SESSION['email'] = $lecturer[1];
+            // Sjekker om passordet er riktig.
+            if (password_verify($password, $pwHash)) {
+                $_SESSION['loggedIn'] = true;
+                $_SESSION['lecturer'] = true;
+                $_SESSION['name'] = $name;
+                $_SESSION['email'] = $email;
+
+                return true;
+            }
         }
+        return false;
     }
 
     /**
      * Logger inn en foreleser hvis brukeren finnes i tabellen for administratorer.
      */
-    private function loginAdmin(array $user): void {
-        $stmt = $this->mysqli->prepare("SELECT brukernavn FROM admin WHERE brukernavn = ? AND passord = ?");
-        $stmt->bind_param("ss", $user['email'], $user['password']);
+    private function loginAdmin(array $user): bool {
+        $email = $user['email'];
+        $password = $user['password'];
+
+        $stmt = $this->mysqli->prepare("SELECT passord FROM admin WHERE brukernavn = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-            $admin = $result->fetch_array();
+            $admin = $result->fetch_assoc();
+            $pwHash = $admin['passord'];
 
-            $_SESSION['loggedIn'] = true;
-            $_SESSION['admin'] = true;
-            $_SESSION['name'] = $admin[0];
+            if (password_verify($password, $pwHash)) {
+                $_SESSION['loggedIn'] = true;
+                $_SESSION['admin'] = true;
+                $_SESSION['name'] = $email;
+
+                return true;
+            }
         }
+        return false;
     }
 
 }

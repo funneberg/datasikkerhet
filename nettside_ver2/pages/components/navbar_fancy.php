@@ -6,9 +6,10 @@
             
             <a class="navbar-item is-active" href="index.php">HJEM</a>
             <a class="navbar-item" href="index.php?page=courses">EMNER</a>
+            <a class="navbar-item" href="index.php?page=app">APP</a>
 
             <!-- Viser innstillinger hvis man er logget inn som student eller foreleser. -->
-            <?php if (isset($_SESSION['student']) || isset($_SESSION['foreleser'])): ?>
+            <?php if (isset($_SESSION['student']) || isset($_SESSION['lecturer'])): ?>
                 <a class="navbar-item" href="index.php?page=settings">INNSTILLINGER</a>
             <?php endif; ?>
                 

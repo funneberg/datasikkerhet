@@ -51,7 +51,7 @@
                         
                         <p class="card-header-title is-centered">Bytt passord:</p>
                     
-                        <form action="post">
+                        <form method="post">
 
                             <div class="field">
                 

@@ -16,12 +16,36 @@ class Settings extends Model {
      * Endrer passordet til en student.
      */
     public function changeStudentPassword($passwords): Settings {
-        if ($passwords['newPasswordFirst'] == $passwords['newPasswordSecond'] && !empty($passwords['newPasswordFirst'])) {
-            $stmt = $this->mysqli->prepare("UPDATE student SET passord = ? WHERE epost = ? AND passord = ?");
-            $stmt->bind_param("sss", $passwords['newPasswordFirst'], $_SESSION['email'], $passwords['oldPassword']);
-            $stmt->execute();
-            if ($stmt->affected_rows > 0) {
-                return new Settings($this->mysqli, true);
+        $email = $_SESSION['email'];
+
+        $stmt = $this->mysqli->prepare("SELECT passord FROM student WHERE epost = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $student = $result->fetch_assoc();
+
+            $oldPassword = $passwords['oldPassword'];
+            $pwHash = $student['passord'];
+
+            // Sjekker at passordet er riktig.
+            if (password_verify($oldPassword, $pwHash)) {
+
+                $newPassword1 = $passwords['newPasswordFirst'];
+                $newPassword2 = $passwords['newPasswordSecond'];
+
+                // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
+                if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
+                    $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+
+                    $stmt = $this->mysqli->prepare("UPDATE student SET passord = ? WHERE epost = ?");
+                    $stmt->bind_param("ss", $newPassword, $email);
+                    $stmt->execute();
+                    if ($stmt->affected_rows > 0) {
+                        return new Settings($this->mysqli, true);
+                    }
+                }
             }
         }
         return new Settings($this->mysqli);
@@ -31,12 +55,36 @@ class Settings extends Model {
      * Endrer passordet til en foreleser.
      */
     public function changeLecturerPassword($passwords): Settings {
-        if ($passwords['newPasswordFirst'] == $passwords['newPasswordSecond']) {
-            $stmt = $this->mysqli->prepare("UPDATE foreleser SET passord = ? WHERE epost = ? AND passord = ?");
-            $stmt->bind_param("sss", $passwords['newPasswordFirst'], $_SESSION['email'], $passwords['oldPassword']);
-            $stmt->execute();
-            if ($stmt->affected_rows() > 0) {
-                return new Settings($this->mysqli, true);
+        $email = $_SESSION['email'];
+
+        $stmt = $this->mysqli->prepare("SELECT passord FROM foreleser WHERE epost = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $lecturer = $result->fetch_assoc();
+
+            $oldPassword = $passwords['oldPassword'];
+            $pwHash = $lecturer['passord'];
+
+            // Sjekker om brukeren har skrevet inn riktig passord.
+            if (password_verify($oldPassword, $pwHash)) {
+
+                $newPassword1 = $passwords['newPasswordFirst'];
+                $newPassword2 = $passwords['newPasswordSecond'];
+
+                // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
+                if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
+                    $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+
+                    $stmt = $this->mysqli->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
+                    $stmt->bind_param("ss", $newPassword, $email);
+                    $stmt->execute();
+                    if ($stmt->affected_rows > 0) {
+                        return new Settings($this->mysqli, true);
+                    }
+                }
             }
         }
         return new Settings($this->mysqli);
