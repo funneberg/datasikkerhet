@@ -16,7 +16,7 @@
         <img style="width:150px" src="./bilder/<?php echo $course['bilde'] ?>" />
 
         <!-- Forelesere kan ikke sende henvendelser. -->
-        <?php if (!(isset($_SESSION['foreleser']))): ?>
+        <?php if (!isset($_SESSION['lecturer'])): ?>
             <form method="post">
                 <textarea name="inquiry" cols="30" rows="5"></textarea>
                 <button name="sendInquiry">Send</button>
