@@ -41,7 +41,6 @@ class Register extends Model {
                 // Lager et nytt navn til bildet.
                 $fileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
                 $newFileName = Register::dir.hash("sha256", uniqid()).".".$fileType;
-                $fileName = basename($targetFile, ".".$fileType);
 
                 // Endrer navnet på nytt hvis det allerede finnes et bilde med det nye navnet.
                 while (file_exists($newFileName)) {
