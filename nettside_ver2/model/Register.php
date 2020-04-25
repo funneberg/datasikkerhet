@@ -40,19 +40,21 @@ class Register extends Model {
 
                 // Lager et nytt navn til bildet.
                 $fileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
-                $newFileName = Register::dir.hash("sha256", uniqid()).".".$fileType;
+                $file = Register::dir.hash("sha256", uniqid()).".".$fileType;
 
                 // Endrer navnet på nytt hvis det allerede finnes et bilde med det nye navnet.
-                while (file_exists($newFileName)) {
-                    $newFileName = Register::dir.hash("sha256", uniqid()).".".$fileType;
+                while (file_exists($file)) {
+                    $file = Register::dir.hash("sha256", uniqid()).".".$fileType;
                 }
 
+                $fileName = basename($file);
+
                 $stmt = $this->mysqli->prepare("INSERT INTO foreleser (navn, epost, passord, bilde) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $lecturer['name'], $lecturer['email'], $lecturer['password'], basename($newFileName));
+                $stmt->bind_param("ssss", $lecturer['name'], $lecturer['email'], $lecturer['password'], $fileName);
                 $stmt->execute();
 
                 if ($stmt->affected_rows > 0) {
-                    move_uploaded_file($image['tmp_name'], $newFileName);
+                    move_uploaded_file($image['tmp_name'], $file);
                 }
 
                 $_SESSION['loggedIn'] = true;
