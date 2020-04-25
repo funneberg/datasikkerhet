@@ -6,7 +6,7 @@ include("controller/Controller.php");
 
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "skosaalen!";
 $dbname = "datasikkerhet";
 
 // Oppretter forbindelse med databasen.

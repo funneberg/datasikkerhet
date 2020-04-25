@@ -10,8 +10,6 @@ class CourseListView extends View {
      */
     public function output(Model $model): void {
 
-        echo $_POST['searchTerm'];
-
         // Henter alle emner.
         $courses = $model->getCourses();
         include_once("./pages/courseListPage.php");
