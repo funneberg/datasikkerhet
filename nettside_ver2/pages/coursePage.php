@@ -42,6 +42,14 @@
                     <input type="hidden" name="id" value=<?php echo $inquiry['id'] ?> />
                 </form>
 
+                <!-- Viser svar fra foreleser. -->
+                <?php if (isset($inquiry['svar'])): ?>
+                    <div style="border-left: 2px solid; padding: 10px; margin-bottom: 10px">
+                        <p>Svar fra <?php echo $course['navn'] ?>:</p>
+                        <p><?php echo $inquiry['svar'] ?>
+                    </div>
+                <?php endif; ?>
+
                 <p>Kommentarer (<?php echo sizeof($inquiry['comments']) ?>):</p>
 
                 <!-- Kommentarer til en henveldelse. -->

@@ -16,7 +16,15 @@ class CourseController extends Controller {
      * Sender inn en kommentar fra brukeren.
      */
     public function submitComment(Course $model): Course {
-        return $model->saveComment($_POST);
+        $course = $model->getCourse();
+        $lecturer = $course['epost'];
+        if (isset($_SESSION['lecturer']) && $_SESSION['email'] == $lecturer) {
+            $model = $model->saveResponse($_POST);
+        }
+        else {
+            $model = $model->saveComment($_POST);
+        }
+        return $model;
     }
 
     /**

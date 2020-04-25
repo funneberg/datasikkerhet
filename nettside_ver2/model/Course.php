@@ -30,6 +30,13 @@ class Course extends Model {
         return new Course($this->mysqli, $this->course['emnekode']);
     }
 
+    public function saveResponse(array $response): Course {
+        $stmt = $this->mysqli->prepare("UPDATE henvendelse SET svar = ? WHERE id = ?");
+        $stmt->bind_param("si", $response['comment'], $response['id']);
+        $stmt->execute();
+        return new Course($this->mysqli, $this->course['emnekode']);
+    }
+
     /**
      * Lagrer en kommentar i databasen.
      */
