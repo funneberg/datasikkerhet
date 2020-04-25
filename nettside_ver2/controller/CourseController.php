@@ -9,7 +9,10 @@ class CourseController extends Controller {
      * Sender inn en henvendelse fra brukeren.
      */
     public function submitInquiry(Course $model): Course {
-        return $model->saveInquiry($_POST);
+        if (!isset($_SESSION['lecturer'])) {
+            $model = $model->saveInquiry($_POST);
+        }
+        return $model;
     }
 
     /**
