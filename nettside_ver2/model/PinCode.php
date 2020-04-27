@@ -20,11 +20,10 @@ class PinCode extends Model {
     }
 
     public function submitPIN(string $pin) {
-        $stmt = $this->mysqli->prepare("SELECT * FROM emner WHERE emnekode = ? AND PIN = ?");
-        $stmt->bind_param("si", $this->course['emnekode'], $pin);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
+
+        $coursePin = $course['pin'];
+
+        if (password_verify($pin, $coursePin)) {
             return new PinCode($this->mysqli, $this->course['emnekode'], true);
         }
         return new PinCode($this->mysqli, $this->course['emnekode']);

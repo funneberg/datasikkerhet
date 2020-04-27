@@ -33,9 +33,15 @@ class CourseCreator extends Model {
      * Lagrer et nytt emne i databasen.
      */
     public function createCourse($course): CourseCreator {
+
+        $coursecode = $course['coursecode'];
+        $coursename = $course['coursename'];
+        $email = $_SESSION['email'];
+        $pin = password_hash($course['pin'], PASSWORD_DEFAULT);
+
         if ($this->isAuthorized()) {
             $stmt = $this->mysqli->prepare("INSERT INTO emner (emnekode, emnenavn, foreleser, PIN) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("sssi", $course['coursecode'], $course['coursename'], $_SESSION['email'], $course['pin']);
+            $stmt->bind_param("ssss", $coursecode, $coursename, $email, $pin);
             $stmt->execute();
         }
         return new CourseCreator($this->mysqli, $this->lecturerEmail);

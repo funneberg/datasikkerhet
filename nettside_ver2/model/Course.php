@@ -119,7 +119,8 @@ class Course extends Model {
      * Sjekker om en PIN-kode er riktig.
      */
     public function isCorrectPIN(int $pin): bool {
-        return $this->course['PIN'] == $pin;
+        $pinHash = $this->course['PIN'];
+        return password_verify($pin, $pinHash);
     }
 
     /**

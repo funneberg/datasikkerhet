@@ -9,8 +9,8 @@ class CourseListController extends Controller {
      * Søker etter et bestemt søkeord i emnelisten.
      */
     public function search(CourseList $model): CourseList {
-        if (!empty($_POST['searchTerm'])) {
-            $model = $model->search($_POST['searchTerm']);
+        if (!empty($_GET['search'])) {
+            $model = $model->search($_GET['search']);
         }
         return $model;
     }

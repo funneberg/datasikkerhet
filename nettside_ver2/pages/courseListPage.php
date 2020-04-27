@@ -26,18 +26,20 @@
         <!-- Left side -->
         <div  class="level-left">
 
-            <form method="post">
+            <form>
+
+                <input type="hidden" name="page" value="courses" />
 
                 <div class="level-item">
                 
                     <div>
 
-                        <input class="input" type="text" placeholder="Søk" name="searchTerm" />
+                        <input class="input" type="text" placeholder="Søk" name="search" />
 
                     </div>
 
                     <div class="level-item">
-                        <button class="button is-primary" name="search">Søk</button>
+                        <button class="button is-primary">Søk</button>
                     </div>
 
                 </div>
