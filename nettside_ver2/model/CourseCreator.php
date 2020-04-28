@@ -34,17 +34,22 @@ class CourseCreator extends Model {
      */
     public function createCourse($course): CourseCreator {
 
-        $coursecode = $course['coursecode'];
-        $coursename = $course['coursename'];
-        $email = $_SESSION['user'];
-        $pin = password_hash($course['pin'], PASSWORD_DEFAULT);
+        $courseName = trim($course['coursename']);
+        $courseCode = trim($course['coursecode']);
+        $email = $_SESSION['email'];
+        $pin = password_hash(stripslashes(trim($course['pin'])), PASSWORD_DEFAULT);
 
-        if ($this->isAuthorized()) {
-            $stmt = $this->mysqli->prepare("INSERT INTO emner (emnekode, emnenavn, foreleser, PIN) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $coursecode, $coursename, $email, $pin);
-            $stmt->execute();
+        //Sjekker at emnenavn og emnekode bare inneholder bokstaver og tall, og at pinkoden bare inneholder tall. 
+        if (preg_match("/^[a-zA-Z0-9 ]*$/" , $courseName) && preg_match("/^[a-zA-Z0-9 ]*$/" , $courseCode) && preg_match("/^[0-9 ]*$/" , $coursePin) )  {
 
-            $this->logger->info('Bruker opprettet et nytt emne.', ['emnekode' => $coursecode, 'brukernavn' => $email]);
+            if ($this->isAuthorized()) {
+                $stmt = $this->mysqli->prepare("INSERT INTO emner (emnekode, emnenavn, foreleser, PIN) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("ssss", $coursecode, $coursename, $email, $pin);
+                $stmt->execute();
+
+                $this->logger->info('Bruker opprettet et nytt emne.', ['emnekode' => $coursecode, 'brukernavn' => $email]);
+            }
+
         }
 
         $this->logger->info('Bruker prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);

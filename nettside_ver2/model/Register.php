@@ -14,24 +14,29 @@ class Register extends Model {
         if (!empty($student['name']) && !empty($student['email']) && !empty($student['fieldOfStudy']) &&
             !empty($student['year']) && !empty($student['password'])) {
 
-            $name = $student['name'];
-            $email = $student['email'];
-            $fieldOfStudy = $student['fieldOfStudy'];
-            $year = $student['year'];
-            $password = password_hash($student['password'], PASSWORD_DEFAULT);
+            $name = trim($student['name']);
+            $email = trim($student['email']);
+            $fieldOfStudy = trim($student['fieldOfStudy']);
+            $year = trim($student['year']);
 
-            if (!$this->userExists($email)) {
-                $stmt = $this->mysqli->prepare("INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssis", $name, $email, $fieldOfStudy, $year, $password);
-                $stmt->execute();
+            if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $name) && preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $fieldOfStudy) && filter_var($email, FILTER_VALIDATE_EMAIL) 
+                && preg_match("/^[0-9 ]*$/" , $year) && strlen($year) == 4 && $year <= date("Y"))  {
 
-                if ($stmt->affected_rows > 0) {
-                    $_SESSION['loggedIn'] = true;
-                    $_SESSION['student'] = true;
-                    $_SESSION['name'] = $name;
-                    $_SESSION['user'] = $email;
+                $password = password_hash($student['password'], PASSWORD_DEFAULT);
 
-                    $this->logger->info('Ny student ble registrert.', ['Brukernavn' => $email]);
+                if (!$this->userExists($email)) {
+                    $stmt = $this->mysqli->prepare("INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->bind_param("sssis", $name, $email, $fieldOfStudy, $year, $password);
+                    $stmt->execute();
+
+                    if ($stmt->affected_rows > 0) {
+                        $_SESSION['loggedIn'] = true;
+                        $_SESSION['student'] = true;
+                        $_SESSION['name'] = $name;
+                        $_SESSION['user'] = $email;
+
+                        $this->logger->info('Ny student ble registrert.', ['Brukernavn' => $email]);
+                    }
                 }
             }
         }
@@ -46,41 +51,46 @@ class Register extends Model {
      * Registrerer en foreleser til databasen hvis brukeren ikke finnes fra før.
      */
     public function registerLecturer(array $lecturer): Register {
+
         if (!empty($lecturer['name']) && !empty($lecturer['email']) && !empty($lecturer['password'] && !empty($lecturer['image']))) {
 
-            $name = $lecturer['name'];
-            $email = $lecturer['email'];
-            $password = password_hash($lecturer['password'], PASSWORD_DEFAULT);
+            $name = trim($lecturer['name']);
+            $email = trim($lecturer['email']);
 
-            $image = $lecturer['image'];
+            if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/"  , $name) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-            // Sjekker om brukeren finnes fra før, og om bildefilen er gyldig.
-            if (!$this->userExists($email) && $this->isLegalFile($image)) {
+                $password = trim(password_hash($lecturer['password'], PASSWORD_DEFAULT));
 
-                // Lager et nytt navn til bildet.
-                $fileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
-                $file = Register::dir.hash("sha256", uniqid()).".".$fileType;
+                $image = $lecturer['image'];
 
-                // Endrer navnet på nytt hvis det allerede finnes et bilde med det nye navnet.
-                while (file_exists($file)) {
+                // Sjekker om brukeren finnes fra før, og om bildefilen er gyldig.
+                if (!$this->userExists($email) && $this->isLegalFile($image)) {
+
+                    // Lager et nytt navn til bildet.
+                    $fileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
                     $file = Register::dir.hash("sha256", uniqid()).".".$fileType;
-                }
 
-                $fileName = basename($file);
+                    // Endrer navnet på nytt hvis det allerede finnes et bilde med det nye navnet.
+                    while (file_exists($file)) {
+                        $file = Register::dir.hash("sha256", uniqid()).".".$fileType;
+                    }
 
-                $stmt = $this->mysqli->prepare("INSERT INTO foreleser (navn, epost, passord, bilde) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $name, $email, $password, $fileName);
-                $stmt->execute();
+                    $fileName = basename($file);
 
-                if ($stmt->affected_rows > 0) {
-                    move_uploaded_file($image['tmp_name'], $file);
+                    $stmt = $this->mysqli->prepare("INSERT INTO foreleser (navn, epost, passord, bilde) VALUES (?, ?, ?, ?)");
+                    $stmt->bind_param("ssss", $name, $email, $password, $fileName);
+                    $stmt->execute();
 
-                    $_SESSION['loggedIn'] = true;
-                    $_SESSION['lecturer'] = true;
-                    $_SESSION['name'] = $name;
-                    $_SESSION['user'] = $email;
+                    if ($stmt->affected_rows > 0) {
+                        move_uploaded_file($image['tmp_name'], $file);
 
-                    $this->logger->info('Ny foreleser ble registrert.', ['brukernavn' => $email]);
+                        $_SESSION['loggedIn'] = true;
+                        $_SESSION['lecturer'] = true;
+                        $_SESSION['name'] = $name;
+                        $_SESSION['user'] = $email;
+
+                        $this->logger->info('Ny foreleser ble registrert.', ['brukernavn' => $email]);
+                    }
                 }
             }
         }
@@ -120,6 +130,9 @@ class Register extends Model {
      * Sjekker om brukeren man prøver å registrere allerede finnes i databasen.
      */
     public function userExists(string $email): bool {
+
+        $email = stripslashes(trim(htmlspecialchars($email)));
+
         if ($this->isStudent($email)) {
             return true;
         }
@@ -136,6 +149,7 @@ class Register extends Model {
      * Sjekker om brukeren man prøver å registrere allerede finnes i studenttabellen.
      */
     private function isStudent(string $email): bool {
+
         $stmt = $this->mysqli->prepare("SELECT navn FROM student WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -151,6 +165,7 @@ class Register extends Model {
      * Sjekker om brukeren man prøver å registrere allerede finnes i forelesertabellen.
      */
     private function isLecturer(string $email): bool {
+
         $stmt = $this->mysqli->prepare("SELECT navn FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -166,6 +181,7 @@ class Register extends Model {
      * Sjekker om brukeren man prøver å registrere allerede finnes i admintabellen.
      */
     private function isAdmin(string $email): bool {
+
         $stmt = $this->mysqli->prepare("SELECT brukernavn FROM admin WHERE brukernavn = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();

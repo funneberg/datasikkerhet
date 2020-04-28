@@ -12,6 +12,7 @@ class PinCode extends Model {
     }
 
     public function loadCourse(string $code): array {
+
         $stmt = $this->mysqli->prepare("SELECT emnekode, emnenavn, PIN FROM emner WHERE emnekode = ?");
         $stmt->bind_param("s", $code);
         $stmt->execute();
@@ -20,8 +21,6 @@ class PinCode extends Model {
     }
 
     public function submitPIN(string $pin): PinCode {
-
-        $coursePin = $course['pin'];
 
         if (password_verify($pin, $coursePin)) {
             return new PinCode($this->mysqli, $this->logger, $this->course['emnekode'], true);

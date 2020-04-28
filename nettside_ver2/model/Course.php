@@ -18,6 +18,9 @@ class Course extends Model {
      * Lagrer en henvendelse fra en student i databasen.
      */
     public function saveStudentInquiry(array $inquiry): Course {
+
+        $inquiry1 = stripslashes(trim(htmlspecialchars($inquiry['inquiry'])));
+
         $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (avsender_student, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $_SESSION['user'], $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
         $stmt->execute();
@@ -38,6 +41,9 @@ class Course extends Model {
      * Lagrer en henvendelse fra en gjest i databasen.
      */
     public function saveGuestInquiry(array $inquiry): Course {
+
+        $inquiry1 = stripslashes(trim(htmlspecialchars($inquiry['inquiry'])));
+
         $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (avsender_gjest, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $_SESSION['user'], $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
         $stmt->execute();
@@ -56,6 +62,10 @@ class Course extends Model {
      * Lagrer svaret fra en foreleser i databasen.
      */
     public function saveResponse(array $response): Course {
+
+        $responseId = stripslashes(trim(htmlspecialchars($response['id'])));
+        $responseC = stripslashes(trim(htmlspecialchars($response['comment'])));
+
         $stmt = $this->mysqli->prepare("UPDATE henvendelse SET svar = ? WHERE id = ?");
         $stmt->bind_param("si", $response['comment'], $response['id']);
         $stmt->execute();
@@ -74,6 +84,10 @@ class Course extends Model {
      * Lagrer en kommentar fra en student i databasen.
      */
     public function saveStudentComment(array $comment): Course {
+
+        $commentC = stripslashes(trim(htmlspecialchars($comment['comment'])));
+        $commentId = stripslashes(trim(htmlspecialchars($comment['id'])));
+
         $stmt = $this->mysqli->prepare("INSERT INTO kommentar (avsender_student, kommentar_til, kommentar) VALUES (?, ?, ?)");
         $stmt->bind_param("sis", $_SESSION['user'], $comment['id'], $comment['comment']);
         $stmt->execute();
@@ -92,6 +106,10 @@ class Course extends Model {
      * Lagrer en kommentar fra en gjest i databasen.
      */
     public function saveGuestComment(array $comment): Course {
+
+        $commentC = stripslashes(trim(htmlspecialchars($comment['comment'])));
+        $commentId = stripslashes(trim(htmlspecialchars($comment['id'])));
+
         $stmt = $this->mysqli->prepare("INSERT INTO kommentar (avsender_gjest, kommentar_til, kommentar) VALUES (?, ?, ?)");
         $stmt->bind_param("sis", $_SESSION['user'], $comment['id'], $comment['comment']);
         $stmt->execute();
@@ -110,6 +128,9 @@ class Course extends Model {
      * Rapporterer en henvendelse.
      */
     public function reportInquiry(int $id): Course {
+
+        $id = stripslashes(trim(htmlspecialchars($id)));
+
         $stmt = $this->mysqli->prepare("UPDATE henvendelse SET rapportert = 1 WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
@@ -123,6 +144,9 @@ class Course extends Model {
      * Rapporterer en kommentar.
      */
     public function reportComment(int $id): Course {
+
+        $id = stripslashes(trim(htmlspecialchars($id)));
+
         $stmt = $this->mysqli->prepare("UPDATE kommentar SET rapportert = 1 WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -136,6 +160,9 @@ class Course extends Model {
      * Laster inn emnet fra databasen.
      */
     private function loadCourse(string $code): array {
+
+        $code = stripslashes(trim(htmlspecialchars($code)));
+
         $stmt = $this->mysqli->prepare("SELECT emnekode, emnenavn, PIN, navn, epost, bilde FROM emner, foreleser WHERE epost = foreleser AND emnekode = ?");
         $stmt->bind_param("s", $code);
         $stmt->execute();
@@ -153,6 +180,9 @@ class Course extends Model {
      * Laster inn henvendelsene til emnet.
      */
     private function loadInquiries(string $code): array {
+
+        $code = stripslashes(trim(htmlspecialchars($code)));
+
         $stmt = $this->mysqli->prepare("SELECT * FROM henvendelse WHERE emnekode = ? ORDER BY id DESC");
         $stmt->bind_param("s", $code);
         $stmt->execute();
@@ -169,6 +199,9 @@ class Course extends Model {
      * Laster inn kommentarene til en henvendelse.
      */
     private function loadComments(int $id): array {
+
+        $id = stripslashes(trim(htmlspecialchars($id)));
+
         $stmt = $this->mysqli->prepare("SELECT * FROM kommentar WHERE kommentar_til = ? ORDER BY id DESC");
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -198,6 +231,7 @@ class Course extends Model {
      * Sjekker om en PIN-kode er riktig.
      */
     public function isCorrectPIN(int $pin): bool {
+
         $pinHash = $this->course['PIN'];
         return password_verify($pin, $pinHash);
     }

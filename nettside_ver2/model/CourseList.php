@@ -36,18 +36,25 @@ class CourseList extends Model {
      * Henter alle emnene fra databasen som inneholder et søkeord.
      */
     public function search(string $searchTerm): CourseList {
-        $search = '%'.$searchTerm.'%';
-        $stmt = $this->mysqli->prepare("SELECT emner.*, navn FROM emner JOIN foreleser ON foreleser = epost 
-                                        WHERE emnekode LIKE ? OR emnenavn LIKE ? OR foreleser LIKE ? OR navn LIKE ?");
-        $stmt->bind_param("ssss", $search, $search, $search, $search);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $courses = [];
-        while($course = $result->fetch_assoc()) {
-            $courses[] = $course;
-        }
 
-        $this->logger->info('Bruker søkte etter søkeord.', ['sokeord' => $searchTerm]);
+        $searchTerm = stripslashes(trim(htmlspecialchars($searchTerm)));
+
+        if (preg_match("/^[a-zA-Z0-9 \æ\ø\å\Æ\Ø\Å ]*$/" , $searchTerm) {
+
+            $search = '%'.$searchTerm.'%';
+
+            $stmt = $this->mysqli->prepare("SELECT emner.*, navn FROM emner JOIN foreleser ON foreleser = epost 
+                                            WHERE emnekode LIKE ? OR emnenavn LIKE ? OR foreleser LIKE ? OR navn LIKE ?");
+            $stmt->bind_param("ssss", $search, $search, $search, $search);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $courses = [];
+            while($course = $result->fetch_assoc()) {
+                $courses[] = $course;
+            }
+
+            $this->logger->info('Bruker søkte etter søkeord.', ['sokeord' => $searchTerm]);
+        }
 
         return new CourseList($this->mysqli, $this->logger, true, $courses);
     }

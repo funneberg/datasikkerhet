@@ -12,19 +12,22 @@ class Login extends Model {
 
         if (!empty($user['email']) && !empty($user['password'])) {
 
-            // Prøver å logge inn som student.
-            if ($this->loginStudent($user)) {
-                return new Login($this->mysqli, $this->logger);
-            }
+            if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $user['password']) && filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
 
-            // Prøver å logge inn som foreleser.
-            else if ($this->loginLecturer($user)) {
-                return new Login($this->mysqli, $this->logger);
-            }
+                // Prøver å logge inn som student.
+                if ($this->loginStudent($user)) {
+                    return new Login($this->mysqli, $this->logger);
+                }
 
-            // Prøver å logge inn som administrator.
-            else if ($this->loginAdmin($user)) {
-                return new Login($this->mysqli, $this->logger);
+                // Prøver å logge inn som foreleser.
+                else if ($this->loginLecturer($user)) {
+                    return new Login($this->mysqli, $this->logger);
+                }
+
+                // Prøver å logge inn som administrator.
+                else if ($this->loginAdmin($user)) {
+                    return new Login($this->mysqli, $this->logger);
+                }
             }
         }
 
@@ -37,8 +40,9 @@ class Login extends Model {
      * Logger inn en student hvis brukeren finnes i tabellen for studenter.
      */
     private function loginStudent(array $user): bool {
-        $email = $user['email'];
-        $password = $user['password'];
+
+        $email = trim($user['email']);
+        $password = trim($user['password']);
 
         $stmt = $this->mysqli->prepare("SELECT navn, passord FROM student WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -70,8 +74,9 @@ class Login extends Model {
      * Logger inn en foreleser hvis brukeren finnes i tabellen for forelesere.
      */
     private function loginLecturer(array $user): bool {
-        $email = $user['email'];
-        $password = $user['password'];
+       
+        $email = trim($user['email']);
+        $password = trim($user['password']);
 
         $stmt = $this->mysqli->prepare("SELECT navn, passord FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -104,8 +109,9 @@ class Login extends Model {
      * Logger inn en foreleser hvis brukeren finnes i tabellen for administratorer.
      */
     private function loginAdmin(array $user): bool {
-        $email = $user['email'];
-        $password = $user['password'];
+        
+        $email = trim($user['email']);
+        $password = trim($user['password']);
 
         $stmt = $this->mysqli->prepare("SELECT passord FROM admin WHERE brukernavn = ?");
         $stmt->bind_param("s", $email);
