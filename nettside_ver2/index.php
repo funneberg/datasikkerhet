@@ -54,6 +54,12 @@ if (!isset($_SESSION['user'])) {
     $_SESSION['guest'] = true;
 }
 
+$logger->pushProcessor(function ($record) {
+    $record['extra']['user'] = $_SESSION['user'];
+
+    return $record;
+});
+
 $page = $_GET['page'] ?? '';
 
 // En "router", som sender brukeren til riktig side:
@@ -214,8 +220,10 @@ else if ($page == 'logout') {
 
 // Får feilmelding hvis man prøver å gå til en side som ikke eksisterer.
 else {
+
+    $logger->info('Bruker prøvde å gå til en side som ikke eksisterer.', ['side' => $page]);
+
     http_response_code(404);
-    echo "Siden ble ikke funnet.";
     die;
 }
 

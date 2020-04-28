@@ -19,6 +19,11 @@ class CourseView extends View {
         // Henter info om emnet.
         $course = $model->getCourse();
 
+        if (empty($course)) {
+            http_response_code(404);
+            die;
+        }
+
         // Hvis man ikke er logget inn, og ikke har riktig PIN-kode, har man ikke tilgang til å vise siden.
         if (!isset($_SESSION["loggedIn"])) {
             if (isset($_SESSION['access'][$course['emnekode']])) {
@@ -37,8 +42,9 @@ class CourseView extends View {
         }
 
         // Hvis man er logget inn som en foreleser, har man ikke tilgang til andre forelesere sine emner.
-        if (isset($_SESSION['lecturer']) && $_SESSION['user'] != $course['epost']) {
-            header("location: index.php");
+        if ($model->isLecturerButNotCourseLecturer()) {
+
+            http_response_code(403);
             die;
         }
 

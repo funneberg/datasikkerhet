@@ -12,6 +12,11 @@ class PinCodeView extends View {
         // Henter info om emnet.
         $course = $model->getCourse();
 
+        if (empty($course)) {
+            http_response_code(404);
+            die;
+        }
+
         // Hvis PIN-koden er riktig, blir man omdirigert til siden for emnet.
         if (isset($_POST['PIN'])) {
             if ($model->isCorrectPIN($_POST['PIN'])) {

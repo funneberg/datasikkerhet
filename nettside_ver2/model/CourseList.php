@@ -47,7 +47,7 @@ class CourseList extends Model {
             $courses[] = $course;
         }
 
-        $this->logger->info('Bruker søkte etter søkeord.', ['søkeord' => $searchTerm]);
+        $this->logger->info('Bruker søkte etter søkeord.', ['sokeord' => $searchTerm]);
 
         return new CourseList($this->mysqli, $this->logger, true, $courses);
     }

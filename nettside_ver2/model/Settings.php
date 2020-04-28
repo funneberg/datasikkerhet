@@ -43,7 +43,7 @@ class Settings extends Model {
                     $stmt->bind_param("ss", $newPassword, $email);
                     $stmt->execute();
                     if ($stmt->affected_rows > 0) {
-                        $this->logger->prepare('Student oppdaterte passordet sitt.', ['brukernavn' => $email]);
+                        $this->logger->info('Student oppdaterte passordet sitt.', ['brukernavn' => $email]);
 
                         return new Settings($this->mysqli, $this->logger, true);
                     }
@@ -51,7 +51,7 @@ class Settings extends Model {
             }
         }
 
-        $this->logger->prepare('Student prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+        $this->logger->info('Student prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
 
         return new Settings($this->mysqli, $this->logger);
     }
@@ -88,7 +88,7 @@ class Settings extends Model {
                     $stmt->execute();
                     if ($stmt->affected_rows > 0) {
 
-                        $this->logger->prepare('Foreleser oppdaterte passordet sitt.', ['brukernavn' => $email]);
+                        $this->logger->info('Foreleser oppdaterte passordet sitt.', ['brukernavn' => $email]);
 
                         return new Settings($this->mysqli, $this->logger, true);
                     }
@@ -96,7 +96,7 @@ class Settings extends Model {
             }
         }
 
-        $this->logger->prepare('Foreleser prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+        $this->logger->info('Foreleser prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
 
         return new Settings($this->mysqli, $this->logger);
     }

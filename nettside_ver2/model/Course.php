@@ -22,7 +22,14 @@ class Course extends Model {
         $stmt->bind_param("ssss", $_SESSION['user'], $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
         $stmt->execute();
 
-        $this->logger->info('En student sendte en henvendelse.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+        if ($stmt->affected_rows > 0) {
+            $this->logger->info('En student sendte en henvendelse.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+        }
+        else {
+            $this->logger->info('En student prøvde å sende en henvendelse. Forsøk mislykket.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+        }
+
+        
 
         return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
@@ -35,7 +42,12 @@ class Course extends Model {
         $stmt->bind_param("ssss", $_SESSION['user'], $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
         $stmt->execute();
 
-        $this->logger->info('En gjest sendte en henvendelse.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+        if ($stmt->affected_rows > 0) {
+            $this->logger->info('En gjest sendte en henvendelse.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+        }
+        else {
+            $this->logger->info('En gjest prøvde å sende en henvendelse. Forsøk mislykket.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+        }
 
         return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
@@ -48,7 +60,12 @@ class Course extends Model {
         $stmt->bind_param("si", $response['comment'], $response['id']);
         $stmt->execute();
 
-        $this->logger->item('Foreleser svarte på en henvendelse.', ['foreleser' => $_SESSION['user'], 'id' => $response['id'], 'svar' => $response['svar']]);
+        if ($stmt->affected_rows > 0) {
+            $this->logger->item('Foreleser svarte på en henvendelse.', ['foreleser' => $_SESSION['user'], 'id' => $response['id'], 'svar' => $response['svar']]);
+        }
+        else {
+            $this->logger->info('Foreleser prøvde å svare på en henvendelse. Forsøk mislykket.', ['foreleser' => $_SESSION['user'], 'id' => $response['id'], 'svar' => $response['svar']]);
+        }
 
         return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
@@ -61,7 +78,12 @@ class Course extends Model {
         $stmt->bind_param("sis", $_SESSION['user'], $comment['id'], $comment['comment']);
         $stmt->execute();
 
-        $this->logger->info('Bruker sendte en kommentar til en henvendelse.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+        if ($stmt->affected_rows > 0) {
+            $this->logger->info('En student sendte en kommentar til en henvendelse.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+        }
+        else {
+            $this->logger->info('En student prøvde å sende en kommentar til en henvendelse. Forsøk mislykket.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+        }
 
         return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
@@ -74,7 +96,12 @@ class Course extends Model {
         $stmt->bind_param("sis", $_SESSION['user'], $comment['id'], $comment['comment']);
         $stmt->execute();
 
-        $this->logger->info('Bruker sendte en kommentar til en henvendelse.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+        if ($stmt->affected_rows > 0) {
+            $this->logger->info('En gjest sendte en kommentar til en henvendelse.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+        }
+        else {
+            $this->logger->info('En gjest prøvde å sende en kommentar til en henvendelse. Forsøk mislykket.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+        }
 
         return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
@@ -113,7 +140,13 @@ class Course extends Model {
         $stmt->bind_param("s", $code);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_assoc();
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+
+        $this->logger->info('Bruker prøvde å gå til et emne som ikke finnes.', ['emnekode' => $code]);
+
+        return [];
     }
 
     /**
@@ -145,6 +178,20 @@ class Course extends Model {
             $comments[] = $comment;
         }
         return $comments;
+    }
+
+    public function isLecturerButNotCourseLecturer() {
+        if (isset($_SESSION['lecturer'])) {
+            if ($_SESSION['user'] == $this->course['epost']) {
+                return false;
+            }
+
+            $this->logger->info('Foreleser prøvde å gå til et emne som de ikke har tilgang til.', ['foreleser' => $_SESSION['user'], 'emnekode' => $this->course['emnekode']]);
+        
+            return true;
+        }
+
+        return false;
     }
 
     /**

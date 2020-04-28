@@ -35,8 +35,9 @@ class Register extends Model {
                 }
             }
         }
-
-        $this->logger->info('Student ble ikke registrert.');
+        else {
+            $this->logger->info('Student ble ikke registrert.');
+        }
 
         return new Register($this->mysqli, $this->logger);
     }
@@ -83,8 +84,9 @@ class Register extends Model {
                 }
             }
         }
-
-        $this->logger->info('Foreleser ble ikke registrert.');
+        else {
+            $this->logger->info('Foreleser ble ikke registrert.');
+        }
 
         return new Register($this->mysqli, $this->logger);
     }
