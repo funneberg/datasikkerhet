@@ -7,8 +7,8 @@ class CourseList extends Model {
 
     private $courses = [];
 
-    public function __construct(MySQLi $mysqli, bool $search = false, $courses = []) {
-        parent::__construct($mysqli);
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, bool $search = false, $courses = []) {
+        parent::__construct($mysqli, $logger);
         
         if ($search) {
             $this->courses = $courses;
@@ -46,7 +46,10 @@ class CourseList extends Model {
         while($course = $result->fetch_assoc()) {
             $courses[] = $course;
         }
-        return new CourseList($this->mysqli, true, $courses);
+
+        $this->logger->info('Bruker søkte etter søkeord.', ['søkeord' => $searchTerm]);
+
+        return new CourseList($this->mysqli, $this->logger, true, $courses);
     }
 
     /**

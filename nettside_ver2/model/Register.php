@@ -29,11 +29,16 @@ class Register extends Model {
                     $_SESSION['loggedIn'] = true;
                     $_SESSION['student'] = true;
                     $_SESSION['name'] = $name;
-                    $_SESSION['email'] = $email;
+                    $_SESSION['user'] = $email;
+
+                    $this->logger->info('Ny student ble registrert.', ['Brukernavn' => $email]);
                 }
             }
         }
-        return new Register($this->mysqli);
+
+        $this->logger->info('Student ble ikke registrert.');
+
+        return new Register($this->mysqli, $this->logger);
     }
 
     /**
@@ -49,7 +54,7 @@ class Register extends Model {
             $image = $lecturer['image'];
 
             // Sjekker om brukeren finnes fra før, og om bildefilen er gyldig.
-            if (!$this->userExists($lecturer['email']) && $this->isLegalFile($image)) {
+            if (!$this->userExists($email) && $this->isLegalFile($image)) {
 
                 // Lager et nytt navn til bildet.
                 $fileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
@@ -72,11 +77,16 @@ class Register extends Model {
                     $_SESSION['loggedIn'] = true;
                     $_SESSION['lecturer'] = true;
                     $_SESSION['name'] = $name;
-                    $_SESSION['email'] = $email;
+                    $_SESSION['user'] = $email;
+
+                    $this->logger->info('Ny foreleser ble registrert.', ['brukernavn' => $email]);
                 }
             }
         }
-        return new Register($this->mysqli);
+
+        $this->logger->info('Foreleser ble ikke registrert.');
+
+        return new Register($this->mysqli, $this->logger);
     }
 
     /**
@@ -98,6 +108,9 @@ class Register extends Model {
             }
             return true;
         }
+
+        $this->logger->info('Bruker prøvde å laste opp en ugyldig fil.', ['filnavn' => $file['name']]);
+
         return false;
     }
 

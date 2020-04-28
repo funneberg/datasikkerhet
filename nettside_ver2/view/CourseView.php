@@ -37,7 +37,7 @@ class CourseView extends View {
         }
 
         // Hvis man er logget inn som en foreleser, har man ikke tilgang til andre forelesere sine emner.
-        if (isset($_SESSION['lecturer']) && $_SESSION['email'] != $course['epost']) {
+        if (isset($_SESSION['lecturer']) && $_SESSION['user'] != $course['epost']) {
             header("location: index.php");
             die;
         }

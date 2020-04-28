@@ -8,8 +8,8 @@ class CourseCreator extends Model {
     private $lecturerEmail;
     private $courses;
 
-    public function __construct(MySQLi $mysqli, string $email) {
-        parent::__construct($mysqli);
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, string $email) {
+        parent::__construct($mysqli, $logger);
         $this->lecturerEmail = $email;
         $this->courses = $this->loadCourses();
     }
@@ -36,15 +36,20 @@ class CourseCreator extends Model {
 
         $coursecode = $course['coursecode'];
         $coursename = $course['coursename'];
-        $email = $_SESSION['email'];
+        $email = $_SESSION['user'];
         $pin = password_hash($course['pin'], PASSWORD_DEFAULT);
 
         if ($this->isAuthorized()) {
             $stmt = $this->mysqli->prepare("INSERT INTO emner (emnekode, emnenavn, foreleser, PIN) VALUES (?, ?, ?, ?)");
             $stmt->bind_param("ssss", $coursecode, $coursename, $email, $pin);
             $stmt->execute();
+
+            $this->logger->info('Bruker opprettet et nytt emne.', ['emnekode' => $coursecode, 'brukernavn' => $email]);
         }
-        return new CourseCreator($this->mysqli, $this->lecturerEmail);
+
+        $this->logger->info('Bruker prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);
+
+        return new CourseCreator($this->mysqli, $this->logger, $this->lecturerEmail);
     }
 
     /**
@@ -52,7 +57,7 @@ class CourseCreator extends Model {
      */
     public function isAuthorized(): bool {
         $stmt = $this->mysqli->prepare("SELECT * FROM foreleser WHERE godkjent = 1 AND epost = ?");
-        $stmt->bind_param("s", $_SESSION['email']);
+        $stmt->bind_param("s", $_SESSION['user']);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {

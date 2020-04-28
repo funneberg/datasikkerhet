@@ -8,49 +8,75 @@ class Course extends Model {
     private $course;
     private $inquiries;
 
-    public function __construct(MySQLi $mysqli, string $code) {
-        parent::__construct($mysqli);
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, string $code) {
+        parent::__construct($mysqli, $logger);
         $this->course = $this->loadCourse($code);
         $this->inquiries = $this->loadInquiries($code);
     }
 
     /**
-     * Lagrer en henvendelse i databasen.
+     * Lagrer en henvendelse fra en student i databasen.
      */
-    public function saveInquiry(array $inquiry): Course {
-        if (isset($_SESSION['email'])) {
-            $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (avsender, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $_SESSION['email'], $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
-        }
-        else {
-            $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (mottaker, emnekode, henvendelse) VALUES (?, ?, ?)");
-            $stmt->bind_param("sss", $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
-        }
+    public function saveStudentInquiry(array $inquiry): Course {
+        $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (avsender_student, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $_SESSION['user'], $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
         $stmt->execute();
-        return new Course($this->mysqli, $this->course['emnekode']);
+
+        $this->logger->info('En student sendte en henvendelse.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+
+        return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
 
+    /**
+     * Lagrer en henvendelse fra en gjest i databasen.
+     */
+    public function saveGuestInquiry(array $inquiry): Course {
+        $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (avsender_gjest, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $_SESSION['user'], $this->course['epost'], $this->course['emnekode'], $inquiry['inquiry']);
+        $stmt->execute();
+
+        $this->logger->info('En gjest sendte en henvendelse.', ['brukernavn' => $_SESSION['user'], 'henvendelse' => $inquiry['inquiry']]);
+
+        return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
+    }
+
+    /**
+     * Lagrer svaret fra en foreleser i databasen.
+     */
     public function saveResponse(array $response): Course {
         $stmt = $this->mysqli->prepare("UPDATE henvendelse SET svar = ? WHERE id = ?");
         $stmt->bind_param("si", $response['comment'], $response['id']);
         $stmt->execute();
-        return new Course($this->mysqli, $this->course['emnekode']);
+
+        $this->logger->item('Foreleser svarte på en henvendelse.', ['foreleser' => $_SESSION['user'], 'id' => $response['id'], 'svar' => $response['svar']]);
+
+        return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
 
     /**
-     * Lagrer en kommentar i databasen.
+     * Lagrer en kommentar fra en student i databasen.
      */
-    public function saveComment(array $comment): Course {
-        if (isset($_SESSION['email'])) {
-            $stmt = $this->mysqli->prepare("INSERT INTO kommentar (avsender, kommentar_til, kommentar) VALUES (?, ?, ?)");
-            $stmt->bind_param("sis", $_SESSION['email'], $comment['id'], $comment['comment']);
-        }
-        else {
-            $stmt = $this->mysqli->prepare("INSERT INTO kommentar (kommentar_til, kommentar) VALUES (?, ?)");
-            $stmt->bind_param("is", $comment['id'], $comment['comment']);
-        }
+    public function saveStudentComment(array $comment): Course {
+        $stmt = $this->mysqli->prepare("INSERT INTO kommentar (avsender_student, kommentar_til, kommentar) VALUES (?, ?, ?)");
+        $stmt->bind_param("sis", $_SESSION['user'], $comment['id'], $comment['comment']);
         $stmt->execute();
-        return new Course($this->mysqli, $this->course['emnekode']);
+
+        $this->logger->info('Bruker sendte en kommentar til en henvendelse.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+
+        return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
+    }
+
+    /**
+     * Lagrer en kommentar fra en gjest i databasen.
+     */
+    public function saveGuestComment(array $comment): Course {
+        $stmt = $this->mysqli->prepare("INSERT INTO kommentar (avsender_gjest, kommentar_til, kommentar) VALUES (?, ?, ?)");
+        $stmt->bind_param("sis", $_SESSION['user'], $comment['id'], $comment['comment']);
+        $stmt->execute();
+
+        $this->logger->info('Bruker sendte en kommentar til en henvendelse.', ['brukernavn' => $_SESSION['user'], 'kommentar' => $comment['comment']]);
+
+        return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
 
     /**
@@ -60,7 +86,10 @@ class Course extends Model {
         $stmt = $this->mysqli->prepare("UPDATE henvendelse SET rapportert = 1 WHERE id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
-        return new Course($this->mysqli, $this->course['emnekode']);
+
+        $this->logger->info('Bruker rapporterte en henvendelse.', ['brukernavn' => $_SESSION['user'], 'id' => $id]);
+
+        return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
 
     /**
@@ -70,7 +99,10 @@ class Course extends Model {
         $stmt = $this->mysqli->prepare("UPDATE kommentar SET rapportert = 1 WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
-        return new Course($this->mysqli, $this->course['emnekode']);
+
+        $this->logger->info('Bruker rapporterte en kommentar.', ['brukernavn' => $_SESSION['user'], 'id' => $id]);
+
+        return new Course($this->mysqli, $this->logger, $this->course['emnekode']);
     }
 
     /**

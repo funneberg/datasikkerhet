@@ -7,8 +7,8 @@ class App extends Model {
 
     private $downloaded = false;
 
-    public function __construct(MySQLi $mysqli, bool $downloaded = false) {
-        parent::__construct($mysqli);
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, bool $downloaded = false) {
+        parent::__construct($mysqli, $logger);
         $this->downloaded = $downloaded;
     }
 
@@ -30,8 +30,12 @@ class App extends Model {
 
             readfile($file);
 
-            return new App($this->mysqli, true);
+            $this->logger->info('Bruker lastet ned appen.', ['brukernavn' => $_SESSION['user']]);
+
+            return new App($this->mysqli, $this->logger, true);
         }
+
+        $this->logger->info('Bruker prøvde å laste ned appen, men det oppstod en feil.', ['brukernavn' => $_SESSION['user']]);
 
         return $this;
     }

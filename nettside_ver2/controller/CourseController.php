@@ -9,8 +9,11 @@ class CourseController extends Controller {
      * Sender inn en henvendelse fra brukeren.
      */
     public function submitInquiry(Course $model): Course {
-        if (!isset($_SESSION['lecturer'])) {
-            $model = $model->saveInquiry($_POST);
+        if (isset($_SESSION['student'])) {
+            $model = $model->saveStudentInquiry($_POST);
+        }
+        else if (isset($_SESSION['guest'])) {
+            $model = $model->saveGuestInquiry($_POST);
         }
         return $model;
     }
@@ -21,11 +24,14 @@ class CourseController extends Controller {
     public function submitComment(Course $model): Course {
         $course = $model->getCourse();
         $lecturer = $course['epost'];
-        if (isset($_SESSION['lecturer']) && $_SESSION['email'] == $lecturer) {
+        if (isset($_SESSION['lecturer']) && $_SESSION['user'] == $lecturer) {
             $model = $model->saveResponse($_POST);
         }
-        else {
-            $model = $model->saveComment($_POST);
+        else if (isset($_SESSION['student'])) {
+            $model = $model->saveStudentComment($_POST);
+        }
+        else if (isset($_SESSION['guest'])) {
+            $model = $model->saveGuestComment($_POST);
         }
         return $model;
     }

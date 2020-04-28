@@ -14,21 +14,23 @@ class Login extends Model {
 
             // Prøver å logge inn som student.
             if ($this->loginStudent($user)) {
-                return new Login($this->mysqli);
+                return new Login($this->mysqli, $this->logger);
             }
 
             // Prøver å logge inn som foreleser.
             else if ($this->loginLecturer($user)) {
-                return new Login($this->mysqli);
+                return new Login($this->mysqli, $this->logger);
             }
 
             // Prøver å logge inn som administrator.
             else if ($this->loginAdmin($user)) {
-                return new Login($this->mysqli);
+                return new Login($this->mysqli, $this->logger);
             }
         }
 
-        return new Login($this->mysqli);
+        $this->logger->info("Bruker ble ikke logget inn. Innlogging mislykket.", ['brukernavn' => $user['email']]);
+
+        return new Login($this->mysqli, $this->logger);
     }
 
     /**
@@ -53,11 +55,14 @@ class Login extends Model {
                 $_SESSION['loggedIn'] = true;
                 $_SESSION['student'] = true;
                 $_SESSION['name'] = $name;
-                $_SESSION['email'] = $email;
+                $_SESSION['user'] = $email;
+
+                $this->logger->info("Student ble logget inn.", ['brukernavn' => $email]);
 
                 return true;
             }
         }
+
         return false;
     }
 
@@ -84,11 +89,14 @@ class Login extends Model {
                 $_SESSION['loggedIn'] = true;
                 $_SESSION['lecturer'] = true;
                 $_SESSION['name'] = $name;
-                $_SESSION['email'] = $email;
+                $_SESSION['user'] = $email;
+
+                $this->logger->info("Foreleser ble logget inn.", ['brukernavn' => $email]);
 
                 return true;
             }
         }
+
         return false;
     }
 
@@ -112,6 +120,8 @@ class Login extends Model {
                 $_SESSION['loggedIn'] = true;
                 $_SESSION['admin'] = true;
                 $_SESSION['name'] = $email;
+
+                $this->logger->info("Admin ble logget inn.", ['brukernavn' => $email]);
 
                 return true;
             }

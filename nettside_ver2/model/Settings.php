@@ -7,8 +7,8 @@ class Settings extends Model {
 
     private $changed = false;
 
-    public function __construct(MySQLi $mysqli, bool $changed = false) {
-        parent::__construct($mysqli);
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, bool $changed = false) {
+        parent::__construct($mysqli, $logger);
         $this->changed = $changed;
     }
 
@@ -16,7 +16,7 @@ class Settings extends Model {
      * Endrer passordet til en student.
      */
     public function changeStudentPassword($passwords): Settings {
-        $email = $_SESSION['email'];
+        $email = $_SESSION['user'];
 
         $stmt = $this->mysqli->prepare("SELECT passord FROM student WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -43,19 +43,24 @@ class Settings extends Model {
                     $stmt->bind_param("ss", $newPassword, $email);
                     $stmt->execute();
                     if ($stmt->affected_rows > 0) {
-                        return new Settings($this->mysqli, true);
+                        $this->logger->prepare('Student oppdaterte passordet sitt.', ['brukernavn' => $email]);
+
+                        return new Settings($this->mysqli, $this->logger, true);
                     }
                 }
             }
         }
-        return new Settings($this->mysqli);
+
+        $this->logger->prepare('Student prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+
+        return new Settings($this->mysqli, $this->logger);
     }
 
     /**
      * Endrer passordet til en foreleser.
      */
     public function changeLecturerPassword($passwords): Settings {
-        $email = $_SESSION['email'];
+        $email = $_SESSION['user'];
 
         $stmt = $this->mysqli->prepare("SELECT passord FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -82,12 +87,18 @@ class Settings extends Model {
                     $stmt->bind_param("ss", $newPassword, $email);
                     $stmt->execute();
                     if ($stmt->affected_rows > 0) {
-                        return new Settings($this->mysqli, true);
+
+                        $this->logger->prepare('Foreleser oppdaterte passordet sitt.', ['brukernavn' => $email]);
+
+                        return new Settings($this->mysqli, $this->logger, true);
                     }
                 }
             }
         }
-        return new Settings($this->mysqli);
+
+        $this->logger->prepare('Foreleser prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+
+        return new Settings($this->mysqli, $this->logger);
     }
 
     /**

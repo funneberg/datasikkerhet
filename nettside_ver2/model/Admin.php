@@ -7,8 +7,8 @@ class Admin extends Model {
 
     private $lecturers;
 
-    public function __construct(MySQLi $mysqli) {
-        parent::__construct($mysqli);
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger) {
+        parent::__construct($mysqli, $logger);
         $this->lecturers = $this->loadUnauthorizedLecturers();
     }
 
@@ -33,8 +33,10 @@ class Admin extends Model {
         $stmt = $this->mysqli->prepare("UPDATE foreleser SET godkjent = 1 WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
+
+        $this->logger->info('Admin godkjente en foreleser.', ['admin' => $_SESSION['user'], 'foreleser' => $email]);
         
-        return new Admin($this->mysqli);
+        return new Admin($this->mysqli, $this->logger);
     }
 
     /**
