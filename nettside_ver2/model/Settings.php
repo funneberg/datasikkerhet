@@ -40,7 +40,7 @@ class Settings extends Model {
                 if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
 
                     //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
-                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1])) {
+                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
 
 
                         $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
@@ -91,7 +91,7 @@ class Settings extends Model {
                 if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
 
                     //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
-                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1])) {
+                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
 
                         $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
 
