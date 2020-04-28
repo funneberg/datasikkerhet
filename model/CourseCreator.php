@@ -39,12 +39,13 @@ class CourseCreator extends Model {
      */
     public function createCourse($course): CourseCreator {
 
-        $courseName = stripslashes(trim(htmlspecialchars($course['coursename'])));
-        $courseCode = stripslashes(trim(htmlspecialchars($course['coursecode'])));
-        $coursePin = stripslashes(trim(htmlspecialchars($course['pin'])));
+        $courseName = trim($course['coursename']);
+        $courseCode = trim($course['coursecode']);
+        $coursePin = trim($course['pin']);
 
-        //Sjekker at emnenavn og emnekode bare inneholder bokstaver og tall, og at pinkoden bare inneholder tall. 
-        if (preg_match("/^[a-zA-Z0-9 ]*$/" , $courseName) && preg_match("/^[a-zA-Z0-9 ]*$/" , $courseCode) && preg_match("/^[0-9 ]*$/" , $coursePin) )  {
+        //Sjekker at emnenavn bare inneholder bokstaver, emnekode følger et bestemt møster av siffer og bokstaver, og at PIN koden bare er 4 siffer.
+        if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $courseName) && preg_match("/^[A-Z]+(|-[A-Z]+)[0-9]+$/" , $courseCode) && strlen($courseCode) < 10 && preg_match("/^[0-9 ]*$/" , $coursePin) 
+        && strlen($coursePin) == 4)  {
 
             if ($this->isAuthorized()) {
 
@@ -52,6 +53,10 @@ class CourseCreator extends Model {
                 $stmt->bind_param("sssi", $courseCode, $courseName, $_SESSION['email'], $coursePin);
                 $stmt->execute();
             }
+        }
+
+        else {
+            echo "nei";
         }
 
         return new CourseCreator($this->mysqli, $this->lecturerEmail);

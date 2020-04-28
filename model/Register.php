@@ -14,15 +14,15 @@ class Register extends Model {
 
         if (!empty($student['name']) && !empty($student['email']) && !empty($student['fieldOfStudy']) && !empty($student['year']) && !empty($student['password'])) {
 
-            $name = stripslashes(trim(htmlspecialchars($student['name'])));
-            $email = stripslashes(trim(htmlspecialchars($student['email'])));
-            $fieldOfStudy = stripslashes(trim(htmlspecialchars($student['fieldOfStudy'])));
-            $year = stripslashes(trim(htmlspecialchars($student['year'])));
+            $name = trim($student['name']);
+            $email = trim($student['email']);
+            $fieldOfStudy = trim($student['fieldOfStudy']);
+            $year =  trim($student['year']);
 
-            if (preg_match("/^[a-zA-Z ]*$/" , $name) && preg_match("/^[a-zA-Z ]*$/" , $fieldOfStudy) && filter_var($email, FILTER_VALIDATE_EMAIL) 
-                && preg_match("/^[0-9 ]*$/" , $year))  {
+            if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $name) && preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $fieldOfStudy) && filter_var($email, FILTER_VALIDATE_EMAIL) 
+                && preg_match("/^[0-9 ]*$/" , $year) && strlen($year) == 4 && $year <= date("Y"))  {
 
-                $password = stripslashes(trim(htmlspecialchars(password_hash($student['password'], PASSWORD_DEFAULT))));
+                $password = password_hash($student['password'], PASSWORD_DEFAULT);
 
                 if (!$this->userExists($email)) {
 
@@ -54,12 +54,12 @@ class Register extends Model {
 
         if (!empty($lecturer['name']) && !empty($lecturer['email']) && !empty($lecturer['password'] && !empty($lecturer['image']))) {
 
-            $name = stripslashes(trim(htmlspecialchars($lecturer['name'])));
-            $email = stripslashes(trim(htmlspecialchars($lecturer['email'])));
+            $name = trim($lecturer['name']);
+            $email = trim($lecturer['email']);
 
-            if (preg_match("/^[a-zA-Z ]*$/" , $name) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/"  , $name) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-                $password = stripslashes(trim(htmlspecialchars(password_hash($lecturer['password'], PASSWORD_DEFAULT))));
+                $password = trim(password_hash($lecturer['password'], PASSWORD_DEFAULT));
 
                 $image = $lecturer['image'];
 
@@ -149,8 +149,6 @@ class Register extends Model {
      */
     private function isStudent(string $email): bool {
 
-        $email = stripslashes(trim(htmlspecialchars($email)));
-
         $stmt = $this->mysqli->prepare("SELECT navn FROM student WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -168,8 +166,6 @@ class Register extends Model {
      * Sjekker om brukeren man prøver å registrere allerede finnes i forelesertabellen.
      */
     private function isLecturer(string $email): bool {
-
-        $email = stripslashes(trim(htmlspecialchars($email)));
 
         $stmt = $this->mysqli->prepare("SELECT navn FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -189,7 +185,6 @@ class Register extends Model {
      */
     private function isAdmin(string $email): bool {
 
-        $email = stripslashes(trim(htmlspecialchars($email)));
         $stmt = $this->mysqli->prepare("SELECT brukernavn FROM admin WHERE brukernavn = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();

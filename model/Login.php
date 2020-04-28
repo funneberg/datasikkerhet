@@ -12,20 +12,31 @@ class Login extends Model {
 
         if (!empty($user['email']) && !empty($user['password'])) {
 
-            // Prøver å logge inn som student.
-            if ($this->loginStudent($user)) {
-                return new Login($this->mysqli);
+            if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $user['password']) && filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
+
+                // Prøver å logge inn som student.
+                if ($this->loginStudent($user)) {
+
+                    return new Login($this->mysqli);
+                }
+
+                // Prøver å logge inn som foreleser.
+                else if ($this->loginLecturer($user)) {
+
+                    return new Login($this->mysqli);
+                }
+
+                // Prøver å logge inn som administrator.
+                else if ($this->loginAdmin($user)) {
+                    return new Login($this->mysqli);
+                }
             }
 
-            // Prøver å logge inn som foreleser.
-            else if ($this->loginLecturer($user)) {
-                return new Login($this->mysqli);
+            else {
+                echo "nei";
             }
 
-            // Prøver å logge inn som administrator.
-            else if ($this->loginAdmin($user)) {
-                return new Login($this->mysqli);
-            }
+            
         }
 
         return new Login($this->mysqli);
@@ -36,8 +47,8 @@ class Login extends Model {
      */
     private function loginStudent(array $user): bool {
 
-        $email = stripslashes(trim(htmlspecialchars($user['email'])));
-        $password = stripslashes(trim(htmlspecialchars($user['password'])));
+        $email = trim($user['email']);
+        $password = trim($user['password']);
         
         $stmt = $this->mysqli->prepare("SELECT navn, passord FROM student WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -69,8 +80,8 @@ class Login extends Model {
      */
     private function loginLecturer(array $user): bool {
 
-        $email = stripslashes(trim(htmlspecialchars($user['email'])));
-        $password = stripslashes(trim(htmlspecialchars($user['password'])));
+        $email = trim($user['email']);
+        $password = trim($user['password']);
 
         $stmt = $this->mysqli->prepare("SELECT navn, passord FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -101,8 +112,8 @@ class Login extends Model {
      */
     private function loginAdmin(array $user): bool {
 
-        $email = stripslashes(trim(htmlspecialchars($user['email'])));
-        $password = stripslashes(trim(htmlspecialchars($user['password'])));
+        $email = trim($user['email']);
+        $password = trim($user['password']);
 
         $stmt = $this->mysqli->prepare("SELECT passord FROM admin WHERE brukernavn = ?");
         $stmt->bind_param("s", $email);

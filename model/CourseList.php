@@ -44,19 +44,22 @@ class CourseList extends Model {
 
         $searchTerm = stripslashes(trim(htmlspecialchars($searchTerm)));
 
-        $search = '%'.$searchTerm.'%';
-        $stmt = $this->mysqli->prepare("SELECT emner.*, navn FROM emner JOIN foreleser ON foreleser = epost WHERE emnekode LIKE ? OR emnenavn LIKE ? OR foreleser LIKE ? OR navn LIKE ?");
-        $stmt->bind_param("ssss", $search, $search, $search, $search);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $courses = [];
+        if (preg_match("/^[a-zA-Z0-9 \æ\ø\å\Æ\Ø\Å ]*$/" , $searchTerm) {
 
-        while($course = $result->fetch_assoc()) {
+            $search = '%'.$searchTerm.'%';
+            $stmt = $this->mysqli->prepare("SELECT emner.*, navn FROM emner JOIN foreleser ON foreleser = epost WHERE emnekode LIKE ? OR emnenavn LIKE ? OR foreleser LIKE ? OR navn LIKE ?");
+            $stmt->bind_param("ssss", $search, $search, $search, $search);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $courses = [];
 
-            $courses[] = $course;
+            while($course = $result->fetch_assoc()) {
+
+                $courses[] = $course;
+            }
+        
+            return new CourseList($this->mysqli, true, $courses);
         }
-    
-        return new CourseList($this->mysqli, true, $courses);
     }
 
     /**

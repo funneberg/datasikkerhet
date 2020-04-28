@@ -92,14 +92,14 @@ header {
 	height: auto;
 }
 
-.meldingCard {
+#meldingCard {
 	display: flex;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	text-align: center;
 	margin-right: 10vh;
 }
 
-.meldingCardContent {
+#meldingCardContent {
 	padding: 3vh;
 	width: 40vh;
 	height: 40vh;
@@ -118,9 +118,7 @@ header {
 
 
 textarea {
-	width: 50vh;
-	height: 20vh;
-	margin-left: 2vh;
+	width: 80vh;
 }
 
 #emnerSelect {

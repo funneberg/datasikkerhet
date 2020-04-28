@@ -36,7 +36,7 @@ class Admin extends Model {
      */
     public function authorizeLecturer(string $email): Admin {
 
-        $email = stripslashes(trim(htmlspecialchars($email)));
+        $email = trim($email);
 
         $stmt = $this->mysqli->prepare("UPDATE foreleser SET godkjent = 1 WHERE epost = ?");
         $stmt->bind_param("s", $email);

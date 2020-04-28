@@ -17,43 +17,50 @@ class Settings extends Model {
      * Endrer passordet til en student.
      */
     public function changeStudentPassword($passwords): Settings {
-
-        $email = stripslashes(trim(htmlspecialchars($_SESSION['email'])));
+        $email = $_SESSION['user'];
 
         $stmt = $this->mysqli->prepare("SELECT passord FROM student WHERE epost = ?");
-
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-
             $student = $result->fetch_assoc();
 
-            $oldPassword = stripslashes(trim(htmlspecialchars($passwords['oldPassword'])));
-            $pwHash = stripslashes(trim(htmlspecialchars($student['passord'])));
+            $oldPassword = $passwords['oldPassword'];
+            $pwHash = $student['passord'];
 
             // Sjekker at passordet er riktig.
             if (password_verify($oldPassword, $pwHash)) {
 
-                $newPassword1 = stripslashes(trim(htmlspecialchars($passwords['newPasswordFirst'])));
-                $newPassword2 = stripslashes(trim(htmlspecialchars($passwords['newPasswordSecond'])));
+                $newPassword1 = $passwords['newPasswordFirst'];
+                $newPassword2 = $passwords['newPasswordSecond'];
 
                 // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
                 if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
 
-                    $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+                    //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
+                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1]) && preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword2)) {
 
-                    $stmt = $this->mysqli->prepare("UPDATE student SET passord = ? WHERE epost = ?");
-                    $stmt->bind_param("ss", $newPassword, $email);
-                    $stmt->execute();
-                    if ($stmt->affected_rows > 0) {
-                        return new Settings($this->mysqli, true);
+                        $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+
+                        $stmt = $this->mysqli->prepare("UPDATE student SET passord = ? WHERE epost = ?");
+                        $stmt->bind_param("ss", $newPassword, $email);
+                        $stmt->execute();
+
+                        if ($stmt->affected_rows > 0) {
+                            $this->logger->prepare('Student oppdaterte passordet sitt.', ['brukernavn' => $email]);
+
+                            return new Settings($this->mysqli, $this->logger, true);
+                        }
                     }
                 }
             }
         }
-        return new Settings($this->mysqli);
+
+        $this->logger->prepare('Student prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+
+        return new Settings($this->mysqli, $this->logger);
     }
 
     /**
@@ -61,7 +68,7 @@ class Settings extends Model {
      */
     public function changeLecturerPassword($passwords): Settings {
 
-        $email = stripslashes(trim(htmlspecialchars($_SESSION['email'])));
+        $email = $_SESSION['user'];
 
         $stmt = $this->mysqli->prepare("SELECT passord FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
@@ -72,30 +79,41 @@ class Settings extends Model {
 
             $lecturer = $result->fetch_assoc();
 
-            $oldPassword = stripslashes(trim(htmlspecialchars($passwords['oldPassword'])));
-            $pwHash = stripslashes(trim(htmlspecialchars($lecturer['passord'])));
+            $oldPassword = $passwords['oldPassword'];
+            $pwHash = $lecturer['passord'];
 
             // Sjekker om brukeren har skrevet inn riktig passord.
             if (password_verify($oldPassword, $pwHash)) {
 
-                $newPassword1 = stripslashes(trim(htmlspecialchars($passwords['newPasswordFirst'])));
-                $newPassword2 = stripslashes(trim(htmlspecialchars($passwords['newPasswordSecond'])));
+                $newPassword1 = $passwords['newPasswordFirst'];
+                $newPassword2 = $passwords['newPasswordSecond'];
 
                 // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
                 if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
 
-                    $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+                    //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
+                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1]) && preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword2)) 
 
-                    $stmt = $this->mysqli->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
-                    $stmt->bind_param("ss", $newPassword, $email);
-                    $stmt->execute();
-                    if ($stmt->affected_rows > 0) {
-                        return new Settings($this->mysqli, true);
+                        $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+
+                        $stmt = $this->mysqli->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
+                        $stmt->bind_param("ss", $newPassword, $email);
+                        $stmt->execute();
+                        
+                        if ($stmt->affected_rows > 0) {
+
+                            $this->logger->prepare('Foreleser oppdaterte passordet sitt.', ['brukernavn' => $email]);
+
+                            return new Settings($this->mysqli, $this->logger, true);
+                        }
                     }
                 }
             }
         }
-        return new Settings($this->mysqli);
+
+        $this->logger->prepare('Foreleser prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+
+        return new Settings($this->mysqli, $this->logger);
     }
 
     /**

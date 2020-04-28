@@ -13,8 +13,6 @@ class PinCode extends Model {
     }
 
     public function loadCourse(string $code) {
-
-        $code = stripslashes(trim(htmlspecialchars($code)));
         
         $stmt = $this->mysqli->prepare("SELECT emnekode, emnenavn, PIN FROM emner WHERE emnekode = ?");
         $stmt->bind_param("s", $code);
@@ -25,8 +23,6 @@ class PinCode extends Model {
     }
 
     public function submitPIN(string $pin) {
-
-        $pin = stripslashes(trim(htmlspecialchars($pin)));
             
         $stmt = $this->mysqli->prepare("SELECT * FROM emner WHERE emnekode = ? AND PIN = ?");
         $stmt->bind_param("si", $this->course['emnekode'], $pin);

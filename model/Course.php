@@ -156,8 +156,6 @@ class Course extends Model {
      */
     public function isCorrectPIN(int $pin): bool {
 
-        $code = stripslashes(trim(htmlspecialchars($code)));
-
         return $this->course['PIN'] == $pin;
     }
 
