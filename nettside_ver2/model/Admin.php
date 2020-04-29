@@ -37,8 +37,13 @@ class Admin extends Model {
         $stmt->bind_param("s", $email);
         $stmt->execute();
 
+        if($stmt->affected_rows > 0){
+
         $this->logger->info('Admin godkjente en foreleser.', ['admin' => $_SESSION['user'], 'foreleser' => $email]);
-        
+        }
+        else{
+            $this->logger->warning('Admin prøvde å godkjenne en foreleser som ikke eksisterer eller allerede er godkjent', ['brukernavn' => $email]);
+        }
         return new Admin($this->mysqli, $this->logger);
     }
 

@@ -38,8 +38,9 @@ class CourseList extends Model {
     public function search(string $searchTerm): CourseList {
 
         $searchTerm = stripslashes(trim(htmlspecialchars($searchTerm)));
+        $courses = [];
 
-        if (preg_match("/^[a-zA-Z0-9 \æ\ø\å\Æ\Ø\Å ]*$/" , $searchTerm) {
+        if (preg_match("/^[a-zA-Z0-9 \æ\ø\å\Æ\Ø\Å ]*$/" , $searchTerm)) {
 
             $search = '%'.$searchTerm.'%';
 
@@ -48,12 +49,15 @@ class CourseList extends Model {
             $stmt->bind_param("ssss", $search, $search, $search, $search);
             $stmt->execute();
             $result = $stmt->get_result();
-            $courses = [];
             while($course = $result->fetch_assoc()) {
                 $courses[] = $course;
             }
 
             $this->logger->info('Bruker søkte etter søkeord.', ['sokeord' => $searchTerm]);
+        }
+
+        else{
+            $this->logger->warning('Bruker skrev inn ugyldig tegn i emne-inputfeltet.', ['brukernavn' => $_SESSION['user'], 'sokeord' => $searchTerm]);
         }
 
         return new CourseList($this->mysqli, $this->logger, true, $courses);

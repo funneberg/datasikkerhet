@@ -36,7 +36,7 @@ class CourseCreator extends Model {
 
         $courseName = trim($course['coursename']);
         $courseCode = trim($course['coursecode']);
-        $email = $_SESSION['email'];
+        $email = $_SESSION['user'];
         $pin = password_hash(stripslashes(trim($course['pin'])), PASSWORD_DEFAULT);
 
         //Sjekker at emnenavn og emnekode bare inneholder bokstaver og tall, og at pinkoden bare inneholder tall. 
@@ -51,8 +51,9 @@ class CourseCreator extends Model {
             }
 
         }
-
-        $this->logger->info('Bruker prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);
+        else{
+            $this->logger->info('Bruker prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);
+        }
 
         return new CourseCreator($this->mysqli, $this->logger, $this->lecturerEmail);
     }

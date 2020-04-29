@@ -26,7 +26,7 @@
         <!-- Left side -->
         <div  class="level-left">
 
-            <form>
+            <form method="get">
 
                 <input type="hidden" name="page" value="courses" />
 

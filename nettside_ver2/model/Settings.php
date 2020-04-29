@@ -54,6 +54,11 @@ class Settings extends Model {
                             return new Settings($this->mysqli, $this->logger, true);
                         }
                     }
+                    
+                    else{
+                        echo("Du skrev inn et ugyldig tegn.");
+                        $this->logger->warning('Student skrev inn ugyldig tegn i nyttpassord-feltet', ['brukernavn' => $_SESSION['user']]);
+                    }
                 }
             }
         }
@@ -104,6 +109,10 @@ class Settings extends Model {
 
                             return new Settings($this->mysqli, $this->logger, true);
                         }
+                    }
+                    else{
+                        echo("Du skrev inn et ugyldig tegn.");
+                        $this->logger->warning('Foreleser skrev inn ugyldig tegn i nyttpassord-feltet', ['brukernavn' => $_SESSION['user']]);
                     }
                 }
             }

@@ -29,6 +29,11 @@ class Login extends Model {
                     return new Login($this->mysqli, $this->logger);
                 }
             }
+
+            else{
+                echo("bruker har skrivd inn ugyldige tegn");
+                $this->logger->warning("Bruker skrev inn ugyldig tegn i innloggingsfeltet.", ['brukernavn' => $user['email']]);
+            }
         }
 
         $this->logger->info("Bruker ble ikke logget inn. Innlogging mislykket.", ['brukernavn' => $user['email']]);

@@ -39,6 +39,9 @@ class Register extends Model {
                     }
                 }
             }
+            else {
+                $this->logger->warning('Bruker prøvde å skrive inn et ulovlig tegn.', ['brukernavn' => $email]);
+            }
         }
         else {
             $this->logger->info('Student ble ikke registrert.');
@@ -92,6 +95,9 @@ class Register extends Model {
                         $this->logger->info('Ny foreleser ble registrert.', ['brukernavn' => $email]);
                     }
                 }
+            }
+            else {
+                $this->logger->warning('Bruker prøvde å skrive inn et ulovlig tegn.', ['brukernavn' => $email]);
             }
         }
         else {
