@@ -39,12 +39,29 @@ $logger->pushProcessor(function ($record) {
 
 // Database
 $servername = "localhost";
+
 $username = "root";
 $password = "skosaalen!";
+/*
+$usernameRoot = "root";
+$passwordRoot = "skosaalen!";
+
+$usernameAdd = "add";
+$passwordADd = "blokkade";
+
+$usernameRead = "read";
+$passwordRead = "lysglimt";
+*/
 $dbname = "datasikkerhet";
 
 // Oppretter forbindelse med databasen.
 $mysqli = new MySQLi($servername,$username,$password,$dbname);
+
+/*
+$mysqliRoot = new MySQLi($servername,$usernameRoot,$passwordRoot,$dbname);
+$mysqliAdd = new MySQLi($servername,$usernameAdd,$passwordAdd,$dbname);
+$mysqliRead = new MySQLi($servername,$usernameRead,$passwordRead,$dbname);
+*/
 
 // Starter en sesjon.
 session_start();
