@@ -80,15 +80,13 @@ public class LoginActivity extends AppCompatActivity {
                             //creating request handler object
                             PostRequestHandler requestHandler = new PostRequestHandler();
 
-
-                            System.out.println(sEmail);
                             //creating request parameters
                             HashMap<String, String> params = new HashMap<>();
                             params.put("email", sEmail);
                             params.put("password", sPassword);
 
                             //returing the response
-                            return requestHandler.sendPostRequest(URL_LOGIN, params);
+                            return requestHandler.sendPostRequest(LOGIN, params);
                         }
 
                         @Override
@@ -96,11 +94,15 @@ public class LoginActivity extends AppCompatActivity {
                             super.onPostExecute(s);
                             pdLoading.dismiss();
 
-                            System.out.println("Test: " + s);
+                            System.out.println(LOGIN);
 
                             try {
                                 JSONObject obj = new JSONObject(s);
 
+                                // Show response message
+                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+
+                                // Log in if no error
                                 if (!obj.getBoolean("error")) {
                                     String name = obj.getString("name");
                                     String fieldOfStudy = obj.getString("fieldOfStudy");
@@ -109,10 +111,10 @@ public class LoginActivity extends AppCompatActivity {
                                     Account.setActiveUser(name, sEmail, fieldOfStudy, year);
 
                                     finish();
-                                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 }
                             } catch (JSONException e) {
+                                System.out.println("Test feil");
                                 e.printStackTrace();
                                 Toast.makeText(LoginActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }

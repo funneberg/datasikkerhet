@@ -79,13 +79,13 @@ public class ChangePwFragment extends Fragment {
 
                             //creating request parameters
                             HashMap<String, String> params = new HashMap<>();
-                            params.put("email", sEmail);
+                            params.put("user", sEmail);
                             params.put("oldPassword", sOldPassword);
-                            params.put("newPassword1", sNewPassword1);
-                            params.put("newPassword2", sNewPassword2);
+                            params.put("newPasswordFirst", sNewPassword1);
+                            params.put("newPasswordSecond", sNewPassword2);
 
-                            //returing the response
-                            return requestHandler.sendPostRequest(URL_CHANGE_PASSWORD, params);
+                            //returning the response
+                            return requestHandler.sendPostRequest(SETTINGS, params);
                         }
 
                         @Override
@@ -93,16 +93,13 @@ public class ChangePwFragment extends Fragment {
                             super.onPostExecute(s);
                             pdLoading.dismiss();
 
-                            System.out.println("JSON-string: " + s);
-
                             try {
                                 //converting response to json object
                                 JSONObject obj = new JSONObject(s);
-                                //if no error in response
-                                if (!obj.getBoolean("error")) {
 
-                                    Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                                }
+                                // Response message
+                                Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Toast.makeText(getActivity(), "Exception: " + e, Toast.LENGTH_LONG).show();

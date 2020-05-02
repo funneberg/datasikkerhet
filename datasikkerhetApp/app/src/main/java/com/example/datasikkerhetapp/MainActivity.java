@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CourseDownloader d=new CourseDownloader(MainActivity.this, URL_GET_COURSES);
+        CourseDownloader d=new CourseDownloader(MainActivity.this, COURSES);
         d.execute();
 
         setup(savedInstanceState);
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCourse() {
-        CommentDownloader d=new CommentDownloader(MainActivity.this, URL_GET_COMMENTS + chosenCourse.getCode());
+        CommentDownloader d=new CommentDownloader(MainActivity.this, COURSE + chosenCourse.getCode());
         d.execute();
     }
 }

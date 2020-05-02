@@ -62,13 +62,18 @@ public class CourseDataParser extends AsyncTask<Void,Void,Integer>{
 
     private int parseData() {
         try {
+            System.out.println("Dx 1");
+            System.out.println("Dx "+jsonData);
             JSONArray ja=new JSONArray(jsonData);
+            System.out.println("Dx 2");
             JSONObject jo;
+            System.out.println("Dx 3");
 
             courses.clear();
 
             for(int i=0;i<ja.length();i++) {
                 jo=ja.getJSONObject(i);
+                System.out.println("Dx 4");
 
                 String code=jo.getString("emnekode");
                 String name=jo.getString("emnenavn");
@@ -78,8 +83,10 @@ public class CourseDataParser extends AsyncTask<Void,Void,Integer>{
                 String lecturerPhoto;
 
                 lecturerName = jo.getString("navn");
-                lecturerEmail = jo.getString("epost");
+                lecturerEmail = jo.getString("foreleser");
                 lecturerPhoto = jo.getString("bilde");
+
+                System.out.println("Dx 5");
 
                 Course course = new Course(code, name, new Lecturer(lecturerName, lecturerEmail, lecturerPhoto));
 
@@ -87,12 +94,17 @@ public class CourseDataParser extends AsyncTask<Void,Void,Integer>{
 
             }
 
+            System.out.println("Dx 6");
+
             return 1;
 
         }
         catch (JSONException e) {
+            System.out.println("Dx oh no");
             e.printStackTrace();
         }
+
+        System.out.println("Dx fail");
 
         return 0;
     }

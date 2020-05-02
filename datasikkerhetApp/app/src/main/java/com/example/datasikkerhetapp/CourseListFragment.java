@@ -46,9 +46,7 @@ public class CourseListFragment extends Fragment {
 
         MainActivity ma = (MainActivity) getActivity();
 
-        ArrayList<Course> courses = null;
-
-        courses = ma.getCourses();
+        ArrayList<Course> courses = ma.getCourses();
 
         for (final Course aCourse : courses) {
 

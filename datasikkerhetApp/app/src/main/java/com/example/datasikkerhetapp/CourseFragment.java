@@ -122,13 +122,16 @@ public class CourseFragment extends Fragment {
 
                                 //creating request parameters
                                 HashMap<String, String> params = new HashMap<>();
-                                params.put("emailFrom", sSenderEmail);
-                                params.put("emailTo", sRecieverEmail);
-                                params.put("coursecode", sCoursecode);
-                                params.put("message", sMessage);
+                                params.put("user", sSenderEmail);
+                                //params.put("emailTo", sRecieverEmail);
+                                //params.put("coursecode", sCoursecode);
+                                params.put("inquiry", sMessage);
+                                params.put("sendInquiry", "");
+
+                                System.out.println("Emne URL: " + COURSE + thisCourse.getCode());
 
                                 //returing the response
-                                return requestHandler.sendPostRequest(URL_SEND_INQUIRY, params);
+                                return requestHandler.sendPostRequest(COURSE + thisCourse.getCode(), params);
                             }
 
                             @Override
@@ -139,15 +142,16 @@ public class CourseFragment extends Fragment {
                                 try {
                                     //converting response to json object
                                     JSONObject obj = new JSONObject(s);
+
+                                    // Show respond message
+                                    Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+
                                     //if no error in response
                                     if (!obj.getBoolean("error")) {
-                                        Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                                         ((MainActivity)getActivity()).showCourse();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getActivity(), "Exception: " + e, Toast.LENGTH_LONG).show();
-                                    System.out.println("Exception: " + e);
                                 }
                             }
                         }
@@ -189,7 +193,7 @@ public class CourseFragment extends Fragment {
                     InputStream in = (InputStream) new URL(URL_IMG + thisCourse.getLecturer().getImgString()).getContent();
                     drawable = Drawable.createFromStream(in, "src");
                 } catch (Exception e) {
-                    Log.e("Error", e.getMessage());
+                    //Log.e("Error", e.getMessage());
                     e.printStackTrace();
                 }
                 return drawable;
@@ -239,6 +243,7 @@ public class CourseFragment extends Fragment {
                 btnReport.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        final String sEmail = Account.getActiveUser().getEmail();
                         final String sInquiryID = Integer.toString(inquiry.getId());
 
                         System.out.println("Inquiry ID: " + sInquiryID);
@@ -263,10 +268,12 @@ public class CourseFragment extends Fragment {
 
                                 //creating request parameters
                                 HashMap<String, String> params = new HashMap<>();
-                                params.put("messageID", sInquiryID);
+                                params.put("id", sInquiryID);
+                                params.put("user", sEmail);
+                                params.put("reportInquiry", "");
 
                                 //returing the response
-                                return requestHandler.sendPostRequest(URL_REPORT_INQUIRY, params);
+                                return requestHandler.sendPostRequest(COURSE + thisCourse.getCode(), params);
                             }
 
                             @Override
@@ -277,12 +284,11 @@ public class CourseFragment extends Fragment {
 
                                 try {
                                     JSONObject obj = new JSONObject(s);
-                                    if (!obj.getBoolean("error")) {
-                                        Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                                    }
+
+                                    // Show response message
+                                    Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getActivity(), "Exception: " + e, Toast.LENGTH_LONG).show();
                                 }
                             }
                         }
@@ -332,12 +338,13 @@ public class CourseFragment extends Fragment {
 
                                 //creating request parameters
                                 HashMap<String, String> params = new HashMap<>();
-                                params.put("emailFrom", sSenderEmail);
-                                params.put("parentCommentID", sIntParentCommentID);
+                                params.put("user", sSenderEmail);
+                                params.put("id", sIntParentCommentID);
                                 params.put("comment", sComment);
+                                params.put("sendComment", "");
 
                                 //returing the response
-                                return requestHandler.sendPostRequest(URL_SEND_COMMENT, params);
+                                return requestHandler.sendPostRequest(COURSE + thisCourse.getCode(), params);
                             }
 
                             @Override
@@ -350,14 +357,16 @@ public class CourseFragment extends Fragment {
                                 try {
                                     //converting response to json object
                                     JSONObject obj = new JSONObject(s);
+
+                                    // Show response message
+                                    Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+
                                     //if no error in response
                                     if (!obj.getBoolean("error")) {
-                                        Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                                         ma.showCourse();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getActivity(), "Exception: " + e, Toast.LENGTH_LONG).show();
                                     System.out.println("Exception: " + e);
                                 }
                             }
@@ -387,6 +396,7 @@ public class CourseFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             final String sInquiryID = Integer.toString(comment.getId());
+                            final String sEmail = Account.getActiveUser().getEmail();
 
                             class ReportComment extends AsyncTask<Void, Void, String> {
                                 ProgressDialog pdLoading = new ProgressDialog(getActivity());
@@ -407,10 +417,12 @@ public class CourseFragment extends Fragment {
 
                                     //creating request parameters
                                     HashMap<String, String> params = new HashMap<>();
-                                    params.put("messageID", sInquiryID);
+                                    params.put("id", sInquiryID);
+                                    params.put("user", sEmail);
+                                    params.put("reportComment", "");
 
                                     //returing the response
-                                    return requestHandler.sendPostRequest(URL_REPORT_COMMENT, params);
+                                    return requestHandler.sendPostRequest(COURSE + thisCourse.getCode(), params);
                                 }
 
                                 @Override
@@ -420,9 +432,10 @@ public class CourseFragment extends Fragment {
 
                                     try {
                                         JSONObject obj = new JSONObject(s);
-                                        if (!obj.getBoolean("error")) {
-                                            Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                                        }
+
+                                        // Show response message
+                                        Toast.makeText(getActivity().getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                         Toast.makeText(getActivity(), "Exception: " + e, Toast.LENGTH_LONG).show();

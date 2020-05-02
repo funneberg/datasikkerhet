@@ -67,42 +67,59 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
 
     private int parseData() {
         System.out.println("jsonData: " + jsonData);
+
         try {
             //converting response to json object
-            JSONArray ja = new JSONArray(jsonData);
-            JSONObject jo;
+            //JSONArray ja = new JSONArray(jsonData);
+            JSONObject data = new JSONObject(jsonData);
+            JSONArray jaInquiries = data.getJSONArray("inquiries");
 
-            for (int i = 0; i < ja.length(); i++) {
-                jo = ja.getJSONObject(i);
+            JSONObject joInquiry;
 
-                int inquiryID = jo.getInt("inquiryID");
-                String sender = jo.getString("senderEmail");
-                String message = jo.getString("message");
-                String response = jo.getString("response");
+            for (int i = 0; i < jaInquiries.length(); i++) {
+                joInquiry = jaInquiries.getJSONObject(i);
+
+                int inquiryID = joInquiry.getInt("id");
+                String sender;
+
+                if (joInquiry.getString("avsender_student").equals("null")) {
+                    sender = joInquiry.getString("avsender_student");
+                }
+                else {
+                    sender = joInquiry.getString("avsender_gjest");
+                }
+                String message = joInquiry.getString("henvendelse");
+                String response = joInquiry.getString("svar");
 
                 ArrayList<Comment> comments = new ArrayList<>();
 
-                if (jo.length() > 4) {
-                    JSONArray jaNested = jo.getJSONArray("comments");
+                if (joInquiry.has("comments")) {
+                    JSONArray jaComments = joInquiry.getJSONArray("comments");
 
-                    System.out.println("NESTED: " + jaNested.toString());
+                    System.out.println("NESTED: " + comments.toString());
 
-                    JSONObject joNested;
-                    for (int j = 0; j < jaNested.length(); j++) {
-                        joNested = jaNested.getJSONObject(j);
+                    JSONObject joComment;
+                    for (int j = 0; j < jaComments.length(); j++) {
+                        joComment = jaComments.getJSONObject(j);
 
-                        System.out.println("JSON OBJECT: " + joNested.toString());
+                        System.out.println("JSON OBJECT: " + joComment.toString());
 
-                        int commentID = joNested.getInt("commentID");
-                        String commenter = joNested.getString("commenterEmail");
-                        String comment = joNested.getString("comment");
+                        int commentID = joComment.getInt("id");
+                        String commenter;
+                        if (joComment.getString("avsender_student").equals("null")) {
+                            commenter = joComment.getString("avsender_student");
+                        }
+                        else {
+                            commenter = joComment.getString("avsender_gjest");
+                        }
+                        String comment = joComment.getString("kommentar");
 
                         comments.add(new Comment(commentID, comment, isUser(commenter)));
                     }
                 }
 
                 Inquiry inquiry;
-                if (response.isEmpty()) {
+                if (response.equals("null")) {
                     inquiry = new Inquiry(inquiryID, isUser(sender), message, comments);
                 }
                 else {

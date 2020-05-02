@@ -90,7 +90,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             params.put("password", sPassword);
 
                             //returing the response
-                            return requestHandler.sendPostRequest(URL_REGISTER, params);
+                            return requestHandler.sendPostRequest(REGISTER, params);
                         }
 
                         @Override
@@ -103,15 +103,14 @@ public class RegistrationActivity extends AppCompatActivity {
                             try {
                                 //converting response to json object
                                 JSONObject obj = new JSONObject(s);
+
+                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+
                                 //if no error in response
                                 if (!obj.getBoolean("error")) {
                                     Account.setActiveUser(sName, sEmail, sFieldOfStudy, sYear);
-
                                     finish();
                                     startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                                }
-                                else {
-                                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
