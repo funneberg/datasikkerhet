@@ -11,6 +11,8 @@ class Register extends Model {
      * Registrerer en student hvis brukeren ikke finnes i databasen fra før.
      */
     public function registerStudent(array $student): Register {
+
+        $response = array();
         if (!empty($student['name']) && !empty($student['email']) && !empty($student['fieldOfStudy']) &&
             !empty($student['year']) && !empty($student['password'])) {
 
@@ -20,7 +22,7 @@ class Register extends Model {
             $year = trim($student['year']);
 
             if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $name) && preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $fieldOfStudy) && filter_var($email, FILTER_VALIDATE_EMAIL) 
-                && preg_match("/^[0-9 ]*$/" , $year) && strlen($year) == 4 && $year <= date("Y"))  {
+                && preg_match("/^[0-9]*$/" , $year) && strlen($year) == 4 && $year <= date("Y"))  {
 
                 $password = password_hash($student['password'], PASSWORD_DEFAULT);
 
@@ -30,24 +32,40 @@ class Register extends Model {
                     $stmt->execute();
 
                     if ($stmt->affected_rows > 0) {
-                        $_SESSION['loggedIn'] = true;
-                        $_SESSION['student'] = true;
-                        $_SESSION['name'] = $name;
-                        $_SESSION['user'] = $email;
+                        $response['error'] = false;
+                        $response['message'] = "Bruker registrert";
+                        $response['name'] = $name;
+                        $response['email'] = $email;
+                        $response['fieldOfStudy'] = $fieldOfStudy;
+                        $response['year'] = $year;
 
                         $this->logger->info('Ny student ble registrert.', ['Brukernavn' => $email]);
                     }
+                    else {
+                        $response['error'] = true;
+                        $response['message'] = "Bruker ble ikke registrert";
+                        $this->logger->info('Student ble ikke registrert.');
+                    }
+                }
+                else {
+                    $response['error'] = true;
+                    $response['message'] = "Bruker finnes allerede";
+                    $this->logger->info('Student prøvde å opprette en bruker som allerede finnes.');
                 }
             }
             else {
+                $response['error'] = true;
+                $response['message'] = "Ugyldig tegn";
                 $this->logger->warning('Bruker prøvde å skrive inn et ulovlig tegn.', ['brukernavn' => $email]);
             }
         }
         else {
+            $response['error'] = true;
+            $response['message'] = "Alle feltene må fylles ut";
             $this->logger->info('Student ble ikke registrert.');
         }
 
-        return new Register($this->mysqli, $this->logger);
+        return new Register($this->mysqli, $this->logger, $response);
     }
 
     /**
@@ -55,6 +73,7 @@ class Register extends Model {
      */
     public function registerLecturer(array $lecturer): Register {
 
+        $response = array();
         if (!empty($lecturer['name']) && !empty($lecturer['email']) && !empty($lecturer['password'] && !empty($lecturer['image']))) {
 
             $name = trim($lecturer['name']);
@@ -62,7 +81,7 @@ class Register extends Model {
 
             if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/"  , $name) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-                $password = trim(password_hash($lecturer['password'], PASSWORD_DEFAULT));
+                $password = password_hash($lecturer['password'], PASSWORD_DEFAULT);
 
                 $image = $lecturer['image'];
 
@@ -87,24 +106,38 @@ class Register extends Model {
                     if ($stmt->affected_rows > 0) {
                         move_uploaded_file($image['tmp_name'], $file);
 
-                        $_SESSION['loggedIn'] = true;
-                        $_SESSION['lecturer'] = true;
-                        $_SESSION['name'] = $name;
-                        $_SESSION['user'] = $email;
+                        $response['error'] = false;
+                        $response['message'] = "Bruker opprettet";
+                        $response['name'] = $name;
+                        $response['email'] = $email;
 
                         $this->logger->info('Ny foreleser ble registrert.', ['brukernavn' => $email]);
                     }
+                    else {
+                        $response['error'] = true;
+                        $response['message'] = "Bruker ble opprettet";
+                        $this->logger->info('Foreleser ble ikke registrert.');
+                    }
+                }
+                else {
+                    $response['error'] = true;
+                    $response['message'] = "Bruker finnes allerede";
+                    $this->logger->info('Foreleser prøvde å opprette en bruker som allerede finnes.');
                 }
             }
             else {
+                $response['error'] = true;
+                $response['message'] = "Ugyldig tegn";
                 $this->logger->warning('Bruker prøvde å skrive inn et ulovlig tegn.', ['brukernavn' => $email]);
             }
         }
         else {
+            $response['error'] = true;
+            $response['message'] = "Alle feltene må fylles ut.";
             $this->logger->info('Foreleser ble ikke registrert.');
         }
 
-        return new Register($this->mysqli, $this->logger);
+        return new Register($this->mysqli, $this->logger, $response);
     }
 
     /**
@@ -127,7 +160,7 @@ class Register extends Model {
             return true;
         }
 
-        $this->logger->info('Bruker prøvde å laste opp en ugyldig fil.', ['filnavn' => $file['name']]);
+        $this->logger->warning('Bruker prøvde å laste opp en ugyldig fil.', ['filnavn' => $file['name']]);
 
         return false;
     }
@@ -139,14 +172,18 @@ class Register extends Model {
 
         $email = stripslashes(trim(htmlspecialchars($email)));
 
-        if ($this->isStudent($email)) {
-            return true;
-        }
-        if ($this->isLecturer($email)) {
-            return true;
-        }
-        if ($this->isAdmin($email)) {
-            return true;
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+            if ($this->isStudent($email)) {
+                return true;
+            }
+            if ($this->isLecturer($email)) {
+                return true;
+            }
+            if ($this->isAdmin($email)) {
+                return true;
+            }
+            
         }
         return false;
     }

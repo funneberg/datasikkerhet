@@ -14,15 +14,6 @@ class RegisterView extends View {
             header("location: index.php");
             die;
         }
-        /*
-        $registration = [];
-        if (isset($_POST)) {
-            $registration = $_POST;
-        }
-        if (isset($_FILES['image'])) {
-            $registration['image'] = $_FILES['image'];
-        }
-        */
         include_once("./pages/registerPage.php");
     }
 

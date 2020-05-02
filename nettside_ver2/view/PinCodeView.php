@@ -10,9 +10,9 @@ class PinCodeView extends View {
      */
     public function output(Model $model): void {
         // Henter info om emnet.
-        $course = $model->getCourse();
+        $course = $model->getResponse();
 
-        if (empty($course)) {
+        if (!isset($course['emnekode'])) {
             http_response_code(404);
             die;
         }
@@ -26,7 +26,6 @@ class PinCodeView extends View {
                 die;
             }
         }
-        $course = $model->getCourse();
         include_once("./pages/pinCodePage.php");
     }
 

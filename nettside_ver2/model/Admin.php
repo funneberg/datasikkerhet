@@ -5,11 +5,10 @@
  */
 class Admin extends Model {
 
-    private $lecturers;
-
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger) {
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, array $response = []) {
         parent::__construct($mysqli, $logger);
-        $this->lecturers = $this->loadUnauthorizedLecturers();
+        $lecturers = $this->loadUnauthorizedLecturers();
+        $this->response = array_replace($response, $this->lecturers)
     }
 
     /**
@@ -38,20 +37,16 @@ class Admin extends Model {
         $stmt->execute();
 
         if($stmt->affected_rows > 0){
-
-        $this->logger->info('Admin godkjente en foreleser.', ['admin' => $_SESSION['user'], 'foreleser' => $email]);
+            $response['error'] = false;
+            $response['message'] = "Foreleser godkjent";
+            $this->logger->info('Admin godkjente en foreleser.', ['admin' => $_SESSION['user'], 'foreleser' => $email]);
         }
         else{
+            $response['error'] = true;
+            $response['message'] = "Noe gikk galt";
             $this->logger->warning('Admin prøvde å godkjenne en foreleser som ikke eksisterer eller allerede er godkjent', ['brukernavn' => $email]);
         }
-        return new Admin($this->mysqli, $this->logger);
-    }
-
-    /**
-     * Henter arrayet med forelesere som ikke er godkjent.
-     */
-    public function getUnauthorizedLecturers(): array {
-        return $this->lecturers;
+        return new Admin($this->mysqli, $this->logger, $response);
     }
 
 }

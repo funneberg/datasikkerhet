@@ -24,6 +24,14 @@ class RegisterController extends Controller {
         return $model;
     }
 
+    /**
+     * Registrerer en ny student.
+     * Denne funksjonen brukes av mobilappen som kun er ment for studenter.
+     */
+    public function signUpStudent(Register $model): Register {
+        return $model->registerStudent($_POST);
+    }
+
 }
 
 ?>

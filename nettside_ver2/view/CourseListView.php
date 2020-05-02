@@ -11,7 +11,7 @@ class CourseListView extends View {
     public function output(Model $model): void {
         
         // Henter alle emner.
-        $courses = $model->getCourses();
+        $courses = $model->getResponse();
         include_once("./pages/courseListPage.php");
     }
 

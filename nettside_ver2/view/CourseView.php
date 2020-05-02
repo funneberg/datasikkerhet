@@ -17,7 +17,7 @@ class CourseView extends View {
         }
 
         // Henter info om emnet.
-        $course = $model->getCourse();
+        $course = $model->getResponse();
 
         if (empty($course)) {
             http_response_code(404);
@@ -42,14 +42,14 @@ class CourseView extends View {
         }
 
         // Hvis man er logget inn som en foreleser, har man ikke tilgang til andre forelesere sine emner.
-        if ($model->isLecturerButNotCourseLecturer()) {
+        if ($model->isNotCourseLecturer($_SESSION)) {
 
             http_response_code(403);
             die;
         }
 
         // Henter henvendelsene til emnet.
-        $inquiries = $model->getInquiries();
+        $inquiries = $course['inquiries'];
         include_once("./pages/coursePage.php");
     }
 

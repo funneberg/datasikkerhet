@@ -5,24 +5,25 @@
  */
 class CourseList extends Model {
 
-    private $courses = [];
+    //private $courses = [];
 
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, bool $search = false, $courses = []) {
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, string $search = "") {
         parent::__construct($mysqli, $logger);
-        
-        if ($search) {
-            $this->courses = $courses;
+        $this->response = $this->loadCourses($search);
+    }
+
+    public function loadCourses(string $search): array {
+        if (empty($search)) {
+            return $this->loadAllCourses();
         }
-        else {
-            $this->courses = $this->loadCourses();
-        }
+        return $this->search($search);
     }
 
     /**
      * Laster inn alle emner fra databasen.
      */
-    public function loadCourses(): array {
-        $stmt = $this->mysqli->prepare("SELECT emner.*, navn FROM emner, foreleser WHERE foreleser = epost");
+    public function loadAllCourses(): array {
+        $stmt = $this->mysqli->prepare("SELECT emner.*, navn, bilde FROM emner, foreleser WHERE foreleser = epost");
         $stmt->execute();
         $result = $stmt->get_result();
         $courses = [];
@@ -35,9 +36,8 @@ class CourseList extends Model {
     /**
      * Henter alle emnene fra databasen som inneholder et søkeord.
      */
-    public function search(string $searchTerm): CourseList {
+    public function search(string $searchTerm): array {
 
-        $searchTerm = stripslashes(trim(htmlspecialchars($searchTerm)));
         $courses = [];
 
         if (preg_match("/^[a-zA-Z0-9 \æ\ø\å\Æ\Ø\Å ]*$/" , $searchTerm)) {
@@ -57,10 +57,10 @@ class CourseList extends Model {
         }
 
         else{
-            $this->logger->warning('Bruker skrev inn ugyldig tegn i emne-inputfeltet.', ['brukernavn' => $_SESSION['user'], 'sokeord' => $searchTerm]);
+            $this->logger->warning('Bruker skrev inn ugyldig tegn i søkefeltet.', ['brukernavn' => $_SESSION['user'], 'sokeord' => $searchTerm]);
         }
 
-        return new CourseList($this->mysqli, $this->logger, true, $courses);
+        return $courses;
     }
 
     /**

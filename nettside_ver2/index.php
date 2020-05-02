@@ -4,54 +4,25 @@ include("model/Model.php");
 include("view/View.php");
 include("controller/Controller.php");
 
-require('/../../../home/datasikkerhet/vendor/autoload.php');
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\LogglyHandler;
-use Monolog\Formatter\LogglyFormatter;
-use Monolog\Handler\FingersCrossedHandler;
-use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
-
-use Monolog\Handler\GelfHandler;
-use Gelf\Message;
-use Monolog\Formatter\GelfMessageFormatter;
-
-$logger = new Monolog\Logger('sikkerhet');
-
-// Fillogging
-$logger->pushHandler(new StreamHandler(__DIR__.'/test_log/log.txt', Logger::DEBUG));
-
-// GELF
-$transport = new Gelf\Transport\UdpTransport("127.0.0.1", 12201 /*, Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN*/);
-$publisher = new Gelf\Publisher($transport);
-$handler = new GelfHandler($publisher,Logger::DEBUG);
-
-$logger->pushHandler($handler);
-
-/*
-$logger->pushProcessor(function ($record) {
-    $record['extra']['user'] = 'admin';
-
-    return $record;
-});
-*/
+include("logger.php");
 
 // Database
 $servername = "localhost";
 
 $username = "root";
 $password = "skosaalen!";
+
 /*
 $usernameRoot = "root";
 $passwordRoot = "skosaalen!";
 
 $usernameAdd = "add";
-$passwordADd = "blokkade";
+$passwordAdd = "blokkade";
 
 $usernameRead = "read";
 $passwordRead = "lysglimt";
 */
+
 $dbname = "datasikkerhet";
 
 // Oppretter forbindelse med databasen.
@@ -119,6 +90,24 @@ else if ($page == '') {
 
     if (isset($_POST['login'])) {
         $model = $controller->signIn($model);
+
+        $user = $model->getResponse();
+
+        // Logger inn bruker med
+        if (isset($user['error']) && $user['error'] == false) {
+            $_SESSION['loggedIn'] = true;
+            if (isset($user['student'])) {
+                $_SESSION['student'] = true;
+            }
+            else if (isset($user['lecturer'])) {
+                $_SESSION['lecturer'] = true;
+            }
+            else if (isset($user['admin'])) {
+                $_SESSION['admin'] = true;
+            }
+            $_SESSION['user'] = $user['email'];
+            $_SESSION['name'] = $user['name'];
+        }
     }
 }
 else if ($page == 'register') {
@@ -132,6 +121,20 @@ else if ($page == 'register') {
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $model = $controller->signUp($model);
+
+        $user = $model->getResponse();
+
+        if ($user['error'] == false) {
+            $_SESSION['loggedIn'] = true;
+            if (isset($user['student'])) {
+                $_SESSION['student'] = true;
+            }
+            else if (isset($user['lecturer'])) {
+                $_SESSION['lecturer'] = true;
+            }
+            $_SESSION['user'] = $user['email'];
+            $_SESSION['name'] = $user['name'];
+        }
     }
 }
 
@@ -155,13 +158,17 @@ else if ($page == 'courses') {
     include("view/CourseListView.php");
     include("controller/CourseListController.php");
 
-    $model = new CourseList($mysqli, $logger);
+    $search = $_GET['search'] ?? '';
+
+    $model = new CourseList($mysqli, $logger, $search);
     $view = new CourseListView();
     $controller = new CourseListController();
 
+    /*
     if (isset($_GET['search'])) {
         $model = $controller->search($model);
     }
+    */
 }
 
 // Hvis man prøver å gå til en side for et emne, og er logget inn, eller har PIN-kode,

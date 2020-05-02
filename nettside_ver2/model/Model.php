@@ -13,7 +13,7 @@ abstract class Model {
     /**
      * En konstruktør for modeller som tar imot en kobling til en database.
      */
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, array $response) {
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, array $response = []) {
         $this->mysqli = $mysqli;
         $this->logger = $logger;
         $this->response = $response;

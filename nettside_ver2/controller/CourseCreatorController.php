@@ -9,7 +9,9 @@ class CourseCreatorController extends Controller {
      * Oppretter et nytt emne.
      */
     public function createCourse(CourseCreator $model): CourseCreator {
-        return $model->createCourse($_POST);
+        $course = $_POST;
+        $course['lecturer'] = $_SESSION['user'];
+        return $model->createCourse($course);
     }
 
 }

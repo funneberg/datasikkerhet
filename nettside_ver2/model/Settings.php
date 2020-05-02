@@ -5,11 +5,8 @@
  */
 class Settings extends Model {
 
-    private $changed = false;
-
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, bool $changed = false) {
-        parent::__construct($mysqli, $logger);
-        $this->changed = $changed;
+    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, bool $changed = false, array $response = []) {
+        parent::__construct($mysqli, $logger, $response);
     }
 
     /**
@@ -17,55 +14,82 @@ class Settings extends Model {
      */
     public function changeStudentPassword($passwords): Settings {
 
-        $email = $_SESSION['user'];
+        $email = stripslashes(trim(htmlspecialchars($passwords['user'])));
 
-        $stmt = $this->mysqli->prepare("SELECT passord FROM student WHERE epost = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-        if ($result->num_rows > 0) {
-            $student = $result->fetch_assoc();
+            $stmt = $this->mysqli->prepare("SELECT passord FROM student WHERE epost = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            $oldPassword = $passwords['oldPassword'];
-            $pwHash = $student['passord'];
+            if ($result->num_rows > 0) {
+                $student = $result->fetch_assoc();
 
-            // Sjekker at passordet er riktig.
-            if (password_verify($oldPassword, $pwHash)) {
+                $oldPassword = $passwords['oldPassword'];
+                $pwHash = $student['passord'];
 
-                $newPassword1 = $passwords['newPasswordFirst'];
-                $newPassword2 = $passwords['newPasswordSecond'];
+                // Sjekker at passordet er riktig.
+                if (password_verify($oldPassword, $pwHash)) {
 
-                // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
-                if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
+                    $newPassword1 = $passwords['newPasswordFirst'];
+                    $newPassword2 = $passwords['newPasswordSecond'];
 
-                    //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
-                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
+                    // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
+                    if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
+
+                        //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
+                        if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
 
 
-                        $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+                            $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
 
-                        $stmt = $this->mysqli->prepare("UPDATE student SET passord = ? WHERE epost = ?");
-                        $stmt->bind_param("ss", $newPassword, $email);
-                        $stmt->execute();
-                        if ($stmt->affected_rows > 0) {
-                            $this->logger->info('Student oppdaterte passordet sitt.', ['brukernavn' => $email]);
+                            $stmt = $this->mysqli->prepare("UPDATE student SET passord = ? WHERE epost = ?");
+                            $stmt->bind_param("ss", $newPassword, $email);
+                            $stmt->execute();
+                            if ($stmt->affected_rows > 0) {
 
-                            return new Settings($this->mysqli, $this->logger, true);
+                                $response['error'] = false;
+                                $response['message'] = "Passord endret";
+                                $this->logger->info('Student oppdaterte passordet sitt.', ['brukernavn' => $email]);
+
+                                return new Settings($this->mysqli, $this->logger, true, $response);
+                            }
+                            else {
+                                $response['error'] = true;
+                                $response['message'] = "Det oppstod en feil";
+                                $this->logger->info('Student prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+                            }
+                        }
+                        else{
+                            $response['error'] = true;
+                            $response['message'] = "Ugyldig tegn";
+                            $this->logger->warning('Student skrev inn ugyldig tegn i nyttpassord-feltet', ['brukernavn' => $email]);
                         }
                     }
-                    
-                    else{
-                        echo("Du skrev inn et ugyldig tegn.");
-                        $this->logger->warning('Student skrev inn ugyldig tegn i nyttpassord-feltet', ['brukernavn' => $_SESSION['user']]);
+                    else {
+                        $response['error'] = true;
+                        $response['message'] = "Det nye passordet er feil";
                     }
                 }
+                else {
+                    $response['error'] = true;
+                    $response['message'] = "Feil passord";
+                }
+            }
+            else {
+                $response['error'] = true;
+                $response['message'] = "Det oppstod en feil";
+                $this->logger->warning('Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket.', ['brukernavn' => $email]);
             }
         }
+        else {
+            $response['error'] = true;
+            $response['message'] = "Det oppstod en feil";
+            $this->logger->warning('Student prøvde å oppdatere passordet til en ugyldig epostadresse. Oppdatering mislykket.', ['brukernavn' => $email]);
+        }
 
-        $this->logger->info('Student prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
-
-        return new Settings($this->mysqli, $this->logger);
+        return new Settings($this->mysqli, $this->logger, false, $response);
     }
 
     /**
@@ -73,62 +97,85 @@ class Settings extends Model {
      */
     public function changeLecturerPassword($passwords): Settings {
 
-        $email = $_SESSION['user'];
+        $email = stripslashes(trim(htmlspecialchars($passwords['user'])));
 
-        $stmt = $this->mysqli->prepare("SELECT passord FROM foreleser WHERE epost = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-        if ($result->num_rows > 0) {
-            $lecturer = $result->fetch_assoc();
+            $stmt = $this->mysqli->prepare("SELECT passord FROM foreleser WHERE epost = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            $oldPassword = $passwords['oldPassword'];
-            $pwHash = $lecturer['passord'];
+            if ($result->num_rows > 0) {
+                $lecturer = $result->fetch_assoc();
 
-            // Sjekker om brukeren har skrevet inn riktig passord.
-            if (password_verify($oldPassword, $pwHash)) {
+                $oldPassword = $passwords['oldPassword'];
+                $pwHash = $lecturer['passord'];
 
-                $newPassword1 = $passwords['newPasswordFirst'];
-                $newPassword2 = $passwords['newPasswordSecond'];
+                // Sjekker om brukeren har skrevet inn riktig passord.
+                if (password_verify($oldPassword, $pwHash)) {
 
-                // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
-                if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
+                    $newPassword1 = $passwords['newPasswordFirst'];
+                    $newPassword2 = $passwords['newPasswordSecond'];
 
-                    //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
-                    if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
+                    // Sjekker at det nye passordet er fyllt ut riktig i begge feltene.
+                    if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
 
-                        $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
+                        //Sjekker at det nye passordet som er skrevet inn kun inneholder tillatte tegn.
+                        if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
 
-                        $stmt = $this->mysqli->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
-                        $stmt->bind_param("ss", $newPassword, $email);
-                        $stmt->execute();
-                        if ($stmt->affected_rows > 0) {
+                            $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
 
-                            $this->logger->info('Foreleser oppdaterte passordet sitt.', ['brukernavn' => $email]);
+                            $stmt = $this->mysqli->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
+                            $stmt->bind_param("ss", $newPassword, $email);
+                            $stmt->execute();
+                            if ($stmt->affected_rows > 0) {
 
-                            return new Settings($this->mysqli, $this->logger, true);
+                                $response['error'] = false;
+                                $response['message'] = "Passord endret";
+
+                                $this->logger->info('Foreleser oppdaterte passordet sitt.', ['brukernavn' => $email]);
+
+                                return new Settings($this->mysqli, $this->logger, true);
+                            }
+                            else {
+                                $response['error'] = true;
+                                $response['message'] = "Det oppstod en feil";
+                                $this->logger->info('Foreleser prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
+                            }
+                        }
+                        else{
+                            $response['error'] = true;
+                            $response['message'] = "Ugyldig tegn";
+                            $this->logger->warning('Foreleser skrev inn ugyldig tegn i nyttpassord-feltet', ['brukernavn' => $email]);
                         }
                     }
-                    else{
-                        echo("Du skrev inn et ugyldig tegn.");
-                        $this->logger->warning('Foreleser skrev inn ugyldig tegn i nyttpassord-feltet', ['brukernavn' => $_SESSION['user']]);
+                    else {
+                        $response['error'] = true;
+                        $response['message'] = "Det nye passordet er feil";
                     }
                 }
+                else {
+                    $response['error'] = true;
+                    $response['message'] = "Feil passord";
+                }
+            }
+            else {
+                $response['error'] = true;
+                $response['message'] = "Det oppstod en feil";
+                $this->logger->warning('Foreleser prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket.', ['brukernavn' => $email]);
+            
             }
         }
+        else {
+            $response['error'] = true;
+            $response['message'] = "Det oppstod en feil";
+            $this->logger->warning('Foreleser prøvde å oppdatere passordet til en ugyldig epostadresse. Oppdatering mislykket.', ['brukernavn' => $email]);
+        }
 
-        $this->logger->info('Foreleser prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
-
-        return new Settings($this->mysqli, $this->logger);
+        return new Settings($this->mysqli, $this->logger, $response);
     }
 
-    /**
-     * Sjekker om passordet ble endret.
-     */
-    public function isPasswordChanged(): bool {
-        return $this->changed;
-    }
 }
 
 ?>
