@@ -18,8 +18,8 @@
         <form>
 
         <!-- Skriver ut en tilbakemelding hvis PIN-koden er feil. -->
-        <?php if (isset($_POST['PIN'])): ?>
-            <p>Feil PIN-kode.</p>
+        <?php if (isset($course['error']) && $course['error'] == true): ?>
+            <p><?php echo $course['message'] ?></p>
         <?php endif; ?>
     </main>
 </body>

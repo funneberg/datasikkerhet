@@ -26,6 +26,10 @@
 
 	<div class="content">
 
+        <?php if (isset($response['error']) && $response['error'] == true): ?>
+            <p name="errorMessage"><?php echo $response['message'] ?></p>
+        <?php endif; ?>
+
         <div class="columns">
     	
             <!-- Studentregistrering -->
@@ -34,13 +38,14 @@
                 <div id="studentCard" class="card">
 
                     <div class="column is-half " class="column">
-          
+
                         <!--Header-->
                         <div id="header"  class="container is-centered">
                             <h1 class="subtitle is-2 is-centered">Student</h1>
                         </div>
 
                     </div>
+
 		  		
 		            <div  class="card-content">
   				
@@ -65,7 +70,8 @@
                             <div class="field is-grouped is-grouped-multiline">
 
                                 <label class="label">Passord</label>
-                                <input type="password" class="input is-primary " name="password">
+                                <input type="password" class="input is-primary " name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}"
+                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og en spesialtegn">
 
                             </div>
 
@@ -118,7 +124,8 @@
                             <div class="field">
 
                                 <label class="label">Passord</label>  
-                                <input type="password" class="input is-primary " name="password" />
+                                <input type="password" class="input is-primary " name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}"
+                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og en spesialtegn" />
 
                             </div>
 

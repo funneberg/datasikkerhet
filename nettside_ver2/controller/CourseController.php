@@ -28,7 +28,7 @@ class CourseController extends Controller {
         $comment = $_POST;
         $comment['user'] = $_SESSION['user'];
 
-        $course = $model->getCourse();
+        $course = $model->getResponse();
         $lecturer = $course['epost'];
         if (isset($_SESSION['lecturer']) && $_SESSION['user'] == $lecturer) {
             $model = $model->saveReply($comment);
@@ -62,18 +62,24 @@ class CourseController extends Controller {
      * Rapporterer en henvendelse.
      */
     public function reportInquiry(Course $model): Course {
-        $report['id'] = $_POST['id'];
-        $report['user'] = $_SESSION['user'];
-        return $model->reportInquiry($report);
+        if (isset($_POST['id'])) {
+            $report['id'] = $_POST['id'];
+            $report['user'] = $_SESSION['user'];
+            $model = $model->reportInquiry($report);
+        }
+        return $model;
     }
 
     /**
      * Rapporterer en kommentar.
      */
     public function reportComment(Course $model): Course {
-        $report['id'] = $_POST['id'];
-        $report['user'] = $_SESSION['user'];
-        return $model->reportComment($report);
+        if (isset($_POST['id'])) {
+            $report['id'] = $_POST['id'];
+            $report['user'] = $_SESSION['user'];
+            $model = $model->reportComment($report);
+        }
+        return $model;
     }
 
     /**

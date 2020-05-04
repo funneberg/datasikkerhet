@@ -5,22 +5,33 @@
  */
 class CourseCreator extends Model {
 
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, string $lecturer, array $response = []) {
-        parent::__construct($mysqli, $logger, $response);
-        $this->response = $this->loadCourses($lecturer);
+    public function __construct(Monolog\Logger $logger, string $lecturer, array $response = []) {
+        parent::__construct($logger, $response);
+        $this->response['courses'] = $this->loadCourses($lecturer);
     }
 
     /**
      * Laster inn emnene til foreleseren som er logget inn.
      */
     private function loadCourses(string $lecturer): array {
-        $stmt = $this->mysqli->prepare("SELECT *, navn FROM emner, foreleser WHERE foreleser = ? AND foreleser = epost");
-        $stmt->bind_param("s", $lecturer);
-        $stmt->execute();
-        $result = $stmt->get_result();
+
         $courses = [];
-        while ($course = $result->fetch_assoc()) {
-            $courses[] = $course;
+
+        if (filter_var($lecturer, FILTER_VALIDATE_EMAIL)) {
+
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT *, navn FROM emner, foreleser WHERE foreleser = ? AND foreleser = epost");
+            $stmt->bind_param("s", $lecturer);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $mysqliSelect->close();
+
+            while ($course = $result->fetch_assoc()) {
+                $courses[] = $course;
+            }
+
         }
         return $courses;
     }
@@ -32,35 +43,48 @@ class CourseCreator extends Model {
 
         $courseName = trim($course['coursename']);
         $courseCode = trim($course['coursecode']);
-        $email = trim($course['user']);
+        $email = trim($course['lecturer']);
+        $pin = trim($course['PIN']);
 
-        //Sjekker at emnenavn og emnekode bare inneholder bokstaver og tall, og at pinkoden bare inneholder tall. 
-        if (preg_match("/^[a-zA-Z0-9 ]*$/" , $courseName) && preg_match("/^[A-Z]+(|-[A-Z]+)[0-9]+$/", $courseCode) && preg_match("/^[0-9]*$/" , $coursePin) && strlen($coursePin) == 4 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!empty($courseName) && !empty($courseCode) && !empty($email) && !empty($pin)) {
 
-            $pin = password_hash($course['pin']), PASSWORD_DEFAULT);
+            //Sjekker at emnenavn og emnekode bare inneholder bokstaver og tall, og at pinkoden bare inneholder tall. 
+            if (preg_match("/^[a-zA-Z0-9 ]*$/" , $courseName) && preg_match("/^[A-Z]+(|-[A-Z]+)[0-9]+$/", $courseCode) && preg_match("/^[0-9]*$/" , $pin) && strlen($pin) == 4 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-            if ($this->isAuthorized($email)) {
-                $stmt = $this->mysqli->prepare("INSERT INTO emner (emnekode, emnenavn, foreleser, PIN) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $coursecode, $coursename, $email, $pin);
-                $stmt->execute();
+                $pin = password_hash($pin, PASSWORD_DEFAULT);
 
-                $response['error'] = false;
-                $response['message'] = "Nytt emne opprettet";
-                $this->logger->info('Foreleser opprettet et nytt emne.', ['emnekode' => $coursecode, 'brukernavn' => $email]);
+                if ($this->isAuthorized($email)) {
+
+                    $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+                    $stmt = $mysqliInsert->prepare("INSERT INTO emner (emnekode, emnenavn, foreleser, PIN) VALUES (?, ?, ?, ?)");
+                    $stmt->bind_param("ssss", $courseCode, $courseName, $email, $pin);
+                    $stmt->execute();
+
+                    $mysqliInsert->close();
+
+                    $response['error'] = false;
+                    $response['message'] = "Nytt emne opprettet";
+                    $this->logger->info('Foreleser opprettet et nytt emne.', ['emnekode' => $courseCode, 'brukernavn' => $email]);
+                }
+                else {
+                    $response['error'] = true;
+                    $response['message'] = "Ikke godkjent";
+                    $this->logger->info('Foreleser som ikke er godkjent prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);
+                }
             }
-            else {
+            else{
                 $response['error'] = true;
-                $response['message'] = "Ikke godkjent";
-                $this->logger->info('Foreleser som ikke er godkjent prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);
+                $response['message'] = "Ugyldig informasjon";
+                $this->logger->info('Foreleser prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);
             }
         }
-        else{
+        else {
             $response['error'] = true;
-            $response['message'] = "Noe gikk galt";
-            $this->logger->info('Foreleser prøvde å opprette et nytt emne. Opprettelse mislykket.', ['brukernavn' => $email]);
+            $response['message'] = "Alle feltene må fylles ut";
         }
 
-        return new CourseCreator($this->mysqli, $this->logger, $this->lecturerEmail);
+        return new CourseCreator($this->logger, $email, $response);
     }
 
     /**
@@ -72,10 +96,15 @@ class CourseCreator extends Model {
 
         if (filter_var($lecturer, FILTER_VALIDATE_EMAIL)) {
 
-            $stmt = $this->mysqli->prepare("SELECT * FROM foreleser WHERE godkjent = 1 AND epost = ?");
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT * FROM foreleser WHERE godkjent = 1 AND epost = ?");
             $stmt->bind_param("s", $lecturer);
             $stmt->execute();
             $result = $stmt->get_result();
+
+            $mysqliSelect->close();
+
             if ($result->num_rows > 0) {
                 return true;
             }

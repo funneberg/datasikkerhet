@@ -46,6 +46,10 @@
     	    <div id="card" class="card">
 		  		
   			    <div  class="card-content">
+
+                    <?php if (isset($response['error']) && $response['error'] == true): ?>
+                        <p><?php echo $response['message'] ?></p>
+                    <?php endif; ?>
   				
                     <p class="card-header-title is-centered"></p>
                 
@@ -63,8 +67,8 @@
 
                             <br />
                             
-                            <label>Emnekode:</label>
-                            <input type="number" class="input is-primary"  name="pin" />
+                            <label>PIN:</label>
+                            <input type="number" class="input is-primary"  name="PIN" />
 
                             <br />
 

@@ -5,8 +5,8 @@ class App extends Model {
     const dir = "./app/";
     const filename = "datasikkerhetApp.apk";
 
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, array $response = []) {
-        parent::__construct($mysqli, $logger, $response);
+    public function __construct(Monolog\Logger $logger, array $response = []) {
+        parent::__construct($logger, $response);
     }
 
     public function download(): App {
@@ -36,7 +36,7 @@ class App extends Model {
         else {
             $response['error'] = false;
             $response['message'] = "Nedlasting mislykket";
-            $this->logger->info('Bruker prøvde å laste ned appen. Nedlasting mislykket.', ['brukernavn' => $_SESSION['user']]
+            $this->logger->info('Bruker prøvde å laste ned appen. Nedlasting mislykket.', ['brukernavn' => $_SESSION['user']]);
         }
 
         return new App($this->mysqli, $this->logger, $response);

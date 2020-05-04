@@ -11,7 +11,8 @@ class CourseCreatorView extends View {
     public function output(Model $model): void {
 
         // Henter emnene til foreleseren som er logget inn.
-        $courses = $model->getResponse();
+        $response = $model->getResponse();
+        $courses = $response['courses'];
         include_once("./pages/courseCreatorPage.php");
     }
 

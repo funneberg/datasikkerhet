@@ -14,6 +14,9 @@ class LoginView extends View {
             header("location: index.php");
             die;
         }
+
+        $response = $model->getResponse();
+
         include_once("./pages/loginPage.php");
     }
 

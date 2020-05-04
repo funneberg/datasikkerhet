@@ -21,7 +21,7 @@
 
             <div class="navbar-end">
 
-                <p id="studentText" class="has-text-centered has-text-white">Logged in as <strong><?php echo $_SESSION['name'] ?></strong></p>
+                <p id="studentText" class="has-text-centered has-text-white">Logged in as <strong><?php echo (isset($_SESSION['admin']) ? $_SESSION['user'] : $_SESSION['name']) ?></strong></p>
                 <a href="index.php?page=logout" class="button is-primary has-text-centered ">Logg ut</a>
 
             </div>

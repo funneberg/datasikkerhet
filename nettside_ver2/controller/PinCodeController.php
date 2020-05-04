@@ -1,15 +1,11 @@
 <?php
 
-/**
- * En Controller for PIN-koder.
- */
-class PinCodeController extends Controller {
+class PinCodeController {
 
-    /**
-     * Sender inn en PIN-kode som brukeren har skrevet inn.
-     */
     public function submitPIN(Course $model): Course {
-        return $model->submitPIN($_POST['PIN']);
+        $submission['PIN'] = $_POST['PIN'];
+        $submission['user'] = $_SESSION['user'];
+        return $model->submitPIN($submission);
     }
 
 }

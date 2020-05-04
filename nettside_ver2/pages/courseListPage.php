@@ -28,20 +28,23 @@
 
             <form method="get">
 
-                <input type="hidden" name="page" value="courses" />
+                <div class="field has-addons">
 
-                <div class="level-item">
-                
-                    <div>
+                    <div class="control">
 
+                        <input type="hidden" name="page" value="courses" />
                         <input class="input" type="text" placeholder="Søk" name="search" />
 
                     </div>
+                           
+                    <div class="control">
 
-                    <div class="level-item">
                         <button class="button is-primary">Søk</button>
+
                     </div>
 
+                      
+                    
                 </div>
 
             </form>

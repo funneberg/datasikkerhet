@@ -5,8 +5,8 @@
  */
 class Settings extends Model {
 
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, bool $changed = false, array $response = []) {
-        parent::__construct($mysqli, $logger, $response);
+    public function __construct(Monolog\Logger $logger, bool $changed = false, array $response = []) {
+        parent::__construct($logger, $response);
     }
 
     /**
@@ -18,9 +18,14 @@ class Settings extends Model {
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-            $stmt = $this->mysqli->prepare("SELECT passord FROM student WHERE epost = ?");
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT passord FROM student WHERE epost = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
+
+            $mysqliSelect->close();
+
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
@@ -39,14 +44,19 @@ class Settings extends Model {
                     if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
 
                         //Sjekker at det nye passordet som er skrevet inn kun inneholder tillate tegn.
-                        if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
+                        if (preg_match("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/", $newPassword1)) {
 
 
                             $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
 
-                            $stmt = $this->mysqli->prepare("UPDATE student SET passord = ? WHERE epost = ?");
+                            $mysqliUpdate = new MySQLi($this->servername, $this->usernameUpdate, $this->passwordUpdate, $this->dbname);
+
+                            $stmt = $mysqliUpdate->prepare("UPDATE student SET passord = ? WHERE epost = ?");
                             $stmt->bind_param("ss", $newPassword, $email);
                             $stmt->execute();
+
+                            $mysqliUpdate->close();
+
                             if ($stmt->affected_rows > 0) {
 
                                 $response['error'] = false;
@@ -89,7 +99,7 @@ class Settings extends Model {
             $this->logger->warning('Student prøvde å oppdatere passordet til en ugyldig epostadresse. Oppdatering mislykket.', ['brukernavn' => $email]);
         }
 
-        return new Settings($this->mysqli, $this->logger, false, $response);
+        return new Settings($this->logger, false, $response);
     }
 
     /**
@@ -101,9 +111,14 @@ class Settings extends Model {
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-            $stmt = $this->mysqli->prepare("SELECT passord FROM foreleser WHERE epost = ?");
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT passord FROM foreleser WHERE epost = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
+
+            $mysqliSelect->close();
+
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
@@ -122,13 +137,18 @@ class Settings extends Model {
                     if ($newPassword1 == $newPassword2 && !empty($newPassword1)) {
 
                         //Sjekker at det nye passordet som er skrevet inn kun inneholder tillatte tegn.
-                        if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $newPassword1)) {
+                        if (preg_match("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/", $newPassword1)) {
 
                             $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
 
-                            $stmt = $this->mysqli->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
+                            $mysqliUpdate = new MySQLi($this->servername, $this->usernameUpdate, $this->passwordUpdate, $this->dbname);
+
+                            $stmt = $mysqliUpdate->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
                             $stmt->bind_param("ss", $newPassword, $email);
                             $stmt->execute();
+
+                            $mysqliUpdate->close();
+
                             if ($stmt->affected_rows > 0) {
 
                                 $response['error'] = false;
@@ -173,7 +193,7 @@ class Settings extends Model {
             $this->logger->warning('Foreleser prøvde å oppdatere passordet til en ugyldig epostadresse. Oppdatering mislykket.', ['brukernavn' => $email]);
         }
 
-        return new Settings($this->mysqli, $this->logger, $response);
+        return new Settings($this->logger, $response);
     }
 
 }

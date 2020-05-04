@@ -24,7 +24,7 @@ class Login extends Model {
                     $response['student'] = true;
                     $response['name'] = $student[0];
                     $response['email'] = $user['email'];
-                    return new Login($this->mysqli, $this->logger, $response);
+                    return new Login($this->logger, $response);
                 }
 
                 // Prøver å logge inn som foreleser.
@@ -36,7 +36,7 @@ class Login extends Model {
                     $response['lecturer'] = true;
                     $response['name'] = $lecturer[0];
                     $response['email'] = $user['email'];
-                    return new Login($this->mysqli, $this->logger, $response);
+                    return new Login($this->logger, $response);
                 }
 
                 // Prøver å logge inn som administrator.
@@ -47,7 +47,7 @@ class Login extends Model {
                     $response['message'] = "Logget inn";
                     $response['admin'] = true;
                     $response['email'] = $user['email'];
-                    return new Login($this->mysqli, $this->logger, $response);
+                    return new Login($this->logger, $response);
                 }
                 $response['error'] = true;
                 $response['message'] = "Feil epost eller passord";
@@ -65,7 +65,7 @@ class Login extends Model {
 
         }
 
-        return new Login($this->mysqli, $this->logger, $response);
+        return new Login($this->logger, $response);
     }
 
     /**
@@ -106,7 +106,7 @@ class Login extends Model {
             $response['message'] = "Alle feltene må fylles ut";
         }
 
-        return new Login($this->mysqli, $this->logger, $response);
+        return new Login($this->logger, $response);
 
     }
 
@@ -118,10 +118,14 @@ class Login extends Model {
         $email = trim($user['email']);
         $password = trim($user['password']);
 
-        $stmt = $this->mysqli->prepare("SELECT navn, passord, studieretning, kull FROM student WHERE epost = ?");
+        $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+        $stmt = $mysqliSelect->prepare("SELECT navn, passord, studieretning, kull FROM student WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+
+        $mysqliSelect->close();
 
         $student = [];
 
@@ -148,10 +152,14 @@ class Login extends Model {
         $email = trim($user['email']);
         $password = trim($user['password']);
 
-        $stmt = $this->mysqli->prepare("SELECT navn, passord FROM foreleser WHERE epost = ?");
+        $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+        $stmt = $mysqliSelect->prepare("SELECT navn, passord FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+
+        $mysqliSelect->close();
 
         $lecturer = [];
 
@@ -179,10 +187,14 @@ class Login extends Model {
         $email = trim($user['email']);
         $password = trim($user['password']);
 
-        $stmt = $this->mysqli->prepare("SELECT passord FROM admin WHERE brukernavn = ?");
+        $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+        $stmt = $mysqliSelect->prepare("SELECT passord FROM admin WHERE brukernavn = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+
+        $mysqliSelect->close();
 
         $admin = [];
 

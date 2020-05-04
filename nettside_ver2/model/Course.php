@@ -5,8 +5,8 @@
  */
 class Course extends Model {
 
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, string $code, array $response = []) {
-        parent::__construct($mysqli, $logger);
+    public function __construct(Monolog\Logger $logger, string $code, array $response = []) {
+        parent::__construct($logger);
         $course = $this->loadCourse($code);
         $this->response = array_replace($response, $course);
         $this->response['inquiries'] = $this->loadInquiries($code);
@@ -22,9 +22,13 @@ class Course extends Model {
             $inquiry1 = stripslashes(trim(htmlspecialchars($inquiry['inquiry'])));
             $user = stripslashes(trim(htmlspecialchars($inquiry['user'])));
 
-            $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (avsender_student, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $user, $this->course['epost'], $this->course['emnekode'], $inquiry1);
+            $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+            $stmt = $mysqliInsert->prepare("INSERT INTO henvendelse (avsender_student, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $user, $this->response['epost'], $this->response['emnekode'], $inquiry1);
             $stmt->execute();
+
+            $mysqliInsert->close();
 
             if ($stmt->affected_rows > 0) {
                 $response['error'] = false;
@@ -43,7 +47,7 @@ class Course extends Model {
             $response['message'] = "Tomt tekstfelt";
         }
 
-        return new Course($this->mysqli, $this->logger, $this->course['emnekode'], $response);
+        return new Course($this->logger, $this->response['emnekode'], $response);
     }
 
     /**
@@ -56,8 +60,10 @@ class Course extends Model {
             $inquiry1 = stripslashes(trim(htmlspecialchars($inquiry['inquiry'])));
             $user = stripslashes(trim(htmlspecialchars($inquiry['user'])));
 
-            $stmt = $this->mysqli->prepare("INSERT INTO henvendelse (avsender_gjest, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $inquiry['user'], $this->course['epost'], $this->course['emnekode'], $inquiry1);
+            $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+            $stmt = $mysqliInsert->prepare("INSERT INTO henvendelse (avsender_gjest, mottaker, emnekode, henvendelse) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $inquiry['user'], $this->response['epost'], $this->response['emnekode'], $inquiry1);
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
@@ -71,13 +77,14 @@ class Course extends Model {
                 $this->logger->info('En gjest prøvde å sende en henvendelse. Forsøk mislykket.', ['brukernavn' => $user, 'henvendelse' => $inquiry1]);
             }
 
+            $mysqliInsert->close();
         }
         else {
             $response['error'] = true;
             $response['message'] = "Tomt tekstfelt";
         }
 
-        return new Course($this->mysqli, $this->logger, $this->course['emnekode'], $response);
+        return new Course($this->logger, $this->response['emnekode'], $response);
     }
 
     /**
@@ -91,14 +98,16 @@ class Course extends Model {
             $replyC = stripslashes(trim(htmlspecialchars($reply['comment'])));
             $replyUser = stripslashes(trim(htmlspecialchars($reply['user'])));
 
-            $stmt = $this->mysqli->prepare("UPDATE henvendelse SET svar = ? WHERE id = ?");
+            $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+            $stmt = $mysqliUpdate->prepare("UPDATE henvendelse SET svar = ? WHERE id = ? AND svar IS NULL");
             $stmt->bind_param("si", $replyC, $replyId);
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
                 $response['error'] = false;
                 $response['message'] = "Svar sendt";
-                $this->logger->item('Foreleser svarte på en henvendelse.', ['foreleser' => $replyUser, 'id' => $replyId, 'svar' => $replyC]);
+                $this->logger->info('Foreleser svarte på en henvendelse.', ['foreleser' => $replyUser, 'id' => $replyId, 'svar' => $replyC]);
             }
             else {
                 $response['error'] = true;
@@ -106,13 +115,14 @@ class Course extends Model {
                 $this->logger->info('Foreleser prøvde å svare på en henvendelse. Forsøk mislykket.', ['foreleser' => $replyUser, 'id' => $replyId, 'svar' => $replyC]);
             }
 
+            $mysqliUpdate->close();
         }
         else {
             $response['error'] = true;
             $response['message'] = "Tomt tekstfelt";
         }
 
-        return new Course($this->mysqli, $this->logger, $this->course['emnekode'], $response);
+        return new Course($this->logger, $this->response['emnekode'], $response);
     }
 
     /**
@@ -126,7 +136,9 @@ class Course extends Model {
             $commentId = stripslashes(trim(htmlspecialchars($comment['id'])));
             $commentUser = stripslashes(trim(htmlspecialchars($comment['user'])));
 
-            $stmt = $this->mysqli->prepare("INSERT INTO kommentar (avsender_student, kommentar_til, kommentar) VALUES (?, ?, ?)");
+            $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+            $stmt = $mysqliInsert->prepare("INSERT INTO kommentar (avsender_student, kommentar_til, kommentar) VALUES (?, ?, ?)");
             $stmt->bind_param("sis", $commentUser, $commentId, $commentC);
             $stmt->execute();
 
@@ -141,13 +153,14 @@ class Course extends Model {
                 $this->logger->info('En student prøvde å sende en kommentar til en henvendelse. Forsøk mislykket.', ['brukernavn' => $commentUser, 'kommentar' => $commentC]);
             }
 
+            $mysqliInsert->close();
         }
         else {
             $response['error'] = true;
             $response['message'] = "Tomt tekstfelt";
         }
 
-        return new Course($this->mysqli, $this->logger, $this->course['emnekode'], $response);
+        return new Course($this->logger, $this->response['emnekode'], $response);
     }
 
     /**
@@ -161,7 +174,9 @@ class Course extends Model {
             $commentId = stripslashes(trim(htmlspecialchars($comment['id'])));
             $commentUser = stripslashes(trim(htmlspecialchars($comment['user'])));
 
-            $stmt = $this->mysqli->prepare("INSERT INTO kommentar (avsender_gjest, kommentar_til, kommentar) VALUES (?, ?, ?)");
+            $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+            $stmt = $mysqliInsert->prepare("INSERT INTO kommentar (avsender_gjest, kommentar_til, kommentar) VALUES (?, ?, ?)");
             $stmt->bind_param("sis", $commentUser, $commentId, $commentC);
             $stmt->execute();
 
@@ -176,13 +191,14 @@ class Course extends Model {
                 $this->logger->info('En gjest prøvde å sende en kommentar til en henvendelse. Forsøk mislykket.', ['brukernavn' => $commentUser, 'kommentar' => $commentC]);
             }
 
+            $mysqliInsert->close();
         }
         else {
             $response['error'] = true;
             $response['message'] = "Tomt tekstfelt";
         }
 
-        return new Course($this->mysqli, $this->logger, $this->course['emnekode'], $response);
+        return new Course($this->logger, $this->response['emnekode'], $response);
     }
 
     /**
@@ -196,8 +212,10 @@ class Course extends Model {
             $id = stripslashes(trim(htmlspecialchars($report['id'])));
             $user = stripslashes(trim(htmlspecialchars($report['user'])));
 
-            $stmt = $this->mysqli->prepare("UPDATE henvendelse SET rapportert = rapportert + 1 WHERE id = ?");
-            $stmt->bind_param("i", $id);
+            $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+            $stmt = $mysqliUpdate->prepare("UPDATE henvendelse SET rapportert = rapportert + 1 WHERE id = ? AND (avsender_gjest IS NULL OR avsender_gjest != ?) AND (avsender_student IS NULL OR avsender_student != ?)");
+            $stmt->bind_param("iss", $id, $user, $user);
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
@@ -208,14 +226,18 @@ class Course extends Model {
             else {
                 $response['error'] = true;
                 $response['message'] = "Noe gikk galt";
+                $this->logger->info('Bruker prøvde å rapportere en henvendelse. Henvendelse ble ikke rapportert.', ['brukernavn' => $user, 'id' => $id]);
             }
+
+            $mysqliUpdate->close();
         }
         else {
             $response['error'] = true;
             $response['message'] = "Noe gikk galt";
+            $this->warning('Brukernavn eller henvendelse-ID ble ikke oppgitt.', ['brukernavn' => $report['user'], 'id' => $report['id']]);
         }
 
-        return new Course($this->mysqli, $this->logger, $this->response['emnekode'], $response);
+        return new Course($this->logger, $this->response['emnekode'], $response);
     }
 
     /**
@@ -229,8 +251,10 @@ class Course extends Model {
             $id = stripslashes(trim(htmlspecialchars($report['id'])));
             $user = stripslashes(trim(htmlspecialchars($report['user'])));
 
-            $stmt = $this->mysqli->prepare("UPDATE kommentar SET rapportert = rapportert + 1 WHERE id = ?");
-            $stmt->bind_param("i", $id);
+            $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+            $stmt = $mysqliUpdate->prepare("UPDATE kommentar SET rapportert = rapportert + 1 WHERE id = ? AND (avsender_gjest IS NULL OR avsender_gjest != ?) AND (avsender_student IS NULL OR avsender_student != ?)");
+            $stmt->bind_param("iss", $id, $user, $user);
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
@@ -241,14 +265,45 @@ class Course extends Model {
             else {
                 $response['error'] = true;
                 $response['message'] = "Noe gikk galt";
+                $this->logger->info('Bruker prøvde å rapportere en kommentar. Kommentar ble ikke rapportert.', ['brukernavn' => $user, 'id' => $id]);
             }
+
+            $mysqliUpdate->close();
         }
         else {
             $response['error'] = true;
             $response['message'] = "Noe gikk galt";
+            $this->warning('Brukernavn eller kommentar-ID ble ikke oppgitt.', ['brukernavn' => $report['user'], 'id' => $report['id']]);
         }
 
-        return new Course($this->mysqli, $this->logger, $this->response['emnekode'], $response);
+        return new Course($this->logger, $this->response['emnekode'], $response);
+    }
+
+    /**
+     * Sjekker om en PIN-kode som er oppgitt av en bruker er riktig, og gir en tilbakemelding.
+     */
+    public function submitPIN(array $submission): Course {
+        if (!empty($submission['user']) && !empty($submission['PIN']) && preg_match("/^[0-9]*$/", $submission['PIN']) && strlen($submission['PIN']) == 4) {
+
+            $pin = $submission['PIN'];
+            $user = stripslashes(trim(htmlspecialchars($submission['user'])));
+
+            if ($this->isCorrectPIN($pin)) {
+                $response['error'] = false;
+                $response['message'] = "Riktig PIN-kode";
+                $this->logger->info('Bruker skrev inn riktig PIN-kode for et emne.', ['brukernavn' => $user, 'emnekode' => $this->response['emnekode']]);
+            }
+            else {
+                $response['error'] = true;
+                $response['message'] = "Feil PIN-kode";
+            }
+        }
+        else {
+            $response['error'] = true;
+            $response['message'] = "Feil PIN-kode";
+            $this->logger->warning('Bruker prøvde å oppgi PIN-kode for et emne. Noe gikk galt.', ['brukernavn' => $submission['user'], 'emnekode' => $this->response['emnekode']]);
+        }
+        return new Course($this->logger, $this->response['emnekode'], $response);
     }
 
     /**
@@ -260,10 +315,14 @@ class Course extends Model {
 
             $code = stripslashes(trim(htmlspecialchars($code)));
 
-            $stmt = $this->mysqli->prepare("SELECT emnekode, emnenavn, PIN, navn, epost, bilde FROM emner, foreleser WHERE epost = foreleser AND emnekode = ?");
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT emnekode, emnenavn, PIN, navn, epost, bilde FROM emner, foreleser WHERE epost = foreleser AND emnekode = ?");
             $stmt->bind_param("s", $code);
             $stmt->execute();
             $result = $stmt->get_result();
+
+            $mysqliSelect->close();
 
             if ($result->num_rows > 0) {
                 return $result->fetch_assoc();
@@ -287,10 +346,14 @@ class Course extends Model {
 
             $code = stripslashes(trim(htmlspecialchars($code)));
 
-            $stmt = $this->mysqli->prepare("SELECT * FROM henvendelse WHERE emnekode = ? ORDER BY id DESC");
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT * FROM henvendelse WHERE emnekode = ? ORDER BY id DESC");
             $stmt->bind_param("s", $code);
             $stmt->execute();
             $result = $stmt->get_result();
+
+            $mysqliSelect->close();
 
             while($inquiry = $result->fetch_assoc()) {
                 $inquiry['comments'] = $this->loadComments($inquiry['id']);
@@ -311,10 +374,14 @@ class Course extends Model {
 
             $id = stripslashes(trim(htmlspecialchars($id)));
 
-            $stmt = $this->mysqli->prepare("SELECT * FROM kommentar WHERE kommentar_til = ? ORDER BY id DESC");
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT * FROM kommentar WHERE kommentar_til = ? ORDER BY id DESC");
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $result = $stmt->get_result();
+
+            $mysqliSelect->close();
             
             while($comment = $result->fetch_assoc()) {
                 $comments[] = $comment;
@@ -323,9 +390,12 @@ class Course extends Model {
         return $comments;
     }
 
+    /**
+     * Sjekker om en foreleser er foreleser for det valgte emnet.
+     */
     public function isNotCourseLecturer(array $user) {
         if (isset($user['lecturer'])) {
-            if ($user['user'] == $this->course['epost']) {
+            if ($user['user'] == $this->response['epost']) {
                 return false;
             }
 
@@ -342,9 +412,9 @@ class Course extends Model {
      */
     public function isCorrectPIN(int $pin): bool {
 
-        if (preg_match("/^[0-9 ]*$/", $pin) && strlen($pin) == 4) {
+        if (preg_match("/^[0-9]*$/", $pin) && strlen($pin) == 4) {
 
-            $pinHash = $this->course['PIN'];
+            $pinHash = $this->response['PIN'];
             return password_verify($pin, $pinHash);
 
         }

@@ -16,7 +16,7 @@ use Monolog\Formatter\GelfMessageFormatter;
 $logger = new Monolog\Logger('sikkerhet');
 
 // Fillogging
-$logger->pushHandler(new StreamHandler(__DIR__.'/../test_log/log.txt', Logger::DEBUG));
+$logger->pushHandler(new StreamHandler(__DIR__.'/test_log/log.txt', Logger::DEBUG));
 
 // GELF
 $transport = new Gelf\Transport\UdpTransport("127.0.0.1", 12201 /*, Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN*/);

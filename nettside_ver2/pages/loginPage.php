@@ -36,11 +36,10 @@
                         <div class="field">
             
                             <p class="control has-icons-left has-icons-right">
-                                <input class="input" type="text" placeholder="Epost" name="email">
+                                <input class="input" type="email" placeholder="E-post" name="email">
                                 <span class="icon is-small is-left">
-                                    <i class="fas fa-user"></i>
+                                    <i class="fas fa-envelope"></i>
                                 </span>
-                                <span class="icon is-small is-right"></span>
                             </p>
 
                         </div>
@@ -80,11 +79,13 @@
 
                                 <br> 
 
-                                <h3 name="errorMessage"></h3>
-
                             <nav>
                 
                         </div>
+
+                        <?php if (isset($response['error']) && $response['error'] == true): ?>
+                            <h3 name="errorMessage"><?php echo $response['message'] ?></h3>
+                        <?php endif; ?>
             
                     </div>
         

@@ -6,15 +6,22 @@
  */
 abstract class Model {
 
-    protected $mysqli;
     protected $logger;
     protected $response;
+
+    protected $servername = "localhost";
+    protected $dbname = "datasikkerhet";
+
+    protected $usernameAdd = "add";
+    protected $passwordAdd = "blokkade";
+
+    protected $usernameRead = "read";
+    protected $passwordRead = "lysglimt";
 
     /**
      * En konstruktør for modeller som tar imot en kobling til en database.
      */
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, array $response = []) {
-        $this->mysqli = $mysqli;
+    public function __construct(Monolog\Logger $logger, array $response = []) {
         $this->logger = $logger;
         $this->response = $response;
     }

@@ -22,18 +22,22 @@ class Register extends Model {
             $year = trim($student['year']);
 
             if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $name) && preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $fieldOfStudy) && filter_var($email, FILTER_VALIDATE_EMAIL) 
-                && preg_match("/^[0-9]*$/" , $year) && strlen($year) == 4 && $year <= date("Y"))  {
+                && preg_match("/^[0-9]*$/" , $year) && strlen($year) == 4 && $year <= date("Y") && preg_match("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/", $student['password'])){
 
                 $password = password_hash($student['password'], PASSWORD_DEFAULT);
 
                 if (!$this->userExists($email)) {
-                    $stmt = $this->mysqli->prepare("INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES (?, ?, ?, ?, ?)");
+
+                    $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+                    $stmt = $mysqliInsert->prepare("INSERT INTO student (navn, epost, studieretning, kull, passord) VALUES (?, ?, ?, ?, ?)");
                     $stmt->bind_param("sssis", $name, $email, $fieldOfStudy, $year, $password);
                     $stmt->execute();
 
                     if ($stmt->affected_rows > 0) {
                         $response['error'] = false;
                         $response['message'] = "Bruker registrert";
+                        $response['student'] = true;
                         $response['name'] = $name;
                         $response['email'] = $email;
                         $response['fieldOfStudy'] = $fieldOfStudy;
@@ -46,6 +50,8 @@ class Register extends Model {
                         $response['message'] = "Bruker ble ikke registrert";
                         $this->logger->info('Student ble ikke registrert.');
                     }
+
+                    $mysqliInsert->close();
                 }
                 else {
                     $response['error'] = true;
@@ -55,7 +61,7 @@ class Register extends Model {
             }
             else {
                 $response['error'] = true;
-                $response['message'] = "Ugyldig tegn";
+                $response['message'] = "Ugyldig informasjon";
                 $this->logger->warning('Bruker prøvde å skrive inn et ulovlig tegn.', ['brukernavn' => $email]);
             }
         }
@@ -65,7 +71,7 @@ class Register extends Model {
             $this->logger->info('Student ble ikke registrert.');
         }
 
-        return new Register($this->mysqli, $this->logger, $response);
+        return new Register($this->logger, $response);
     }
 
     /**
@@ -79,7 +85,7 @@ class Register extends Model {
             $name = trim($lecturer['name']);
             $email = trim($lecturer['email']);
 
-            if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/"  , $name) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/"  , $name) && filter_var($email, FILTER_VALIDATE_EMAIL) && preg_match("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/", $lecturer['password'])){
 
                 $password = password_hash($lecturer['password'], PASSWORD_DEFAULT);
 
@@ -99,7 +105,9 @@ class Register extends Model {
 
                     $fileName = basename($file);
 
-                    $stmt = $this->mysqli->prepare("INSERT INTO foreleser (navn, epost, passord, bilde) VALUES (?, ?, ?, ?)");
+                    $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
+
+                    $stmt = $mysqliInsert->prepare("INSERT INTO foreleser (navn, epost, passord, bilde) VALUES (?, ?, ?, ?)");
                     $stmt->bind_param("ssss", $name, $email, $password, $fileName);
                     $stmt->execute();
 
@@ -108,6 +116,7 @@ class Register extends Model {
 
                         $response['error'] = false;
                         $response['message'] = "Bruker opprettet";
+                        $response['lecturer'] = true;
                         $response['name'] = $name;
                         $response['email'] = $email;
 
@@ -118,6 +127,8 @@ class Register extends Model {
                         $response['message'] = "Bruker ble opprettet";
                         $this->logger->info('Foreleser ble ikke registrert.');
                     }
+
+                    $mysqliInsert->close();
                 }
                 else {
                     $response['error'] = true;
@@ -127,7 +138,7 @@ class Register extends Model {
             }
             else {
                 $response['error'] = true;
-                $response['message'] = "Ugyldig tegn";
+                $response['message'] = "Ugyldig informasjon";
                 $this->logger->warning('Bruker prøvde å skrive inn et ulovlig tegn.', ['brukernavn' => $email]);
             }
         }
@@ -137,7 +148,7 @@ class Register extends Model {
             $this->logger->info('Foreleser ble ikke registrert.');
         }
 
-        return new Register($this->mysqli, $this->logger, $response);
+        return new Register($this->logger, $response);
     }
 
     /**
@@ -193,10 +204,14 @@ class Register extends Model {
      */
     private function isStudent(string $email): bool {
 
-        $stmt = $this->mysqli->prepare("SELECT navn FROM student WHERE epost = ?");
+        $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+        $stmt = $mysqliSelect->prepare("SELECT navn FROM student WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+
+        $mysqliSelect->close();
 
         if ($result->num_rows > 0) {
             return true;
@@ -209,10 +224,14 @@ class Register extends Model {
      */
     private function isLecturer(string $email): bool {
 
-        $stmt = $this->mysqli->prepare("SELECT navn FROM foreleser WHERE epost = ?");
+        $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+        $stmt = $mysqliSelect->prepare("SELECT navn FROM foreleser WHERE epost = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+
+        $mysqliSelect->close();
 
         if ($result->num_rows > 0) {
             return true;
@@ -225,10 +244,14 @@ class Register extends Model {
      */
     private function isAdmin(string $email): bool {
 
-        $stmt = $this->mysqli->prepare("SELECT brukernavn FROM admin WHERE brukernavn = ?");
+        $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+        $stmt = $mysqliSelect->prepare("SELECT brukernavn FROM admin WHERE brukernavn = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+
+        $mysqliSelect->close();
 
         if ($result->num_rows > 0) {
             return true;

@@ -18,13 +18,9 @@ class PinCodeView extends View {
         }
 
         // Hvis PIN-koden er riktig, blir man omdirigert til siden for emnet.
-        if (isset($_POST['PIN'])) {
-            if ($model->isCorrectPIN($_POST['PIN'])) {
-                // Lagrer den riktige PIN-koden i sesjonen.
-                $_SESSION['access'][$course['emnekode']] = $_POST['PIN'];
-                header("location: index.php?page=course&code=".$course['emnekode']);
-                die;
-            }
+        if (!isset($_SESSION['loggedIn']) && isset($_SESSION['access'][$course['emnekode']])) {
+            header("location: index.php?page=course&code=".$course['emnekode']);
+            die;
         }
         include_once("./pages/pinCodePage.php");
     }

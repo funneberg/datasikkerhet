@@ -8,7 +8,6 @@ include("logger.php");
 
 // Database
 $servername = "localhost";
-
 $username = "root";
 $password = "skosaalen!";
 
@@ -58,7 +57,7 @@ if ($page == '' && (isset($_SESSION['student']) || isset($_SESSION['lecturer']))
     include("model/Home.php");
     include("view/HomeView.php");
 
-    $model = new Home($mysqli, $logger);
+    $model = new Home($logger);
     $view = new HomeView();
 }
 
@@ -69,7 +68,7 @@ else if ($page == '' && isset($_SESSION['admin'])) {
     include("view/AdminView.php");
     include("controller/AdminController.php");
 
-    $model = new Admin($mysqli, $logger);
+    $model = new Admin($logger);
     $view = new AdminView();
     $controller = new AdminController();
 
@@ -84,7 +83,7 @@ else if ($page == '') {
     include("view/LoginView.php");
     include("controller/LoginController.php");
 
-    $model = new Login($mysqli, $logger);
+    $model = new Login($logger);
     $view = new LoginView();
     $controller = new LoginController();
 
@@ -115,7 +114,7 @@ else if ($page == 'register') {
     include("view/RegisterView.php");
     include("controller/RegisterController.php");
 
-    $model = new Register($mysqli, $logger);
+    $model = new Register($logger);
     $view = new RegisterView();
     $controller = new RegisterController();
 
@@ -145,7 +144,7 @@ else if ($page == 'courses' && isset($_SESSION['lecturer'])) {
     include("view/CourseCreatorView.php");
     include("controller/CourseCreatorController.php");
 
-    $model = new CourseCreator($mysqli, $logger, $_SESSION['user']);
+    $model = new CourseCreator($logger, $_SESSION['user']);
     $view = new CourseCreatorView();
     $controller = new CourseCreatorController();
 
@@ -160,15 +159,9 @@ else if ($page == 'courses') {
 
     $search = $_GET['search'] ?? '';
 
-    $model = new CourseList($mysqli, $logger, $search);
+    $model = new CourseList($logger, $search);
     $view = new CourseListView();
     $controller = new CourseListController();
-
-    /*
-    if (isset($_GET['search'])) {
-        $model = $controller->search($model);
-    }
-    */
 }
 
 // Hvis man prøver å gå til en side for et emne, og er logget inn, eller har PIN-kode,
@@ -178,7 +171,7 @@ else if ($page == 'course' && isset($_GET['code']) && (isset($_SESSION['loggedIn
     include("view/CourseView.php");
     include("controller/CourseController.php");
 
-    $model = new Course($mysqli, $logger, $_GET['code']);
+    $model = new Course($logger, $_GET['code']);
     $view = new CourseView();
     $controller = new CourseController();
 
@@ -203,15 +196,25 @@ else if ($page == 'course' && isset($_GET['code'])) {
     include("view/PinCodeView.php");
     include("controller/PinCodeController.php");
 
-    $model = new Course($mysqli, $logger, $_GET['code']);
+    $model = new Course($logger, $_GET['code']);
     $view = new PinCodeView();
+    $controller = new PinCodeController();
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $model = $controller->submitPIN($model);
+
+        $response = $model->getResponse();
+        if (isset($response['error']) && $response['error'] == false) {
+            $_SESSION['access'][$_GET['code']] = $_POST['PIN'];
+        }
+    }
 }
 else if ($page == 'settings') {
     include("model/Settings.php");
     include("view/SettingsView.php");
     include("controller/SettingsController.php");
 
-    $model = new Settings($mysqli, $logger);
+    $model = new Settings($logger);
     $view = new SettingsView();
     $controller = new SettingsController();
 
@@ -224,7 +227,7 @@ else if ($page == 'app') {
     include("view/AppView.php");
     include("controller/AppController.php");
 
-    $model = new App($mysqli, $logger);
+    $model = new App($logger);
     $view = new AppView();
     $controller = new AppController();
 

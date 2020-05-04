@@ -7,9 +7,8 @@ class CourseList extends Model {
 
     //private $courses = [];
 
-    public function __construct(MySQLi $mysqli, Monolog\Logger $logger, string $search = "") {
-        parent::__construct($mysqli, $logger);
-        $this->response = $this->loadCourses($search);
+    public function __construct(Monolog\Logger $logger, string $search = "") {
+        parent::__construct($logger, $this->loadCourses($search));
     }
 
     public function loadCourses(string $search): array {
@@ -23,9 +22,14 @@ class CourseList extends Model {
      * Laster inn alle emner fra databasen.
      */
     public function loadAllCourses(): array {
-        $stmt = $this->mysqli->prepare("SELECT emner.*, navn, bilde FROM emner, foreleser WHERE foreleser = epost");
+        $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+        $stmt = $mysqliSelect->prepare("SELECT emner.*, navn, bilde FROM emner, foreleser WHERE foreleser = epost");
         $stmt->execute();
         $result = $stmt->get_result();
+
+        $mysqliSelect->close();
+
         $courses = [];
         while($course = $result->fetch_assoc()) {
             $courses[] = $course;
@@ -44,11 +48,16 @@ class CourseList extends Model {
 
             $search = '%'.$searchTerm.'%';
 
-            $stmt = $this->mysqli->prepare("SELECT emner.*, navn FROM emner JOIN foreleser ON foreleser = epost 
+            $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
+
+            $stmt = $mysqliSelect->prepare("SELECT emner.*, navn FROM emner JOIN foreleser ON foreleser = epost 
                                             WHERE emnekode LIKE ? OR emnenavn LIKE ? OR foreleser LIKE ? OR navn LIKE ?");
             $stmt->bind_param("ssss", $search, $search, $search, $search);
             $stmt->execute();
             $result = $stmt->get_result();
+
+            $mysqliSelect->close();
+
             while($course = $result->fetch_assoc()) {
                 $courses[] = $course;
             }
