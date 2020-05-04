@@ -67,8 +67,8 @@
 
                             <br />
                             
-                            <label>PIN:</label>
-                            <input type="number" class="input is-primary"  name="PIN" />
+                            <label>Emnekode:</label>
+                            <input type="number" class="input is-primary"  name="pin" />
 
                             <br />
 

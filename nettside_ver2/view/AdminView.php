@@ -11,7 +11,8 @@ class AdminView extends View {
     public function output(Model $model): void {
         
         // Henter forelesere som ikke er godkjente.
-        $lecturers = $model->getResponse();
+        $response = $model->getResponse();
+        $lecturers = $response['lecturers'];
         include_once('./pages/adminPage.php');
     }
 

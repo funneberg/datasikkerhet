@@ -125,7 +125,7 @@ class Register extends Model {
                     else {
                         $response['error'] = true;
                         $response['message'] = "Bruker ble opprettet";
-                        $this->logger->info('Foreleser ble ikke registrert.');
+                        $this->logger->info('Foreleser ble ikke registrert');
                     }
 
                     $mysqliInsert->close();
@@ -144,7 +144,7 @@ class Register extends Model {
         }
         else {
             $response['error'] = true;
-            $response['message'] = "Alle feltene må fylles ut.";
+            $response['message'] = "Alle feltene må fylles ut";
             $this->logger->info('Foreleser ble ikke registrert.');
         }
 

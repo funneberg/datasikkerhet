@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Henvendelser</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
@@ -18,99 +18,163 @@
 
     <main>
 
-        
-        <h1><?php echo $course['emnekode']." ".$course['emnenavn'] ?></h1>
-        <p><?php echo $course['navn'] ?></p>
-        <p><?php echo $course['epost'] ?></p>
-        <img style="width:150px" src="./bilder/<?php echo $course['bilde'] ?>" />
+        <div class="container">
 
-        <div class="card">
-            <!-- Forelesere kan ikke sende henvendelser. -->
-            <?php if (!isset($_SESSION['lecturer'])): ?>
+            <div class="card">
+            
+                <div style="padding: 10px; margin: 10px">
 
-                <form method="post">
-                    <textarea placeholder="Send en henvendelse" rows="10" cols="10" name="inquiry"></textarea>
-                    <button class="button is-primary" name="sendInquiry">Send</button>
-                </form>
+                    <h1 class="subtitle is-5"><?php echo $course['emnekode']." ".$course['emnenavn'] ?></h1>
+                    <p class="subtitle is-6"><?php echo $course['navn'] ?></p>
+                    <p class="subtitle is-6"><?php echo $course['epost'] ?></p>
+                    <img style="width:150px" src="./bilder/<?php echo $course['bilde'] ?>" />
 
-            <?php endif; ?>
-        </div>
+                
+                    <!-- Forelesere kan ikke sende henvendelser. -->
+                    <?php if (!isset($_SESSION['lecturer'])): ?>
 
-        <!-- Henvendelser -->
-        <?php foreach ($inquiries as $inquiry): ?>
-            <div class="container">
-                <div id="meldingCard" class="card">
+                        <form method="post">
 
-                <div style="border-left: 2px solid; padding: 10px; margin: 10px">
+                            <div class="field is-grouped">
 
-                    <header class="card-header">
-                        
-                        <p class="card-header-title"><?php echo $inquiry['henvendelse'] ?>
+                                <div class="control">
 
-                    </header>
+                                    <textarea class="textarea" placeholder="Send en henvendelse" rows="5" cols="50" name="inquiry"></textarea>
 
-                    <div class="card-content">
+                                </div>
 
-                        <div class="content">
+                                <div class="control">
 
-                            <!-- Man kan ikke rapportere sine egne henvendelser. -->
-                            <?php if ($_SESSION['user'] != $inquiry['avsender_student'] && $_SESSION['user'] != $inquiry['avsender_gjest']): ?>
+                                    <button class="button is-primary" name="sendInquiry">Send</button>
 
-                                <form method="post">
+                                </div>
+
+                            </div>   
+
+                        </form>
+
+                    <?php endif; ?>
+
+                </div>
+
+            </div>
+
+            <!-- Henvendelser -->
+            <?php foreach ($inquiries as $inquiry): ?>
+
+                <div class="card">
+
+                    <div style="padding: 10px; margin: 10px">
+
+                    <div style="padding: 10px; margin: 10px">
+                
+                        <p class="subtitle is-6">Henvendelse:</p>
+
+                        <header class="card-header">
+                            
+                            <p class="card-header-title"><?php echo $inquiry['henvendelse'] ?>
+
+                        </header>
+
+                    <!-- Man kan ikke rapportere sine egne henvendelser. -->
+                    <?php if ($_SESSION['user'] != $inquiry['avsender_student'] && $_SESSION['user'] != $inquiry['avsender_gjest']): ?>
+
+                        <form method="post">
+
+                            <div class="field">
+
+                                <div class="control">
+
                                     <button class="button is-primary" name="reportInquiry">Rapporter</button>
-                                    <input type="hidden" name="id" value=<?php echo $inquiry['id'] ?> />
-                                </form>
 
-                            <?php endif; ?>
+                                </div>
 
-                            <form method="post">
-                                <textarea name="comment" cols="30" rows="5"></textarea>
+                                <div style="padding: 5px;">
+
+                                    <div class="control">
+
+                                        <input type="hidden" name="id" value=<?php echo $inquiry['id'] ?> />
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+                        
+                    <?php endif; ?>
+
+                </div>
+
+                <div style="padding: 10px;">
+
+                    <form method="post">
+
+                        <div class="field">
+
+                            <div class="control">
+
+                                <textarea class="textarea" placeholder = "Skriv en kommentar" name="comment" rows="5" cols="50"></textarea>
+
+                            </div>
+
+                            <div class="control">
+
+                            <div style="padding: 10px; margin: 10px">
+
                                 <button class="button is-primary" name="sendComment">Svar</button>
                                 <input type="hidden" name="id" value=<?php echo $inquiry['id'] ?> />
-                            </form>
-
-                            <!-- Viser svar fra foreleser. -->
-                            <?php if (isset($inquiry['svar'])): ?>
-
-                                <div style="border-left: 2px solid; padding: 10px; margin-bottom: 10px">
-                                    <p>Svar fra <?php echo $course['navn'] ?>:</p>
-                                    <p><?php echo $inquiry['svar'] ?>
                                 </div>
 
-                            <?php endif; ?>
-
-                            <p>Kommentarer (<?php echo sizeof($inquiry['comments']) ?>):</p>
-
-                            <!-- Kommentarer til en henveldelse. -->
-                            <?php foreach ($inquiry['comments'] as $comment): ?>
-
-                                <div style="border-left: 2px solid; padding: 10px; margin-bottom: 10px">
-
-                                    <p><?php echo $comment['kommentar'] ?></p>
-
-                                    <footer class="card-footer">
-
-                                        <!-- Man kan ikke rapportere sine egne kommentarer. -->
-                                        <?php if ($_SESSION['user'] != $inquiry['avsender_student'] && $_SESSION['user'] != $inquiry['avsender_gjest']): ?>
-
-                                            <form method="post">
-                                                <button class="button is-primary" name="reportComment">Rapporter</button>
-                                                <input type="hidden" name="id" value=<?php echo $comment['id'] ?> />
-                                            </form>
-
-                                        <?php endif; ?>
-                                    </footer>
-
-                                </div>
-
-                            <?php endforeach; ?>
+                            </div>
 
                         </div>
-                    </div>
+
+                    </form>
+
+                    <!-- Viser svar fra foreleser. -->
+                    <?php if (isset($inquiry['svar'])): ?>
+
+                    
+                        <p>Svar fra <?php echo $course['navn'] ?>:</p>
+                        <p><?php echo $inquiry['svar'] ?>
+            
+
+                    <?php endif; ?>
+
                 </div>
-            </div>
-            </div
-        <?php endforeach; ?>
+
+                <p>Kommentarer (<?php echo sizeof($inquiry['comments']) ?>):</p>
+
+                <!-- Kommentarer til en henveldelse. -->
+                <?php foreach ($inquiry['comments'] as $comment): ?>
+
+                    <div style="padding: 10px;">
+
+                        <p><?php echo $comment['kommentar'] ?></p>
+
+                    </div>
+
+                    <!-- Man kan ikke rapportere sine egne kommentarer. -->
+                    <?php if ($_SESSION['user'] != $inquiry['avsender_student'] && $_SESSION['user'] != $inquiry['avsender_gjest']): ?>
+
+                        <form method="post">
+
+                            <button class="button is-primary" name="reportComment">Rapporter</button>
+                            <input type="hidden" name="id" value=<?php echo $comment['id'] ?> />
+
+                        </form>
+
+                    <?php endif; ?>
+
+                <?php endforeach; ?>
+                </div>
+                </div>  
+            <?php endforeach; ?>
+                </div>
+            
+        </div>
     </main>
 </body>
 </html>

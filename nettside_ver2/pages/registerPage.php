@@ -36,75 +36,56 @@
             <div class="column is-half" id="studentReg">
     	
                 <div id="studentCard" class="card">
-
-                    <div class="column is-half " class="column">
-
-                        <!--Header-->
-                        <div id="header"  class="container is-centered">
-                            <h1 class="subtitle is-2 is-centered">Student</h1>
-                        </div>
-
-                    </div>
-
 		  		
 		            <div  class="card-content">
   				
-  			            <p class="card-header-title is-centered">Fyll inn informasjon</p>
+  			            <p class="subtitle is-2 is-centered">Student</p>
 		  	
 		                <div class="field">
 
-			            <form method="post">
-			      	
-                            <label class="label">Navn</label>
-			                <input type="text" class="input is-primary" name="name" />
+                            <form method="post">
+                        
+                                <label class="label">Navn</label>
+                                <input type="text" class="input is-primary" name="name" pattern="[A-Za-z  \æ\ø\å\Æ\Ø\Å ]" title="Navn kan bare inneholde bokstaver."/>
 
-                            <label class="label">E-post</label>
-			                <input type="text" class="input is-primary" name="email" />
-              
-                            <label class="label">Studieretning</label>
-			                <input type="text" class="input is-primary" name="fieldOfStudy" />
+                                <label class="label">E-post</label>
+                                <input type="email" class="input is-primary" name="email" title = "Skriv inn en gyldig e-postadresse."/>
+                
+                                <label class="label">Studieretning</label>
+                                <input type="text" class="input is-primary" name="fieldOfStudy" />
 
-                            <label class="label">Årskull</label>
-                            <input type="number" class="input is-primary" name="year">
+                                <label class="label">Årskull</label>
+                                <input type="number" class="input is-primary" pattern="[0-9]{4}" name="year" title="fire siffer."/>
 
-                            <div class="field is-grouped is-grouped-multiline">
+                                <div class="field is-grouped is-grouped-multiline">
 
-                                <label class="label">Passord</label>
-                                <input type="password" class="input is-primary " name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}"
-                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og en spesialtegn">
+                                    <label class="label">Passord</label>
+                                    <input type="password" class="input is-primary " name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*\W).{8,}"
+                                    title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og et spesialtegn"/>
 
-                            </div>
+                                </div>
 
-                            <button name="studentSubmit" class="button is-primary" class="button is-link"> Registrer</button>     
-                            <p>Er du allerede registrert? <a href="index.php">Logg inn her!</a></p> 
-			          
-			            </form>
+                                <button name="studentSubmit" class="button is-primary" class="button is-link"> Registrer</button>     
+                                <p>Er du allerede registrert? <a href="index.php">Logg inn her!</a></p> 
+                        
+                            </form>
 
-	     		    </div>
+	     		        </div>
 
-     	        </div>
+     	            </div>
+
+                </div>
 
             </div>
 
-        </div>
-
-        <!-- Foreleserregistrering -->
-        <div class="column is-half" id="foreleserReg">
+            <!-- Foreleserregistrering -->
+            <div class="column is-half" id="foreleserReg">
             
             <div id="foreleserCard" class="card">
-
-                <div class="column is-half " class="column">
-            
-                    <!--Header-->
-                    <div id="header"  class="container is-centered">
-                        <h1 class="subtitle is-2 is-centered">Foreleser</h1>
-                    </div>
-
-                </div>
                     
                 <div class="card-content">
                     
-                    <p class="card-header-title is-centered">Fyll inn informasjon</p>
+                    <p class="subtitle is-2 is-centered">Foreleser</p>
                 
                     <div class="field">
 
@@ -124,8 +105,8 @@
                             <div class="field">
 
                                 <label class="label">Passord</label>  
-                                <input type="password" class="input is-primary " name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}"
-                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og en spesialtegn" />
+                                <input type="password" class="input is-primary " name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*\W).{8,}"
+                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og et spesialtegn" />
 
                             </div>
 
