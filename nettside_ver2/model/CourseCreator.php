@@ -41,12 +41,13 @@ class CourseCreator extends Model {
      */
     public function createCourse($course): CourseCreator {
 
-        $courseName = trim($course['coursename']);
-        $courseCode = trim($course['coursecode']);
         $email = trim($course['lecturer']);
-        $pin = trim($course['PIN']);
 
-        if (!empty($courseName) && !empty($courseCode) && !empty($email) && !empty($pin)) {
+        if (!empty($course['coursename']) && !empty($course['coursecode']) && !empty($course['PIN']) && !empty($email)) {
+
+            $courseName = trim($course['coursename']);
+            $courseCode = trim($course['coursecode']);
+            $pin = trim($course['PIN']);
 
             //Sjekker at emnenavn og emnekode bare inneholder bokstaver og tall, og at pinkoden bare inneholder tall. 
             if (preg_match("/^[a-zA-Z0-9 ]*$/" , $courseName) && preg_match("/^[A-Z]+(|-[A-Z]+)[0-9]+$/", $courseCode) && preg_match("/^[0-9]*$/" , $pin) && strlen($pin) == 4 && filter_var($email, FILTER_VALIDATE_EMAIL)) {

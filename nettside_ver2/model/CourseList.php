@@ -8,7 +8,8 @@ class CourseList extends Model {
     //private $courses = [];
 
     public function __construct(Monolog\Logger $logger, string $search = "") {
-        parent::__construct($logger, $this->loadCourses($search));
+        parent::__construct($logger);
+        $this->response = $this->loadCourses($search);
     }
 
     public function loadCourses(string $search): array {
@@ -66,17 +67,10 @@ class CourseList extends Model {
         }
 
         else{
-            $this->logger->warning('Bruker skrev inn ugyldig tegn i søkefeltet.', ['brukernavn' => $_SESSION['user'], 'sokeord' => $searchTerm]);
+            $this->logger->warning('Bruker skrev inn ugyldig tegn i søkefeltet.', ['sokeord' => $searchTerm]);
         }
 
         return $courses;
-    }
-
-    /**
-     * Returnerer emnene.
-     */
-    public function getCourses() {
-        return $this->courses;
     }
 
 }
