@@ -6,7 +6,7 @@ public class Links {
 
     private static final String HTTP = "https://";
     private static final String IP_ADRESS = "158.39.188.221";
-    private static final String DIR = "/wip/app_api/";
+    private static final String DIR = "/app_api/";
     private static final String FILE = "app_api.php";
     private static final String PARAM = "?page=";
     private static final String URL = HTTP+IP_ADRESS+DIR+FILE+PARAM;
