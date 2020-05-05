@@ -3,7 +3,7 @@
 class App extends Model {
 
     const dir = "./app/";
-    const filename = "datasikkerhetApp.apk";
+    const filename = "datasikkerhetApp2.apk";
 
     public function __construct(Monolog\Logger $logger, array $response = []) {
         parent::__construct($logger, $response);
