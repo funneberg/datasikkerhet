@@ -116,7 +116,6 @@ header {
 	flex-wrap: wrap;
 }
 
-
 textarea {
 	width: 50vh;
 	height: 20vh;
@@ -131,4 +130,9 @@ textarea {
 	width: 60vh;
 	margin-right: 5vh;
 }
+
+#adminHeader {
+	padding: 20vh;
+}
+
 

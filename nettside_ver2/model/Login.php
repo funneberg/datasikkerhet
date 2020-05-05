@@ -24,6 +24,8 @@ class Login extends Model {
                     $response['student'] = true;
                     $response['name'] = $student[0];
                     $response['email'] = $user['email'];
+                    $response['fieldOfStudy'] = $student[2];
+                    $response['year'] = $student[3];
                     return new Login($this->logger, $response);
                 }
 
@@ -88,6 +90,8 @@ class Login extends Model {
                     $response['student'] = true;
                     $response['name'] = $student[0];
                     $response['email'] = $user['email'];
+                    $response['fieldOfStudy'] = $student[2];
+                    $response['year'] = $student[3];
                 }
                 else {
                     $response['error'] = true;

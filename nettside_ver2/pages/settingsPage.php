@@ -56,13 +56,13 @@
                             <div class="field">
                 
                                 <label class="label">Skriv inn gammelt passord</label>
-                                <input type="password" class="input is-primary" name="oldPassword" />
+                                <input type="password" class="input is-primary" name="oldPassword" pattern="[^'\x22]+" />
                 
                                 <br /><br />
 
                                 <label class="label">Skriv inn nytt passord</label>
                                 <input type="password" class="input is-primary" name="newPasswordFirst" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}"
-                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og en spesialtegn" >
+                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og en spesialtegn" />
                 
                                 <br><br>
 
