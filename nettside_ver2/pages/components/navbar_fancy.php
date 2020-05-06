@@ -7,6 +7,7 @@
             <a class="navbar-item is-active" href="index.php">HJEM</a>
             <a class="navbar-item" href="index.php?page=courses">EMNER</a>
             <a class="navbar-item" href="index.php?page=app">APP</a>
+            <a href="index.php?page=documentation">DOKUMENTASJON</a>
 
             <!-- Viser innstillinger hvis man er logget inn som student eller foreleser. -->
             <?php if (isset($_SESSION['student']) || isset($_SESSION['lecturer'])): ?>

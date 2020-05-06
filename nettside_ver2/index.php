@@ -244,6 +244,16 @@ else if ($page == 'logout') {
     session_destroy();
     header("location: index.php");
 }
+else if ($page == 'documentation') {
+    $filename = "./dokumentasjon/Datasikkerhet_prosjektrapport-angrep2.pdf"; 
+    header("Content-type: application/pdf"); 
+    header("Content-Length: " . filesize($filename));
+    header('Content-Disposition: inline; filename="' . $filename . '"'); 
+    header('Content-Transfer-Encoding: binary'); 
+    header('Accept-Ranges: bytes');
+    readfile($filename);
+    die;
+}
 
 // Får feilmelding hvis man prøver å gå til en side som ikke eksisterer.
 else {
