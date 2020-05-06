@@ -57,8 +57,8 @@ class Course extends Model {
 
         if (!empty($inquiry['inquiry']) && !empty($inquiry['user']) && preg_match('/^[A-Za-z0-9_~\-!@#?.\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\) ]+$/', $inquiry['inquiry'])) {
 
-            $inquiry1 = stripslashes(trim(htmlspecialchars($inquiry['inquiry'])));
-            $user = stripslashes(trim(htmlspecialchars($inquiry['user'])));
+            $inquiry1 = $inquiry['inquiry'];
+            $user = $inquiry['user'];
 
             $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
@@ -94,9 +94,9 @@ class Course extends Model {
 
         if (!empty($reply['comment']) && !empty($reply['user']) && preg_match('/^[A-Za-z0-9_~\-!@#?.\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\) ]+$/', $reply['comment'])) {
 
-            $replyId = stripslashes(trim(htmlspecialchars($reply['id'])));
-            $replyC = stripslashes(trim(htmlspecialchars($reply['comment'])));
-            $replyUser = stripslashes(trim(htmlspecialchars($reply['user'])));
+            $replyId = $reply['id'];
+            $replyC = $reply['comment'];
+            $replyUser = $reply['user'];
 
             $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
@@ -132,9 +132,9 @@ class Course extends Model {
 
         if (!empty($comment['id']) && !empty($comment['comment']) && !empty($comment['user']) && preg_match('/^[A-Za-z0-9_~\-!@#?.\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\) ]+$/', $comment['comment'])) {
 
-            $commentC = stripslashes(trim(htmlspecialchars($comment['comment'])));
-            $commentId = stripslashes(trim(htmlspecialchars($comment['id'])));
-            $commentUser = stripslashes(trim(htmlspecialchars($comment['user'])));
+            $commentC = $comment['comment'];
+            $commentId = $comment['id'];
+            $commentUser = $comment['user'];
 
             $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
@@ -170,9 +170,9 @@ class Course extends Model {
 
         if (!empty($comment['id']) && !empty($comment['comment']) && !empty($comment['user']) && preg_match('/^[A-Za-z0-9_~\-!@#?.\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\) ]+$/', $comment['comment'])) {
 
-            $commentC = stripslashes(trim(htmlspecialchars($comment['comment'])));
-            $commentId = stripslashes(trim(htmlspecialchars($comment['id'])));
-            $commentUser = stripslashes(trim(htmlspecialchars($comment['user'])));
+            $commentC = $comment['comment'];
+            $commentId = $comment['id'];
+            $commentUser = $comment['user'];
 
             $mysqliInsert = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
@@ -209,8 +209,8 @@ class Course extends Model {
         $response = array();
         if (!empty($report['id']) && !empty($report['user'])) {
 
-            $id = stripslashes(trim(htmlspecialchars($report['id'])));
-            $user = stripslashes(trim(htmlspecialchars($report['user'])));
+            $id = $report['id'];
+            $user = $report['user'];
 
             $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
@@ -248,8 +248,8 @@ class Course extends Model {
         $response = array();
         if (!empty($report['id']) && !empty($report['user'])) {
 
-            $id = stripslashes(trim(htmlspecialchars($report['id'])));
-            $user = stripslashes(trim(htmlspecialchars($report['user'])));
+            $id = $report['id'];
+            $user = $report['user'];
 
             $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
@@ -286,7 +286,7 @@ class Course extends Model {
         if (!empty($submission['user']) && !empty($submission['PIN']) && preg_match("/^[0-9]*$/", $submission['PIN']) && strlen($submission['PIN']) == 4) {
 
             $pin = $submission['PIN'];
-            $user = stripslashes(trim(htmlspecialchars($submission['user'])));
+            $user = $submission['user'];
 
             if ($this->isCorrectPIN($pin)) {
                 $response['error'] = false;
@@ -312,8 +312,6 @@ class Course extends Model {
     private function loadCourse(string $code): array {
 
         if (preg_match("/^[A-Z]+(|-[A-Z]+)[0-9]+$/", $code)) {
-
-            $code = stripslashes(trim(htmlspecialchars($code)));
 
             $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
 
@@ -344,8 +342,6 @@ class Course extends Model {
 
         if (preg_match("/^[A-Z]+(|-[A-Z]+)[0-9]+$/", $code)) {
 
-            $code = stripslashes(trim(htmlspecialchars($code)));
-
             $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
 
             $stmt = $mysqliSelect->prepare("SELECT * FROM henvendelse WHERE emnekode = ? ORDER BY id DESC");
@@ -371,8 +367,6 @@ class Course extends Model {
         $comments = [];
 
         if (preg_match("/^[0-9]*$/", $id)) {
-
-            $id = stripslashes(trim(htmlspecialchars($id)));
 
             $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
 
