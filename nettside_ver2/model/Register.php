@@ -16,10 +16,10 @@ class Register extends Model {
         if (!empty($student['name']) && !empty($student['email']) && !empty($student['fieldOfStudy']) &&
             !empty($student['year']) && !empty($student['password'])) {
 
-            $name = trim($student['name']);
-            $email = trim($student['email']);
-            $fieldOfStudy = trim($student['fieldOfStudy']);
-            $year = trim($student['year']);
+            $name = $student['name'];
+            $email = $student['email'];
+            $fieldOfStudy = $student['fieldOfStudy'];
+            $year = $student['year'];
 
             if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $name) && preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/" , $fieldOfStudy) && filter_var($email, FILTER_VALIDATE_EMAIL) 
                 && preg_match("/^[0-9]*$/" , $year) && strlen($year) == 4 && $year <= date("Y") && preg_match("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/", $student['password'])){
@@ -82,8 +82,8 @@ class Register extends Model {
         $response = array();
         if (!empty($lecturer['name']) && !empty($lecturer['email']) && !empty($lecturer['password'] && !empty($lecturer['image']))) {
 
-            $name = trim($lecturer['name']);
-            $email = trim($lecturer['email']);
+            $name = $lecturer['name'];
+            $email = $lecturer['email'];
 
             if (preg_match("/^[a-zA-Z \æ\ø\å\Æ\Ø\Å ]*$/"  , $name) && filter_var($email, FILTER_VALIDATE_EMAIL) && preg_match("/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/", $lecturer['password'])){
 
@@ -180,8 +180,6 @@ class Register extends Model {
      * Sjekker om brukeren man prøver å registrere allerede finnes i databasen.
      */
     public function userExists(string $email): bool {
-
-        $email = stripslashes(trim(htmlspecialchars($email)));
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 

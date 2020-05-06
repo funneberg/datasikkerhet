@@ -56,7 +56,8 @@
                             <div class="field">
                 
                                 <label class="label">Skriv inn gammelt passord</label>
-                                <input type="password" class="input is-primary" name="oldPassword" pattern="[^'\x22]+" />
+                                <input type="password" class="input is-primary" name="oldPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}"
+                                title = "Passord må bestå av minst åtte tegn, minst en stor og en liten bokstav, minst ett tall og en spesialtegn" />
                 
                                 <br /><br />
 

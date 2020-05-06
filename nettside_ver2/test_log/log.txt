@@ -1559,3 +1559,125 @@
 [2020-05-06T13:17:57.661419+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"roger@hansen.no"} []
 [2020-05-06T13:18:07.905732+00:00] sikkerhet.INFO: En student sendte en henvendelse. {"brukernavn":"roger@hansen.no","henvendelse":"Test"} []
 [2020-05-06T13:18:23.794151+00:00] sikkerhet.INFO: En student sendte en kommentar til en henvendelse. {"brukernavn":"roger@hansen.no","kommentar":"Test svar"} []
+[2020-05-06T19:53:21.151792+00:00] sikkerhet.INFO: Bruker lastet ned appen. {"brukernavn":"Gjest-5eb310703c3e1"} {"user":"Gjest-5eb310703c3e1"}
+[2020-05-06T19:53:35.969677+00:00] sikkerhet.INFO: Bruker søkte etter søkeord. {"sokeord":"q"} {"user":"Gjest-5eb310703c3e1"}
+[2020-05-06T19:53:38.159648+00:00] sikkerhet.INFO: Bruker søkte etter søkeord. {"sokeord":"a"} {"user":"Gjest-5eb310703c3e1"}
+[2020-05-06T19:53:47.096170+00:00] sikkerhet.INFO: Bruker skrev inn riktig PIN-kode for et emne. {"brukernavn":"Gjest-5eb310703c3e1","emnekode":"ITF25019"} {"user":"Gjest-5eb310703c3e1"}
+[2020-05-06T19:55:01.184917+00:00] sikkerhet.WARNING: Bruker prøvde å oppgi PIN-kode for et emne. Noe gikk galt. {"brukernavn":"Gjest-5eb30fd65a7ae","emnekode":"ITF25019"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:55:08.768463+00:00] sikkerhet.INFO: Bruker skrev inn riktig PIN-kode for et emne. {"brukernavn":"Gjest-5eb30fd65a7ae","emnekode":"ITF25019"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:55:36.757219+00:00] sikkerhet.INFO: Bruker søkte etter søkeord. {"sokeord":"ITF25019"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:55:42.466542+00:00] sikkerhet.INFO: Bruker søkte etter søkeord. {"sokeord":"ITF2501"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:56:28.535923+00:00] sikkerhet.INFO: Bruker ble ikke logget inn. Innlogging mislykket. {"brukernavn":"steinar@steinar.no"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:56:39.636332+00:00] sikkerhet.INFO: Bruker skrev inn riktig PIN-kode for et emne. {"brukernavn":"Gjest-5eb3165ebc558","emnekode":"ITF25019"} {"user":"Gjest-5eb3165ebc558"}
+[2020-05-06T19:56:51.795205+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"admin@admin"} {"user":"Gjest-5eb3165ebc558"}
+[2020-05-06T19:57:29.718611+00:00] sikkerhet.INFO: Admin ble logget inn. {"brukernavn":"admin@admin.no"} {"user":"Gjest-5eb3165ebc558"}
+[2020-05-06T19:57:46.493411+00:00] sikkerhet.WARNING: Bruker prøvde å skrive inn et ulovlig tegn. {"brukernavn":"Aslak@online.no"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:57:46.990801+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"admin@admin.no"} {"user":"admin@admin.no"}
+[2020-05-06T19:58:45.481111+00:00] sikkerhet.INFO: Ny foreleser ble registrert. {"brukernavn":"arne@arne.no"} {"user":"Gjest-5eb310703c3e1"}
+[2020-05-06T19:58:52.857183+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"arne@arne.no"} {"user":"arne@arne.no"}
+[2020-05-06T19:58:57.865318+00:00] sikkerhet.WARNING: Bruker prøvde å skrive inn et ulovlig tegn. {"brukernavn":"aslak@online.no"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:59:02.548359+00:00] sikkerhet.INFO: Foreleser ble logget inn. {"brukernavn":"arne@arne.no"} {"user":"Gjest-5eb316fcd7227"}
+[2020-05-06T19:59:23.368008+00:00] sikkerhet.INFO: Ny student ble registrert. {"Brukernavn":"frida@test.no"} {"user":"Gjest-5eb316bb04ace"}
+[2020-05-06T19:59:30.832985+00:00] sikkerhet.INFO: Ny student ble registrert. {"Brukernavn":"Aslak@online.no"} {"user":"Gjest-5eb30fd65a7ae"}
+[2020-05-06T19:59:39.430893+00:00] sikkerhet.WARNING: Foreleser prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"arne@arne.no"} {"user":"arne@arne.no"}
+[2020-05-06T20:00:30.266310+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:01:00.186582+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:01:10.289659+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"Aslak@online.no"} {"user":"Gjest-5eb3177c366ba"}
+[2020-05-06T20:02:23.033524+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:02:24.910584+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:03:47.748687+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"Aslak@online.no"} {"user":"Gjest-5eb317d0e8267"}
+[2020-05-06T20:04:20.344267+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:04:22.391597+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:05:02.031196+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"frida@test.no"} {"user":"frida@test.no"}
+[2020-05-06T20:05:07.522816+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"Aslak@online.no"} {"user":"Gjest-5eb318466f05a"}
+[2020-05-06T20:05:31.337442+00:00] sikkerhet.WARNING: Foreleser prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"arne@arne.no"} {"user":"arne@arne.no"}
+[2020-05-06T20:05:31.422238+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:05:34.689029+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:05:47.249051+00:00] sikkerhet.INFO: En student sendte en kommentar til en henvendelse. {"brukernavn":"frida@test.no","kommentar":"Nå"} {"user":"frida@test.no"}
+[2020-05-06T20:06:13.052630+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"Aslak@online.no"} {"user":"Gjest-5eb3188ebc235"}
+[2020-05-06T20:06:49.353851+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:06:51.450312+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:06:53.069695+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:07:09.690368+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"Aslak@online.no"} {"user":"Gjest-5eb318dd189f3"}
+[2020-05-06T20:07:44.802908+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:07:46.797624+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"Aslak@online.no"} {"user":"Aslak@online.no"}
+[2020-05-06T20:07:53.428549+00:00] sikkerhet.WARNING: Foreleser prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"arne@arne.no"} {"user":"arne@arne.no"}
+[2020-05-06T20:08:51.400163+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"frida@test.no"} {"user":"frida@test.no"}
+[2020-05-06T20:09:01.934896+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"frida@test.no"} {"user":"Gjest-5eb319536deb4"}
+[2020-05-06T20:09:10.600411+00:00] sikkerhet.INFO: Ny student ble registrert. {"Brukernavn":"tom@tom.no"} {"user":"Gjest-5eb31912ccd3c"}
+[2020-05-06T20:09:16.254319+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T20:09:19.347523+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"frida@test.no"} {"user":"Gjest-5eb319536deb4"}
+[2020-05-06T20:09:24.220051+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb3196c468cd"}
+[2020-05-06T20:09:30.985991+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"frida@test.no"} {"user":"Gjest-5eb319536deb4"}
+[2020-05-06T20:09:42.221381+00:00] sikkerhet.WARNING: Student prøvde å oppdatere passordet til en epost som ikke finnes i systemet. Oppdatering mislykket. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T20:09:44.307795+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T20:09:48.642438+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"frida@test.com"} {"user":"Gjest-5eb319536deb4"}
+[2020-05-06T20:10:13.548680+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"frida@test.no"} {"user":"Gjest-5eb319536deb4"}
+[2020-05-06T20:10:17.572979+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb3198851d8d"}
+[2020-05-06T20:12:17.575828+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"frida@test.no"} {"user":"Gjest-5eb319536deb4"}
+[2020-05-06T20:17:22.465976+00:00] sikkerhet.INFO: Foreleser oppdaterte passordet sitt. {"brukernavn":"arne@arne.no"} {"user":"arne@arne.no"}
+[2020-05-06T20:20:09.079861+00:00] sikkerhet.INFO: Ny student ble registrert. {"Brukernavn":"martine@mail.com"} {"user":"Gjest-5eb31ba0d0ebb"}
+[2020-05-06T20:22:11.352412+00:00] sikkerhet.INFO: Ny student ble registrert. {"Brukernavn":"test@test.no"} {"user":"Gjest-5eb319536deb4"}
+[2020-05-06T20:22:13.865383+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"test@test.no"} {"user":"test@test.no"}
+[2020-05-06T20:22:25.145333+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:22:44.706846+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:22:57.192859+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"martine@mail.com"} {"user":"martine@mail.com"}
+[2020-05-06T20:23:07.396358+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"martine@mail.com"} {"user":"Gjest-5eb31ca1368b2"}
+[2020-05-06T20:23:11.141156+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T20:23:23.538862+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb31caf2be5e"}
+[2020-05-06T20:23:28.352008+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"martine@mail.com"} {"user":"martine@mail.com"}
+[2020-05-06T20:23:35.429971+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"martine@mail.com"} {"user":"Gjest-5eb31cc060c04"}
+[2020-05-06T20:23:51.779072+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:24:00.467025+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.com"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:26:38.206888+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.com"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:26:49.733984+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:27:45.405667+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:32:21.661463+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"arne@arne.no"} {"user":"arne@arne.no"}
+[2020-05-06T20:32:35.366241+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:32:47.919267+00:00] sikkerhet.INFO: Foreleser ble logget inn. {"brukernavn":"arne@arne.no"} {"user":"Gjest-5eb31ed5b113f"}
+[2020-05-06T20:32:59.008970+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T20:33:14.426914+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb31efb0785a"}
+[2020-05-06T20:35:32.742733+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:35:36.302146+00:00] sikkerhet.INFO: Foreleser oppdaterte passordet sitt. {"brukernavn":"arne@arne.no"} {"user":"arne@arne.no"}
+[2020-05-06T20:35:37.450927+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T20:35:46.112385+00:00] sikkerhet.WARNING: Bruker skrev inn ugyldig tegn i innloggingsfeltet. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb31c75dea32"}
+[2020-05-06T21:38:45.283483+00:00] sikkerhet.INFO: Ny foreleser ble registrert. {"brukernavn":"roar@roar.com"} {"user":"Gjest-5eb32e09c4b89"}
+[2020-05-06T21:38:47.665396+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"roar@roar.com"} {"user":"roar@roar.com"}
+[2020-05-06T21:38:56.825905+00:00] sikkerhet.INFO: Foreleser ble logget inn. {"brukernavn":"roar@roar.com"} {"user":"Gjest-5eb32e67b3a0d"}
+[2020-05-06T21:39:15.004293+00:00] sikkerhet.INFO: Foreleser oppdaterte passordet sitt. {"brukernavn":"roar@roar.com"} {"user":"roar@roar.com"}
+[2020-05-06T21:41:06.374983+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"roar@roar.com"} {"user":"roar@roar.com"}
+[2020-05-06T21:41:23.332890+00:00] sikkerhet.INFO: Foreleser ble logget inn. {"brukernavn":"roar@roar.com"} {"user":"Gjest-5eb32ef26616d"}
+[2020-05-06T21:41:37.453267+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb32edef0b06"}
+[2020-05-06T21:42:02.777487+00:00] sikkerhet.INFO: Foreleser som ikke er godkjent prøvde å opprette et nytt emne. Opprettelse mislykket. {"brukernavn":"roar@roar.com"} {"user":"roar@roar.com"}
+[2020-05-06T21:43:45.547606+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb32f91512dc"}
+[2020-05-06T21:46:17.508395+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"test@test.no"} {"user":"test@test.no"}
+[2020-05-06T21:46:28.973476+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb330298c927"}
+[2020-05-06T21:46:30.693174+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"test@test.no"} {"user":"test@test.no"}
+[2020-05-06T21:47:17.332851+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"roar@roar.com"} {"user":"roar@roar.com"}
+[2020-05-06T21:48:06.725284+00:00] sikkerhet.INFO: Ny student ble registrert. {"Brukernavn":"stein@stein.no"} {"user":"Gjest-5eb330655fed3"}
+[2020-05-06T21:48:09.892036+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"stein@stein.no"} {"user":"stein@stein.no"}
+[2020-05-06T21:48:18.184347+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"stein@stein.no"} {"user":"Gjest-5eb33099e47e8"}
+[2020-05-06T21:53:49.791747+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T21:54:12.868056+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"test@test.no"} {"user":"Gjest-5eb33036b1dc1"}
+[2020-05-06T21:54:18.573513+00:00] sikkerhet.INFO: Bruker søkte etter søkeord. {"sokeord":"it"} {"user":"test@test.no"}
+[2020-05-06T21:55:09.284207+00:00] sikkerhet.INFO: En student sendte en henvendelse. {"brukernavn":"test@test.no","henvendelse":"Test 2"} {"user":"test@test.no"}
+[2020-05-06T21:55:15.095594+00:00] sikkerhet.INFO: En student sendte en kommentar til en henvendelse. {"brukernavn":"test@test.no","kommentar":"Test 3"} {"user":"test@test.no"}
+[2020-05-06T21:56:08.823991+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb331eddb321"}
+[2020-05-06T21:56:24.640455+00:00] sikkerhet.INFO: Student oppdaterte passordet sitt. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T21:56:28.469186+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T21:56:44.141387+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb3328c7dd22"}
+[2020-05-06T21:56:46.771175+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T21:56:55.021775+00:00] sikkerhet.INFO: En student sendte en kommentar til en henvendelse. {"brukernavn":"test@test.no","kommentar":"Test 3"} {"user":"test@test.no"}
+[2020-05-06T21:57:13.326682+00:00] sikkerhet.INFO: Bruker skrev inn riktig PIN-kode for et emne. {"brukernavn":"Gjest-5eb3329ec36b9","emnekode":"ITF25019"} {"user":"Gjest-5eb3329ec36b9"}
+[2020-05-06T21:57:16.791035+00:00] sikkerhet.INFO: Bruker rapporterte en henvendelse. {"brukernavn":"Gjest-5eb3329ec36b9","id":"4"} {"user":"Gjest-5eb3329ec36b9"}
+[2020-05-06T21:57:20.919774+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"test@test.no"} {"user":"test@test.no"}
+[2020-05-06T21:57:29.259380+00:00] sikkerhet.INFO: Bruker skrev inn riktig PIN-kode for et emne. {"brukernavn":"Gjest-5eb332c0e7ed1","emnekode":"ITF25019"} {"user":"Gjest-5eb332c0e7ed1"}
+[2020-05-06T21:57:33.572741+00:00] sikkerhet.INFO: Bruker rapporterte en henvendelse. {"brukernavn":"Gjest-5eb332c0e7ed1","id":"4"} {"user":"Gjest-5eb332c0e7ed1"}
+[2020-05-06T21:57:52.782480+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb3329ec36b9"}
+[2020-05-06T21:58:22.155673+00:00] sikkerhet.INFO: Student oppdaterte passordet sitt. {"brukernavn":"stein@stein.no"} {"user":"stein@stein.no"}
+[2020-05-06T21:58:25.383040+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"stein@stein.no"} {"user":"stein@stein.no"}
+[2020-05-06T21:58:33.727461+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"stein@stein.no"} {"user":"Gjest-5eb333016a863"}
+[2020-05-06T21:58:38.298209+00:00] sikkerhet.INFO: Student oppdaterte passordet sitt. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T21:58:41.798680+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}
+[2020-05-06T21:58:50.339271+00:00] sikkerhet.INFO: Student ble logget inn. {"brukernavn":"tom@tom.no"} {"user":"Gjest-5eb33311cab00"}
+[2020-05-06T21:58:52.437489+00:00] sikkerhet.INFO: Bruker logget ut. {"brukernavn":"tom@tom.no"} {"user":"tom@tom.no"}

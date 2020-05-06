@@ -13,7 +13,7 @@ class Login extends Model {
         $response = array();
         if (!empty($user['email']) && !empty($user['password'])) {
 
-            if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $user['password']) && filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
+            if (filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
 
                 // Prøver å logge inn som student.
                 $student = $this->loginStudent($user);
@@ -79,7 +79,7 @@ class Login extends Model {
         $response = array();
         if (!empty($user['email']) && !empty($user['password'])) {
 
-            if (preg_match('/^[A-Za-z0-9_~\-!@#\$%\Æ\Ø\Å\æ\ø\å\^&\*\(\)]+$/', $user['password']) && filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
+            if (filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
 
                 $student = $this->loginStudent($user);
 
@@ -119,8 +119,8 @@ class Login extends Model {
      */
     private function loginStudent(array $user): array {
 
-        $email = trim($user['email']);
-        $password = trim($user['password']);
+        $email = $user['email'];
+        $password = $user['password'];
 
         $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
 
@@ -153,8 +153,8 @@ class Login extends Model {
      */
     private function loginLecturer(array $user): array {
        
-        $email = trim($user['email']);
-        $password = trim($user['password']);
+        $email = $user['email'];
+        $password = $user['password'];
 
         $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
 
@@ -188,8 +188,8 @@ class Login extends Model {
      */
     private function loginAdmin(array $user): array {
         
-        $email = trim($user['email']);
-        $password = trim($user['password']);
+        $email = $user['email'];
+        $password = $user['password'];
 
         $mysqliSelect = new MySQLi($this->servername, $this->usernameRead, $this->passwordRead, $this->dbname);
 

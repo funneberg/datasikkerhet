@@ -5,7 +5,7 @@
  */
 class Settings extends Model {
 
-    public function __construct(Monolog\Logger $logger, bool $changed = false, array $response = []) {
+    public function __construct(Monolog\Logger $logger, array $response = []) {
         parent::__construct($logger, $response);
     }
 
@@ -14,7 +14,7 @@ class Settings extends Model {
      */
     public function changeStudentPassword($passwords): Settings {
 
-        $email = stripslashes(trim(htmlspecialchars($passwords['user'])));
+        $email = $passwords['user'];
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
@@ -23,10 +23,9 @@ class Settings extends Model {
             $stmt = $mysqliSelect->prepare("SELECT passord FROM student WHERE epost = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
+            $result = $stmt->get_result();
 
             $mysqliSelect->close();
-
-            $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
                 $student = $result->fetch_assoc();
@@ -49,13 +48,11 @@ class Settings extends Model {
 
                             $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
 
-                            $mysqliUpdate = new MySQLi($this->servername, $this->usernameUpdate, $this->passwordUpdate, $this->dbname);
+                            $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
                             $stmt = $mysqliUpdate->prepare("UPDATE student SET passord = ? WHERE epost = ?");
                             $stmt->bind_param("ss", $newPassword, $email);
                             $stmt->execute();
-
-                            $mysqliUpdate->close();
 
                             if ($stmt->affected_rows > 0) {
 
@@ -63,13 +60,15 @@ class Settings extends Model {
                                 $response['message'] = "Passord endret";
                                 $this->logger->info('Student oppdaterte passordet sitt.', ['brukernavn' => $email]);
 
-                                return new Settings($this->mysqli, $this->logger, true, $response);
+                                return new Settings($this->logger, $response);
                             }
                             else {
                                 $response['error'] = true;
                                 $response['message'] = "Det oppstod en feil";
                                 $this->logger->info('Student prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
                             }
+
+                            $mysqliUpdate->close();
                         }
                         else{
                             $response['error'] = true;
@@ -107,7 +106,7 @@ class Settings extends Model {
      */
     public function changeLecturerPassword($passwords): Settings {
 
-        $email = stripslashes(trim(htmlspecialchars($passwords['user'])));
+        $email = $passwords['user'];
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
@@ -116,10 +115,9 @@ class Settings extends Model {
             $stmt = $mysqliSelect->prepare("SELECT passord FROM foreleser WHERE epost = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
+            $result = $stmt->get_result();
 
             $mysqliSelect->close();
-
-            $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
                 $lecturer = $result->fetch_assoc();
@@ -141,13 +139,11 @@ class Settings extends Model {
 
                             $newPassword = password_hash($newPassword1, PASSWORD_DEFAULT);
 
-                            $mysqliUpdate = new MySQLi($this->servername, $this->usernameUpdate, $this->passwordUpdate, $this->dbname);
+                            $mysqliUpdate = new MySQLi($this->servername, $this->usernameAdd, $this->passwordAdd, $this->dbname);
 
                             $stmt = $mysqliUpdate->prepare("UPDATE foreleser SET passord = ? WHERE epost = ?");
                             $stmt->bind_param("ss", $newPassword, $email);
                             $stmt->execute();
-
-                            $mysqliUpdate->close();
 
                             if ($stmt->affected_rows > 0) {
 
@@ -156,13 +152,15 @@ class Settings extends Model {
 
                                 $this->logger->info('Foreleser oppdaterte passordet sitt.', ['brukernavn' => $email]);
 
-                                return new Settings($this->mysqli, $this->logger, true);
+                                return new Settings($this->logger, $response);
                             }
                             else {
                                 $response['error'] = true;
                                 $response['message'] = "Det oppstod en feil";
                                 $this->logger->info('Foreleser prøvde å oppdatere passordet sitt. Oppdatering mislykket.', ['brukernavn' => $email]);
                             }
+
+                            $mysqliUpdate->close();
                         }
                         else{
                             $response['error'] = true;
