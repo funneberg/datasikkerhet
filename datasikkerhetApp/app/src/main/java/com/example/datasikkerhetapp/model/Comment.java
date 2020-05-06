@@ -1,8 +1,6 @@
 package com.example.datasikkerhetapp.model;
 
-import java.util.Collections;
-
-public class Comment implements Comparable<Comment> {
+public class Comment {
 
     private int id;
     private String comment;
@@ -24,10 +22,5 @@ public class Comment implements Comparable<Comment> {
 
     public boolean isUser() {
         return user;
-    }
-
-    @Override
-    public int compareTo(Comment c) {
-        return c.id - id;
     }
 }

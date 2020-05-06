@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.datasikkerhetapp.mysql_connection.PostRequestHandler;
+import com.example.datasikkerhetapp.connection.PostRequestHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,8 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                             super.onPostExecute(s);
                             pdLoading.dismiss();
 
-                            System.out.println(LOGIN);
-
                             try {
                                 JSONObject obj = new JSONObject(s);
 
@@ -114,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 }
                             } catch (JSONException e) {
-                                System.out.println("Test feil");
                                 e.printStackTrace();
                                 Toast.makeText(LoginActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }

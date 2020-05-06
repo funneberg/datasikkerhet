@@ -1,4 +1,4 @@
-package com.example.datasikkerhetapp.mysql_connection;
+package com.example.datasikkerhetapp.connection;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -43,10 +43,6 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
 
     @Override
     protected Integer doInBackground(Void... params) {
-
-        System.out.println("hello");
-        System.out.println("JSON DATA" + jsonData);
-
         return this.parseData();
     }
 
@@ -66,11 +62,8 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
     }
 
     private int parseData() {
-        System.out.println("jsonData: " + jsonData);
-
         try {
             //converting response to json object
-            //JSONArray ja = new JSONArray(jsonData);
             JSONObject data = new JSONObject(jsonData);
             JSONArray jaInquiries = data.getJSONArray("inquiries");
 
@@ -82,7 +75,7 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
                 int inquiryID = joInquiry.getInt("id");
                 String sender;
 
-                if (joInquiry.getString("avsender_student").equals("null")) {
+                if (!joInquiry.getString("avsender_student").equals("null")) {
                     sender = joInquiry.getString("avsender_student");
                 }
                 else {
@@ -96,17 +89,13 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
                 if (joInquiry.has("comments")) {
                     JSONArray jaComments = joInquiry.getJSONArray("comments");
 
-                    System.out.println("NESTED: " + comments.toString());
-
                     JSONObject joComment;
                     for (int j = 0; j < jaComments.length(); j++) {
                         joComment = jaComments.getJSONObject(j);
 
-                        System.out.println("JSON OBJECT: " + joComment.toString());
-
                         int commentID = joComment.getInt("id");
                         String commenter;
-                        if (joComment.getString("avsender_student").equals("null")) {
+                        if (!joComment.getString("avsender_student").equals("null")) {
                             commenter = joComment.getString("avsender_student");
                         }
                         else {
@@ -132,8 +121,6 @@ public class CommentDataParser extends AsyncTask<Void, Void, Integer> {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            //Toast.makeText(c, "Exception: " + e, Toast.LENGTH_LONG).show();
-            System.out.println("Exception: " + e);
         }
 
         return 0;

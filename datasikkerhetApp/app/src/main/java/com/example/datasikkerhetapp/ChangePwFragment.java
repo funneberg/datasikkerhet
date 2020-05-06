@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.datasikkerhetapp.mysql_connection.PostRequestHandler;
+import com.example.datasikkerhetapp.connection.PostRequestHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,8 +51,6 @@ public class ChangePwFragment extends Fragment {
                 final String sOldPassword = etOldPassword.getText().toString();
                 final String sNewPassword1 = etNewPassword1.getText().toString();
                 final String sNewPassword2 = etNewPassword2.getText().toString();
-
-                System.out.println("Verdier: " + sEmail + ", " + sOldPassword + ", " + sNewPassword1 + ", " + sNewPassword2);
 
                 if(sOldPassword.isEmpty() || sNewPassword1.isEmpty() || sNewPassword2.isEmpty()){
                     Toast.makeText(getActivity(), "Alle feltene må fylles ut", Toast.LENGTH_SHORT).show();
@@ -103,7 +101,6 @@ public class ChangePwFragment extends Fragment {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Toast.makeText(getActivity(), "Exception: " + e, Toast.LENGTH_LONG).show();
-                                System.out.println("Exception: " + e);
                             }
                         }
                     }

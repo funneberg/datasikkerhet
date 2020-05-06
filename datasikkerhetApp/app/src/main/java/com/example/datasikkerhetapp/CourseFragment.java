@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.example.datasikkerhetapp.model.Comment;
 import com.example.datasikkerhetapp.model.Course;
 import com.example.datasikkerhetapp.model.Inquiry;
-import com.example.datasikkerhetapp.mysql_connection.PostRequestHandler;
+import com.example.datasikkerhetapp.connection.PostRequestHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -218,8 +217,6 @@ public class CourseFragment extends Fragment {
         final MainActivity ma = (MainActivity) getActivity();
         inquiries = ma.getCourseInquiries();
 
-        Collections.sort(inquiries);
-
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         for (final Inquiry inquiry : inquiries) {
@@ -245,8 +242,6 @@ public class CourseFragment extends Fragment {
                     public void onClick(View v) {
                         final String sEmail = Account.getActiveUser().getEmail();
                         final String sInquiryID = Integer.toString(inquiry.getId());
-
-                        System.out.println("Inquiry ID: " + sInquiryID);
 
                         class ReportInquiry extends AsyncTask<Void, Void, String> {
                             ProgressDialog pdLoading = new ProgressDialog(getActivity());
@@ -377,8 +372,6 @@ public class CourseFragment extends Fragment {
                     }
                 }
             });
-
-            Collections.sort(inquiry.getComments());
 
             for (final Comment comment : inquiry.getComments()) {
                 View commentView = inflater.inflate(R.layout.comment_view, null);

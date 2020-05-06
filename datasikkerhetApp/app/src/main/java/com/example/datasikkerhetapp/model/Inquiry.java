@@ -2,12 +2,12 @@ package com.example.datasikkerhetapp.model;
 
 import java.util.ArrayList;
 
-public class Inquiry implements Comparable<Inquiry> {
+public class Inquiry {
 
     private int id;
     private boolean user;
     private String inquiry;
-    private String response;
+    private String reply;
     private ArrayList<Comment> comments;
 
     public Inquiry(int id, boolean user, String inquiry, ArrayList<Comment> comments) {
@@ -15,14 +15,14 @@ public class Inquiry implements Comparable<Inquiry> {
         this.user = user;
         this.inquiry = inquiry;
         this.comments = comments;
-        response = null;
+        reply = null;
     }
 
-    public Inquiry(int id, boolean user, String inquiry, ArrayList<Comment> comments, String response) {
+    public Inquiry(int id, boolean user, String inquiry, ArrayList<Comment> comments, String reply) {
         this.id = id;
         this.user = user;
         this.inquiry = inquiry;
-        this.response = response;
+        this.reply = reply;
         this.comments = comments;
     }
 
@@ -39,15 +39,10 @@ public class Inquiry implements Comparable<Inquiry> {
     }
 
     public String getResponse() {
-        return response;
+        return reply;
     }
 
     public ArrayList<Comment> getComments() {
         return comments;
-    }
-
-    @Override
-    public int compareTo(Inquiry i) {
-        return i.id - id;
     }
 }

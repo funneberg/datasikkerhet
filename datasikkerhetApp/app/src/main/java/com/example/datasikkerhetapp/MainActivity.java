@@ -11,14 +11,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.datasikkerhetapp.model.Course;
 import com.example.datasikkerhetapp.model.Inquiry;
 import com.example.datasikkerhetapp.model.Student;
-import com.example.datasikkerhetapp.mysql_connection.CommentDownloader;
-import com.example.datasikkerhetapp.mysql_connection.CourseDownloader;
+import com.example.datasikkerhetapp.connection.CommentDownloader;
+import com.example.datasikkerhetapp.connection.CourseDownloader;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;

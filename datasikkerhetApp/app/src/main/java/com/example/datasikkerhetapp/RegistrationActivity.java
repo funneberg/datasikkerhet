@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.datasikkerhetapp.mysql_connection.PostRequestHandler;
+import com.example.datasikkerhetapp.connection.PostRequestHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,11 +37,6 @@ public class RegistrationActivity extends AppCompatActivity {
         password = findViewById(R.id.txtPassword);
         btnRegister = findViewById(R.id.btnRegister2);
 
-        System.out.println("Heisveis");
-
-        System.out.println("Input-verdier: " + name.toString() + ", " + email.toString() + ", " + fieldOfStudy.toString() +
-                ", " + year.toString() + " og " + password.toString());
-
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,9 +46,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 final String sFieldOfStudy = fieldOfStudy.getText().toString().trim();
                 final String sYear = year.getText().toString().trim();
                 final String sPassword = password.getText().toString().trim();
-
-                System.out.println("Parametere: " + sName + ", " + sEmail + ", " + sFieldOfStudy +
-                        ", " + sYear + " og " + sPassword);
 
                 if(sName.isEmpty() || sEmail.isEmpty() || sFieldOfStudy.isEmpty() || sYear.isEmpty() || sPassword.isEmpty()){
                     Toast.makeText(RegistrationActivity.this, "Alle feltene må fylles ut", Toast.LENGTH_SHORT).show();
@@ -97,8 +89,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         protected void onPostExecute(String s) {
                             super.onPostExecute(s);
                             pdLoading.dismiss();
-
-                            System.out.println("Dette er JSON-strengen: " + s);
 
                             try {
                                 //converting response to json object

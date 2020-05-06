@@ -1,4 +1,4 @@
-package com.example.datasikkerhetapp.mysql_connection;
+package com.example.datasikkerhetapp.connection;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,14 +12,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class CourseDownloader extends AsyncTask<Void,Void,String> {
+public class CommentDownloader extends AsyncTask<Void,Void,String> {
 
     Context c;
     String urlAddress;
 
     ProgressDialog pd;
 
-    public CourseDownloader(Context c, String urlAddress) {
+    public CommentDownloader(Context c, String urlAddress) {
         this.c = c;
         this.urlAddress = urlAddress;
     }
@@ -36,7 +36,6 @@ public class CourseDownloader extends AsyncTask<Void,Void,String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        System.out.println(this.downloadData());
         return this.downloadData();
     }
 
@@ -50,11 +49,10 @@ public class CourseDownloader extends AsyncTask<Void,Void,String> {
             Toast.makeText(c,"Unsuccessfull,Null returned",Toast.LENGTH_SHORT).show();
         }
         else {
-            //CALL DATA PARSER TO PARSE
-            CourseDataParser parser=new CourseDataParser(c,s);
+            CommentDataParser parser=new CommentDataParser(c,s);
             parser.execute();
-
         }
+
     }
 
     private String downloadData() {
@@ -69,10 +67,10 @@ public class CourseDownloader extends AsyncTask<Void,Void,String> {
             BufferedReader br=new BufferedReader(new InputStreamReader(is));
 
             String line;
-            StringBuffer response=new StringBuffer();
+            StringBuilder response=new StringBuilder();
 
             while ((line=br.readLine()) != null) {
-                response.append(line+"\n");
+                response.append(line).append("\n");
             }
 
             br.close();
@@ -87,13 +85,11 @@ public class CourseDownloader extends AsyncTask<Void,Void,String> {
             if(is != null) {
                 try {
                     is.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-
         return null;
     }
 }

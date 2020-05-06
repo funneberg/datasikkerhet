@@ -1,4 +1,4 @@
-package com.example.datasikkerhetapp.mysql_connection;
+package com.example.datasikkerhetapp.connection;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

@@ -1,4 +1,4 @@
-package com.example.datasikkerhetapp.mysql_connection;
+package com.example.datasikkerhetapp.connection;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,14 +12,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class CommentDownloader extends AsyncTask<Void,Void,String> {
+public class CourseDownloader extends AsyncTask<Void,Void,String> {
 
     Context c;
     String urlAddress;
 
     ProgressDialog pd;
 
-    public CommentDownloader(Context c, String urlAddress) {
+    public CourseDownloader(Context c, String urlAddress) {
         this.c = c;
         this.urlAddress = urlAddress;
     }
@@ -36,7 +36,6 @@ public class CommentDownloader extends AsyncTask<Void,Void,String> {
 
     @Override
     protected String doInBackground(Void... params) {
-        System.out.println(this.downloadData());
         return this.downloadData();
     }
 
@@ -50,11 +49,11 @@ public class CommentDownloader extends AsyncTask<Void,Void,String> {
             Toast.makeText(c,"Unsuccessfull,Null returned",Toast.LENGTH_SHORT).show();
         }
         else {
-            System.out.println("Stringgg: " + s);
-            CommentDataParser parser=new CommentDataParser(c,s);
+            //CALL DATA PARSER TO PARSE
+            CourseDataParser parser=new CourseDataParser(c,s);
             parser.execute();
-        }
 
+        }
     }
 
     private String downloadData() {
@@ -87,11 +86,13 @@ public class CommentDownloader extends AsyncTask<Void,Void,String> {
             if(is != null) {
                 try {
                     is.close();
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+
         return null;
     }
 }
