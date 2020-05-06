@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    cardView:cardCornerRadius="5dp"
+    cardView:cardElevation="5dp"
+    android:layout_height="150dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardView="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="ID"
+            android:id="@+id/idTxt"
+            android:padding="10dp"
+            android:textColor="@color/colorAccent"
+
+            android:layout_alignParentLeft="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Name"
+            android:id="@+id/nameTxt"
+            android:padding="10dp"
+            android:layout_below="@+id/idTxt"
+            android:layout_alignParentLeft="true"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Propellant"
+            android:id="@+id/propellantTxt"
+            android:textColor="@color/colorPrimary"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
+            />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
