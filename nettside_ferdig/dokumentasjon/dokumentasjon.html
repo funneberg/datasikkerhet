@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+<title>Prosjektdokumentasjon</title>
+</head>
+<style>
+body {
+background-image: url("cute.gif");
+}
+h1 {
+width: 50%;
+margin: 0 auto;
+padding-top: 25px;
+}
+#wrapper{
+width: 50%;
+margin: 0 auto;
+background-color: white;	
+}
+#wrapperh1{
+width: 145%;
+margin: 0 auto;
+}
+</style>
+<body>
+<div id="wrapperh1">
+<h1>Prosjektdokumentasjon</h1>
+</div>
+<div id="wrapper">
+<p>Under utviklingsfasen av prosjektet tok vi i bruk WAMP-server lokalt på maskinen for å teste sammenkoblingen mellom database, API og programmeringscript. For testing opprettet vi en database med MySQL Workbench og hadde den på en WAMP-server, men når vi skulle benytte serveren vi fikk tildelt installerte vi MySQL og PHP på serveren og opprettet databasen på selve serveren.</p>
+<p>For å koble sammen nettsiden og Android applikasjonen med serveren brukte vi PHP-script for å sende og hente ut informasjon til databasen. Disse filene ligger på serveren.</p>
+<p>Android applikasjonen ble lagd med Java i Android Studio og den kobler seg til serveren med URL-kall ved hjelp av PHP-script. Disse PHP-scriptene sender tilbake JSON formaterte tekststrenger som blir brukt for å vise data som er hentet ut. I appen kan man registrere seg som en student, logge seg inn og endre passord. Det er også en funksjon som lar deg sende anonyme henvendelser til foreleser til de ulike fagene. Da kan foreleseren i faget svare på disse henvendelsene og da blir disse kommentaren vist i appen sammen med andre folk som også kan kommentere henvendelsen. </p>
+<p>Nettsiden er lagd i PHP og lar studenter og forelesere registrere seg, logge inn og bytte passord. Admin kan logge seg inn, men en bruker kan ikke registrere adminbruker. Vi har lagd en funksjon som lar studenter kunne sende melding angående ønsket fag og forbli anonym. Forelesere kan angi emner de underviser i, lese meldinger fra studenter og svare på meldinger fra studenter. Administratorer må godkjenne forelesere før de blir aktive.</p>
+<p>Gjestebrukeren er en anonym bruker som ikke trenger innlogging. Alle som bruker gjest kan se alle meldinger og svar fra emner hvis de kjenner den firesifret koden. De kan rapportere upassende meldinger og kommentere på meldinger fra studentene. </p>
+<p>Gruppa har brukt kunnskaper fra tidligere fag bla. Objekt orientert programmering og databaser. En på gruppe hadde forkunnskaper om Linux fra før og en annen hadde kunnskaper om PHP. Vi har også benyttet oss av Google for noen løsninger og for at vi skulle få systemet opp så raskt som mulig med tanke på tiden vi fikk på prosjektet.</p>
+</div>
+</body>
+</html>
