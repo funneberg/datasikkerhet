@@ -245,7 +245,7 @@ else if ($page == 'logout') {
     header("location: index.php");
 }
 else if ($page == 'documentation') {
-    $filename = "./dokumentasjon/datasikkerhet-dokumentasjon-gruppe21.pdf"; 
+    $filename = "./dokumentasjon/Datasikkerhet_prosjektrapport-angrep2.pdf"; 
     header("Content-type: application/pdf"); 
     header("Content-Length: " . filesize($filename));
     header('Content-Disposition: inline; filename="' . $filename . '"'); 
